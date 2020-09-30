@@ -1,0 +1,108 @@
+class FlexiBook
+{
+}
+
+class Customer
+{
+    isA Account;
+    1 register -- 1 SignUp account;
+}
+
+class Service
+{
+  serviceCost;
+  serviceName;
+  serviceDuration;
+  serviceDowntime;
+  serviceDescription;
+}
+
+class Owner
+{
+    isA Account;
+  1 -- 1 ServiceList;
+}
+
+class ServiceCombo
+{
+  int noOfServices;
+  int comboCost;
+  int comboDuration;
+ 
+  comboDescription;
+}
+
+class BusinessInfo
+{
+  businessName;
+  emailAddress;
+  phoneNo;
+  Time openingTime;
+  Time closingTime;
+  businessAddress;
+1 -- 1 ServiceList services;
+  1 -- * Customer customerProfiles;
+  1 business -- 1 Owner owner;
+  1 -- 1 Calendar schedule;
+}
+
+class Appointment
+{
+  int appointmentDuration;
+  Time date;
+* booking -- 1 Customer customer;
+  1 appointment -- 1 TimeSlot bookingTime;
+ 
+  * -> * ServiceCombo services;
+  * -- 1 Owner;
+}
+
+class Calendar
+{
+  boolean isAvailable;
+}
+
+class Account
+{
+  username;
+  password;
+  
+}
+
+class TimeSlot
+{
+  Time startTime;
+}
+
+class ServiceList
+{
+  List listOfServices;
+  List listOfServiceCombo;
+}
+
+class SignUp
+{
+}
+association {  
+    1 ServiceList  <@>- * ServiceCombo ;  
+}  
+association {  
+    * ServiceList  <@>- 1 Service ;  
+}  
+association {  
+    *ServiceCombo <@>- * Service;  
+}  
+association {  
+    1 ServiceCombo <@>- * Service mainService;  
+}  
+association {  
+    1 Calendar  <@>- * TimeSlot timeslots ;  
+}  
+
+class ClosedTiming
+{
+  enum Duration { Start, End }  
+  Duration luchBreak;
+  Duration vacation;
+   Duration holiday;  
+}  
