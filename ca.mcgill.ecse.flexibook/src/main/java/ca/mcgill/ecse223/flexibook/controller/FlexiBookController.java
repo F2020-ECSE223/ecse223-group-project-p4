@@ -28,7 +28,17 @@ public class FlexiBookController {
 	public FlexiBookController() {}
 	
 	
-	
+	/**
+	 * 
+	 * @author Shaswata Bhattacharyya
+	 * @param username (The username of the customer)
+	 * @param mainServiceName (The chosen bookable service)
+	 * @param optionalServiceNames (List of optional services, if any)
+	 * @param startTime (Selected start time for the appointment)
+	 * @param startDate (Selected date for the appointment)
+	 * @throws InvalidInputException
+	 * 
+	 */
 	public static void makeAppointment(String username, String mainServiceName, List<String> optionalServiceNames, Time startTime, Date startDate) throws InvalidInputException {
 		
 		try {
@@ -111,7 +121,21 @@ public class FlexiBookController {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @author Shaswata Bhattacharyya
+	 * @param username (The username of the customer)
+	 * @param serviceName (The name of the bookable service of the appointment)
+	 * @param newItems (New optional services to be added, if any)
+	 * @param removedItems (Optional services to be removed, if any)
+	 * @param newStartTime (New start time of appointment, if any)
+	 * @param newDate (New start date of appointment, if any)
+	 * @param oldStartTime (Original start time of appointment)
+	 * @param oldDate (Original start date of appointment)
+	 * @return a string indicating whether update was successful/unsuccessful
+	 * @throws InvalidInputException
+	 * 
+	 */
 	public static String updateAppointment(String username, String serviceName, List<String> newItems, List<String> removedItems, Time newStartTime, Date newDate, Time oldStartTime, Date oldDate) throws InvalidInputException {
 
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
@@ -245,7 +269,15 @@ public class FlexiBookController {
 		
 		
 	
-		
+	/**
+	 *
+	 * @author Shaswata Bhattacharyya	
+	 * @param username (The username of the customer trying to cancel the appointment)
+	 * @param startTime (The start time of the appointment to be cancelled)
+	 * @param startDate (The date of the appointment to be cancelled)
+	 * @throws InvalidInputException
+	 * 
+	 */
 	public static void cancelAppointment(String username, Time startTime, Date startDate) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Appointment appointment = null;
@@ -317,6 +349,14 @@ public class FlexiBookController {
 	
 	//private methods
 	
+	
+	/**
+	 * @author Shaswata Bhattacharyya
+	 * @param startTime
+	 * @param startDate
+	 * @param service
+	 * @return time slot created using the start date, start time, end date and end time
+	 */
 	private static TimeSlot getTimeSlot(Time startTime, Date startDate, Service service) {
 		
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
@@ -332,7 +372,11 @@ public class FlexiBookController {
 	
 	
 	
-	
+	/**
+	 * @author Shaswata Bhattacharyya
+	 * @param appointment
+	 * @return true if valid time slot, false otherwise
+	 */
 	private static boolean checkDateAndTime(Appointment appointment) {
 		
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
@@ -403,6 +447,11 @@ public class FlexiBookController {
 	}
 	
 	
+	/**
+	 * @author Shaswata Bhattacharyya
+	 * @param username
+	 * @return the customer corresponding to the username
+	 */
 	private static Customer findCustomerByName(String username) {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Customer thisCustomer;
@@ -417,6 +466,12 @@ public class FlexiBookController {
 		return null;
 	}
 	
+	
+	/**
+	 * @author Shaswata Bhattacharyya
+	 * @param serviceName
+	 * @return the bookable service corresponding to the service name
+	 */
 	private static BookableService findServiceByName(String serviceName) {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		BookableService thisService;
