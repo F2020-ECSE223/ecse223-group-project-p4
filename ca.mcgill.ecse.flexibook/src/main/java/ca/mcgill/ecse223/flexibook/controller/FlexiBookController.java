@@ -29,7 +29,7 @@ public class FlexiBookController {
 	
 	
 	
-	public static boolean makeAppointment(String username, String mainServiceName, List<String> optionalServiceNames, Time startTime, Date startDate) {
+	public static void makeAppointment(String username, String mainServiceName, List<String> optionalServiceNames, Time startTime, Date startDate) throws InvalidInputException {
 		
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Appointment appointment = null;
@@ -40,7 +40,7 @@ public class FlexiBookController {
 		List<BookableService> serviceList = flexiBook.getBookableServices();
 		
 		if(mainServiceName == null || username == null || startTime == null || startDate == null) {
-			return false;
+			throw new InvalidInputException("Service name, Customer username, start time or start date cannot be null");
 		}
 		
 		//find the available service from the flexibook corresponding to the name
@@ -89,17 +89,20 @@ public class FlexiBookController {
 		//check if the appointment is within valid business hours
 		
 		if(checkDateAndTime(appointment) == false) {
-			return false;
+			throw new InvalidInputException("Time slot for creating a new appointment is invalid");
 		}
-		flexiBook.addAppointment(appointment);
+		try {
+			flexiBook.addAppointment(appointment);
+		}catch(RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
+		}
 		
-		return true;
 		
 	}
 	
 	
 	
-	public static boolean updateAppointment(String username, String serviceName, List<String> newItems, List<String> removedItems, Time newStartTime, Date newDate, Time oldStartTime, Date oldDate) {
+	public static void updateAppointment(String username, String serviceName, List<String> newItems, List<String> removedItems, Time newStartTime, Date newDate, Time oldStartTime, Date oldDate) throws InvalidInputException {
 
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Appointment appointment = null;
@@ -108,8 +111,8 @@ public class FlexiBookController {
 		BookableService thisService = null;
 		List<BookableService> serviceList = flexiBook.getBookableServices();
 		
-		if(serviceName == null || username == null) {
-			return false;
+		if(serviceName == null || username == null || oldStartTime == null || oldDate == null) {
+			throw new InvalidInputException("Service name, Customer username, previous start time or previous start date cannot be null");
 		}
 		
 		//find the service corresponding to the name
@@ -200,10 +203,13 @@ public class FlexiBookController {
 		
 		
 		if(checkDateAndTime(appointment) == false) {
-			return false; 
+			throw new InvalidInputException("Time slot for creating a new appointment is invalid.");
 		}
-		
-		return true;
+		try {
+			flexiBook.addAppointment(appointment);
+		}catch(RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
+		}
 		
 		
 	}
@@ -211,11 +217,15 @@ public class FlexiBookController {
 		
 	
 		
-	public static boolean cancelAppointment(String username, Time startTime, Date startDate) {
+	public static void cancelAppointment(String username, Time startTime, Date startDate) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		
 		int initial = flexiBook.getAppointments().size();
-		int Final;;
+		int Final;
+		
+		if(username == null || startTime == null || startDate == null) {
+			throw new InvalidInputException("Customer username, start time or start date cannot be null");
+		}
 		
 		List<Appointment> appointmentList = null;
 		Customer customer = null;
@@ -246,12 +256,13 @@ public class FlexiBookController {
 			}
 		}
 		
+		
 		Final = flexiBook.getAppointments().size();
-		if(Final == initial - 1) {
-			return true;
+		if(Final != initial - 1) {
+			throw new InvalidInputException("Failed to remove appointment because either username or time slot doesn't match");
 		}
 		
-		return false;	
+		
 		
 	}
 	
@@ -340,9 +351,6 @@ public class FlexiBookController {
 			}
 			
 		}
-		
-		
-		
 		
 		return valid;
 	}
