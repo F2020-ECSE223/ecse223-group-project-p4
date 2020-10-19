@@ -4,6 +4,7 @@
 package ca.mcgill.ecse.flexibook.application;
 
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
+import ca.mcgill.ecse.flexibook.model.User;
 
 public class FlexiBookApplication {
     public String getGreeting() {
@@ -11,22 +12,34 @@ public class FlexiBookApplication {
     }
     
  
-    	 
-private static FlexiBook flexiBook;
+	    	 
+	private static FlexiBook flexiBook;
+	private static User currentUser; 
+	
+	public static FlexiBook getFlexiBook() {
+	
+	  if (flexiBook == null) {
+		  flexiBook = new FlexiBook();
+	  }
+	
+	 return flexiBook;
+	
+	 }
+	
+	public static User getCurrentUser() {
+		
+		return currentUser;
+	}
+ 	
 
-private static FlexiBook getFlexiBook() {
+    public static User setCurrentUser(User user) {
+		// TODO Auto-generated method stub
+    	currentUser = user;
+		return currentUser;
+	}
 
-  if (flexiBook == null) {
-	  flexiBook = new FlexiBook();
-  }
-
- return flexiBook;
-
- }
-
-    	
-
-    public static void main(String[] args) {
+    
+	public static void main(String[] args) {
         System.out.println(new FlexiBookApplication().getGreeting());
     }
 

@@ -1,0 +1,13 @@
+namespace ca.mcgill.ecse.btms.FlexiBook;
+
+class TOService {
+    String name;
+    int duration;
+  int downtimeDuration;
+  int downtimeStart;
+}
+
+class TOServiceCombo {
+ String mainService
+ int duration 
+}

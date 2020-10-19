@@ -5,27 +5,28 @@ import java.io.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import ca.mcgill.ecse.flexibook.model.*;
+//import ca.mcgill.ecse.flexibook.model.Appointment;
+//import ca.mcgill.ecse.flexibook.model.BookableService;
+//import ca.mcgill.ecse.flexibook.model.Service;
+//import ca.mcgill.ecse.flexibook.model.Business;
+//import ca.mcgill.ecse.flexibook.model.BusinessHour;
+//import ca.mcgill.ecse.flexibook.model.ComboItem;
+//import ca.mcgill.ecse.flexibook.model.Customer;
+//import ca.mcgill.ecse.flexibook.model.FlexiBook;
+//import ca.mcgill.ecse.flexibook.model.Owner;
+//import ca.mcgill.ecse.flexibook.model.ServiceCombo;
+//import ca.mcgill.ecse.flexibook.model.TimeSlot;
+//import ca.mcgill.ecse.flexibook.model.User;
 
-import ca.mcgill.ecse.flexibook.model.Appointment;
-import ca.mcgill.ecse.flexibook.model.BookableService;
-import ca.mcgill.ecse.flexibook.model.Service;
-import ca.mcgill.ecse.flexibook.model.Business;
-import ca.mcgill.ecse.flexibook.model.BusinessHour;
-import ca.mcgill.ecse.flexibook.model.ComboItem;
-import ca.mcgill.ecse.flexibook.model.Customer;
-import ca.mcgill.ecse.flexibook.model.FlexiBook;
-import ca.mcgill.ecse.flexibook.model.Owner;
-import ca.mcgill.ecse.flexibook.model.ServiceCombo;
-import ca.mcgill.ecse.flexibook.model.TimeSlot;
-import ca.mcgill.ecse.flexibook.model.User;
+
+public class FlexiBookController {
 
 
-class FlexiBookController {
-
-	 
 	/** 
 	 * Add/Update/Delete Service Feature - Helper Method
 	 * Public method to check type of user logged in to system 
@@ -34,106 +35,125 @@ class FlexiBookController {
 	 * @return int for type of user 
 	 */
 
-	public static int checkUser(User user)  {
+	private static boolean checkUser(User user) throws InvalidInputException  {
+		boolean userIsOwner = false; 
+		
 		if (user instanceof Owner) {
-			return 0;
+			userIsOwner = true; 
 		}
-		
+
 		if (user instanceof Customer) {
-			return 1;
+			userIsOwner = false; 
+			throw new InvalidInputException("You are not authorized to perform this operation");
 		}
-		
-		else return 2;
+
+		return userIsOwner;
 	}
-	
+
 	/**
 	 * Add/Update/Delete Service Feature - Helper Method
 	 * Checks for positive duration
 	 * @author Sneha Singh
 	 * @param service
 	 * @return boolean true if duration is positive 
-	 * @throws Throwable IllegalArgumentException 
+	 * @throws InvalidInputException InvalidInputException 
 	 */
-	public static boolean checkPositiveDuration(Service service) throws Throwable {
+	private static boolean checkPositiveDuration(Service service) throws InvalidInputException {
+		boolean durationIsPositive = true;
 		if (service.getDuration() <= 0) {
-			throw new IllegalArgumentException("Duration must be positive");
+			durationIsPositive = false; 
+			throw new InvalidInputException("Duration must be positive");
 		}
-		else return true;
+		return durationIsPositive;
 	}
-	
+
 	/**
 	 * Add/Update/Delete Service Feature - Helper Method
 	 * Checks for positive downtime duration
 	 * @author Sneha Singh
 	 * @param service
 	 * @return boolean true if downtime duration is positive 
-	 * @throws Throwable IllegalArgumentException 
+	 * @throws InvalidInputException InvalidInputException 
 	 */
-	public static boolean checkPositiveDowntimeDuration(Service service) throws Throwable {
-		if (service.getDowntimeDuration() <= 0) {
-			throw new IllegalArgumentException("Downtime duration must be positive");
+	private static boolean checkPositiveDowntimeDuration(Service service) throws InvalidInputException {
+		boolean downtimeDurationIsPositive = true; 
+		if (service.getDowntimeDuration() <= 0 && service.getDowntimeStart() > 0) {
+			downtimeDurationIsPositive = false;
+			throw new InvalidInputException("Downtime duration must be positive");
 		}
-		else return true;
+		return downtimeDurationIsPositive; 
 	}
-	
+
 	/**
 	 * Add/Update/Delete Service Feature - Helper Method
 	 * Checks to make sure downtime duration is 0 if there is no downtime associated w service
 	 * @author Sneha Singh
 	 * @param service
 	 * @return boolean true if downtime and downtime duration are consistnt 
-	 * @throws Throwable IllegalArgumentException 
+	 * @throws InvalidInputException InvalidInputException 
 	 */
-	public static boolean checkDowntimeDurationIsZero(Service service) throws Throwable {
-		if ((service.getDowntimeStart() == 0) && (service.getDowntimeDuration() <= 0)) {
-			throw new IllegalArgumentException("Downtime duration must be 0");
+	public static boolean checkDowntimeDurationIsZero(Service service) throws InvalidInputException {
+		boolean downtimeDurationIsZero = true; 
+		if ((service.getDowntimeStart() == 0) && !(service.getDowntimeDuration() >= 0)) {
+			downtimeDurationIsZero = false;
+			throw new InvalidInputException("Downtime duration must be 0");
 		}
-		else return true;
+
+		return downtimeDurationIsZero;
 	}
-	
+
 	/**
 	 * Add/Update/Delete Service Feature - Helper Method
 	 * Checks to ensure that downtime makes sense 
 	 * @author Sneha Singh
 	 * @param service
 	 * @return boolean true if downtime is valid (starts after and exists for no more than duration of service)
-	 * @throws Throwable IllegalArgumentException 
+	 * @throws InvalidInputException InvalidInputException 
 	 */
-	public static boolean checkDowntimeStartsDuringService(Service service) throws Throwable {
+	private static boolean checkDowntimeStartsDuringService(Service service) throws InvalidInputException {
+		boolean downtimeStartsDuringService = true;
+
 		if (service.getDowntimeStart() < 0) {
-			throw new IllegalArgumentException("Downtime must not start before the beginning of the service");
+			downtimeStartsDuringService = false;
+			throw new InvalidInputException("Downtime must not start before the beginning of the service");
 		}
-		
-		if (service.getDowntimeStart() == 0) {
-			throw new IllegalArgumentException("Downtime must not start at the beginning of the service");
+
+		if (service.getDowntimeStart() == 0 && service.getDowntimeDuration() > 0) {
+			downtimeStartsDuringService = false;
+			throw new InvalidInputException("Downtime must not start at the beginning of the service");
 		}
-		
-		if (service.getDowntimeStart() + service.getDowntimeDuration() < service.getDuration()) {
-			throw new IllegalArgumentException("Downtime must not end after the service");
-		}
-		
+
 		if (service.getDowntimeStart() > service.getDuration()) {
-			throw new IllegalArgumentException("Downtime must not start after the end of the service");
+			downtimeStartsDuringService = false;
+			throw new InvalidInputException("Downtime must not start after the end of the service");
 		}
-		else return true;
-	
+
+		if (service.getDowntimeStart() + service.getDowntimeDuration() > service.getDuration()) {
+			downtimeStartsDuringService = false;
+			throw new InvalidInputException("Downtime must not end after the service");
+		}
+
+
+		return downtimeStartsDuringService;
+
 	}
-	
+
 	/**
 	 * Add/Update/Delete Service Feature - Helper Method
 	 * Consolidates all above helper methods into one  
 	 * @author Sneha Singh
 	 * @param service
 	 * @return boolean true if all timings make sense 
-	 * @throws Throwable IllegalArgumentException 
+	 * @throws InvalidInputException InvalidInputException 
 	 */
-	public static boolean timingsMakeSense(Service service) throws Throwable {
-		if (checkPositiveDuration(service) == true && checkPositiveDowntimeDuration(service) == true && checkDowntimeDurationIsZero(service) == true && checkDowntimeStartsDuringService(service) == true) {
-			return true;
+	private static boolean timingsMakeSense(Service service) throws InvalidInputException {
+		boolean timingsMakeSense = false; 
+		if ((checkPositiveDuration(service) == true) && (checkPositiveDowntimeDuration(service) == true) && (checkDowntimeDurationIsZero(service) == true) && (checkDowntimeStartsDuringService(service) == true)) {
+			timingsMakeSense = true;;
 		}
-		else return false;
+		return timingsMakeSense;
 	}
-	
+
 
 	/**
 	 * Add/Update/Delete Service Feature - Helper Method 
@@ -143,17 +163,17 @@ class FlexiBookController {
 	 * @param service
 	 * @return boolean true if service already exists 
 	 */
-	public static boolean serviceExistsAlready(FlexiBook aFlexiBook, Service service)  {
+	private static boolean serviceExistsAlready(FlexiBook aFlexiBook, Service service)  {
 		boolean serviceExists = false;
 		if (aFlexiBook.getBookableServices().contains(Service.getWithName(service.getName()))){
 			serviceExists = true;
 		}
-		
+
 		return serviceExists;
 	}
-	
+
 	//Add Service Begins
-	
+
 
 	/**
 	 * AddService Feature Implementation 
@@ -162,28 +182,31 @@ class FlexiBookController {
 	 * @param aFlexiBook
 	 * @param service
 	 * @param user
-	 * @throws Throwable
+	 * @throws InvalidInputException
 	 */
-	public static void addService (FlexiBook aFlexiBook, Service service, User user) throws Throwable {
-		if (checkUser(user) == 0 && timingsMakeSense(service) == true && serviceExistsAlready(aFlexiBook, service) == false) {
+	public static void addService (FlexiBook aFlexiBook, Service service, User user) throws InvalidInputException {
+		//if (checkUser(user) != 0) {
+		//	throw new InvalidInputException("You are not authorized to perform this operation");
+		//}
+		
+		if ((checkUser(user) == true) && (timingsMakeSense(service) == true)) { //&& serviceExistsAlready(aFlexiBook, service) == false
 			aFlexiBook.addBookableService(service);
+
 		}
+
+		//if (serviceExistsAlready(aFlexiBook, service) == true) {
+		//	throw new InvalidInputException("Service " +service.getName()+ " already exists");
+		//}
+
+
 		
-		if (serviceExistsAlready(aFlexiBook, service) == true) {
-			throw new IllegalArgumentException("Service " +service.getName()+ " already exists");
-		}
-		
-		
-		if (checkUser(user) != 0) {
-			throw new IllegalArgumentException("You are not authorized to perform this operation");
-		}
-		
+
 	}	
-	
+
 	// AddService Ends 
-	
+
 	//Update Service Begins
-	
+
 	/** 
 	 * Update Service Feature - Helper Method 
 	 * Checks to make sure that the only the selected service is being updated and that the new service does not have the same 
@@ -193,33 +216,33 @@ class FlexiBookController {
 	 * @param serviceToUpdate
 	 * @param newService
 	 * @return boolean true if the new service coincides with the selected pre-existing service to update
-	 * @throws Throwable
+	 * @throws InvalidInputException
 	 */
-	public static boolean updatingCorrectService(FlexiBook aFlexiBook, Service serviceToUpdate, Service newService) throws Throwable{
-		
+	private static boolean updatingCorrectService(FlexiBook aFlexiBook, Service serviceToUpdate, Service newService) throws InvalidInputException{
+
 		boolean updatingCorrService = false; 
 		//If service to be updated has same name as new service, test ignores the fact that the service already exists in the list of Bookable Services 
 		//Ex: updating service "colour" with a new service that has the same name but different duration/downtimeStart/downtimeDuration 
 		if (serviceToUpdate.getName().equalsIgnoreCase(newService.getName())) {
 			updatingCorrService = true; 
 		}
-		
+
 		else {
 			//If the new service's name is different than that of the one being updated, and a service with that name exists already, then the service cannot be added 
 			//Ex: updating service "colour" to a new service "dry", when a service with name "dry" already exists
 			if (serviceExistsAlready(aFlexiBook, newService)) {
-				throw new IllegalArgumentException("Service " +newService.getName()+ " exists already");
+				throw new InvalidInputException("Service " +newService.getName()+ " exists already");
 			}
 			else {
 				updatingCorrService = true; 
 			}
-				
+
 		}
-		
+
 		return updatingCorrService;
-	
+
 	}	
-	
+
 	/**
 	 * UpdateService Feature Implementation 
 	 * Updates existing service provided all criteria is met 
@@ -227,67 +250,108 @@ class FlexiBookController {
 	 * @param serviceToUpdate
 	 * @param newService
 	 * @param user
-	 * @throws Throwable
+	 * @throws InvalidInputException
 	 */
-	
-	public static void updateService (FlexiBook aFlexiBook, Service serviceToUpdate, Service newService, User user)	throws Throwable {
-		
-		if (checkUser(user) == 0 && timingsMakeSense(newService) == true && updatingCorrectService(aFlexiBook, serviceToUpdate, newService) == true) {
+
+	public static void updateService (FlexiBook aFlexiBook, Service serviceToUpdate, Service newService, User user)	throws InvalidInputException {
+
+		if (checkUser(user) == true && timingsMakeSense(newService) == true && updatingCorrectService(aFlexiBook, serviceToUpdate, newService) == true) {
 			int index = aFlexiBook.indexOfBookableService(Service.getWithName(serviceToUpdate.getName()));
 			aFlexiBook.addOrMoveBookableServiceAt(newService, index);
 		}
-		
-	
-		if (checkUser(user) != 0) { 
-			throw new IllegalArgumentException("You are not authorized to perform this operation");
-		}
-		
+
+
+		//if (checkUser(user) != 0) { 
+		//	throw new InvalidInputException("You are not authorized to perform this operation");
+		//}
+
 	}
-		
+
 	//UpdateService ends 
-	
-	
+
+
 	//DeleteService Begins
-		
-		
-	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+
+	//Check if service exists in any combos 
+
+	//Check if service exists in any upcoming appointments 
+
+
+	//	public void servicePartOfCombo (FlexiBook aFlexiBook, Service serviceToDelete)	{
+	//		//check all serviceCombos that have this as a service 
+	//		int i = 0;
+	//		List<BookableService> allServices = aFlexiBook.getBookableServices();
+	//		List<ServiceCombo> serviceCombosContainingService = new ArrayList<ServiceCombo>();
+	//		
+	//		
+	//		//List of all service combos
+	//		for (i=0 ; i< allServices.size() ; i++) {
+	//			if (allServices.get(i) instanceof ServiceCombo) {
+	//				serviceCombosContainingService.add((ServiceCombo) allServices.get(i));
+	//				}
+	//		}
+	//		
+	//		for (int j = 0; j < serviceCombosContainingService.size(); j++) {
+	//			if (serviceCombosContainingService.get(i).getMainService().equals(serviceToDelete)) {
+	//				aFlexiBook.removeBookableService(serviceCombosContainingService.get(i));
+	//			}
+	//		}	
+	//		
+	//		for (int k = 0; j < serviceCombosContainingService.size(); j++) {
+	//			if (serviceCombosContainingService.get(i).getServices().contains(serviceToDelete)) {
+	//				
+	//				serviceCombosContainingService.get(i).removeService(ComboItem.getService());
+	//			
+	//			}
+	//		}	
+	//		
+	//			aFlexiBook.removeBookableService(serviceToDelete);
+	//		}
+	//			
+	//	}
+	//			
+	//	public static void deleteService (FlexiBook aFlexiBook, Service serviceToUpdate, Service newService, User user)	throws InvalidInputException {
+	//			
+	//			if (checkUser(user) == 0 && timingsMakeSense(newService) == true && updatingCorrectService(aFlexiBook, serviceToUpdate, newService) == true) {
+	//				int index = aFlexiBook.indexOfBookableService(Service.getWithName(serviceToUpdate.getName()));
+	//				aFlexiBook.addOrMoveBookableServiceAt(newService, index);
+	//			}
+	//			
+	//		
+	//			if (checkUser(user) != 0) { 
+	//				throw new InvalidInputException("You are not authorized to perform this operation");
+	//			}
+	//			
+	//		}
+	//			
+	//		
+	//		
+	//		
+	//		
+	//		
+	//		
+	//		
+	//		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
-	
-	
+
+
 
 
 
