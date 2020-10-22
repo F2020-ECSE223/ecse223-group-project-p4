@@ -20,6 +20,7 @@ public class FlexiBookApplication {
 	
 	  if (flexiBook == null) {
 		  flexiBook = new FlexiBook();
+
 	  }
 	
 	 return flexiBook;
@@ -33,7 +34,6 @@ public class FlexiBookApplication {
  	
 
     public static User setCurrentUser(User user) {
-		// TODO Auto-generated method stub
     	currentUser = user;
 		return currentUser;
 	}
