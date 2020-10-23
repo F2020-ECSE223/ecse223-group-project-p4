@@ -3,44 +3,71 @@
  */
 package ca.mcgill.ecse.flexibook.application;
 
+import java.sql.Date;
+import java.sql.Time;
+
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse.flexibook.model.User;
 
 public class FlexiBookApplication {
-    public String getGreeting() {
-        return "Hello world.";
-    }
-    
- 
-	    	 
+	public String getGreeting() {
+		return "Hello world.";
+	}
+
+
+
 	private static FlexiBook flexiBook;
 	private static User currentUser; 
-	
+	private static Time currentTime;
+	private static Date currentDate; 
+
 	public static FlexiBook getFlexiBook() {
-	
-	  if (flexiBook == null) {
-		  flexiBook = new FlexiBook();
 
-	  }
-	
-	 return flexiBook;
-	
-	 }
-	
+		if (flexiBook == null) {
+			flexiBook = new FlexiBook();
+
+		}
+
+		return flexiBook;
+
+	}
+
 	public static User getCurrentUser() {
-		
-		return currentUser;
-	}
- 	
 
-    public static User setCurrentUser(User user) {
-    	currentUser = user;
 		return currentUser;
 	}
 
-    
+
+	public static User setCurrentUser(User user) {
+		currentUser = user;
+		return currentUser;
+	}
+
+
+	public static Date setSystemDate(String date) {
+		currentDate= Date.valueOf(date);
+		return currentDate; 
+	}
+
+	public static Time setSystemTime(String time) {
+		currentTime = Time.valueOf(time);
+		return currentTime; 
+	}
+
+	public static Date getSystemDate() {
+
+		return currentDate; 
+	}
+
+
+	public static Time getSystemTime() {
+
+		return currentTime; 
+	}
+
+
 	public static void main(String[] args) {
-        System.out.println(new FlexiBookApplication().getGreeting());
-    }
+		System.out.println(new FlexiBookApplication().getGreeting());
+	}
 
 }
