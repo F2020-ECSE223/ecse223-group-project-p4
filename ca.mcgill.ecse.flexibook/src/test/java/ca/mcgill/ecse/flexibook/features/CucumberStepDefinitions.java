@@ -524,9 +524,6 @@ public class CucumberStepDefinitions {
 		
 	}
 	
-=======
-public class CucumberStepDefinitions {
->>>>>>> 7836a9dac4b3cd0113fb7a12774308ca90d4ebdc
 
 	/**
 	 * @author Shaswata Bhattacharyya
