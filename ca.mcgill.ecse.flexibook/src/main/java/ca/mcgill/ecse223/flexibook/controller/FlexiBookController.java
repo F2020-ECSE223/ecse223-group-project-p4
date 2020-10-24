@@ -1,9 +1,10 @@
-package ca.mcgill.ecse.flexibook.controller;
+package ca.mcgill.ecse223.flexibook.controller;
 
 
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
@@ -24,7 +25,7 @@ import ca.mcgill.ecse.flexibook.model.User;
 
 
 
-<<<<<<< HEAD
+
 public class FlexiBookController {
 	
 	public FlexiBookController() {}
@@ -497,12 +498,7 @@ public class FlexiBookController {
 		
 		return null;
 	}
-=======
-//*************************** APPOINTMENT FEATURES****************************//
-	
 
->>>>>>> 7836a9dac4b3cd0113fb7a12774308ca90d4ebdc
-	
 	
 	//************************************SERVICE FEATURES******************************
 
