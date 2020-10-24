@@ -11,6 +11,7 @@ import ca.mcgill.ecse.flexibook.model.User;
 
 
 
+
 public class FlexiBookApplication {
 	private static FlexiBook flexiBook;
 	private static User currentUser;
@@ -26,6 +27,14 @@ public class FlexiBookApplication {
     public static void main(String[] args) {
         //System.out.println(new FlexiBookApplication().getGreeting());
     }
+//
+//
+//	 
+	private static Time currentTime;
+	private static Date currentDate; 
+
+	
+
 
 	public static User getCurrentUser() {
 		return currentUser;
@@ -47,11 +56,14 @@ public class FlexiBookApplication {
 		return systemTime;
 	}
 	
-	public static void setSystemDate(Date date) {
-		systemDate = date;
+	public static void setSystemDate(String date) {
+		systemDate = Date.valueOf(date);
 	}
 	
-	public static void setSystemTime(Time time) {
-		systemTime = time;
+	public static void setSystemTime(String time) {
+		systemTime = Time.valueOf(time);
 	}
+
 }
+
+

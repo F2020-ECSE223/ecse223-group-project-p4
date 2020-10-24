@@ -21,8 +21,8 @@ import ca.mcgill.ecse.flexibook.model.Service;
 import ca.mcgill.ecse.flexibook.model.ServiceCombo;
 import ca.mcgill.ecse.flexibook.model.TimeSlot;
 import ca.mcgill.ecse.flexibook.model.User;
-import ca.mcgill.ecse.flexibook.controller.FlexiBookController;
-import ca.mcgill.ecse.flexibook.controller.InvalidInputException;
+import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
+import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse.flexibook.model.Customer;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
@@ -325,10 +325,10 @@ public class CucumberStepDefinitions {
 	public void the_system_s_time_and_date_is(String string) {
 		String datePart = string.substring(0, 10);
 		String timePart = string.substring(11, 16);
-		Date date = Date.valueOf(datePart);
-		Time time = Time.valueOf(timePart + ":00");
-		FlexiBookApplication.setSystemDate(date);
-		FlexiBookApplication.setSystemTime(time);
+//		Date date = Date.valueOf(datePart);
+//		Time time = Time.valueOf(timePart + ":00");
+		FlexiBookApplication.setSystemDate(datePart);
+		FlexiBookApplication.setSystemTime(timePart+ ":00");
 	}
 
 	/**
