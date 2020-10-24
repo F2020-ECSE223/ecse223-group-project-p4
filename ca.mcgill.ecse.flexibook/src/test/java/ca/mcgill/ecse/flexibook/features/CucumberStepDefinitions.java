@@ -329,6 +329,16 @@ public class CucumberStepDefinitions {
 		
 	}
 	
+	
+	/**
+	 * @author Shaswata Bhattacharyya
+	 * @param string
+	 */
+	@Given("{string} is logged in to their account")
+	public void is_logged_in_to_their_account(String string) {
+		Customer customer = findCustomerByName(string);
+	    FlexiBookApplication.setCurrentUser(customer);
+	}
 		
 	
 	/**
