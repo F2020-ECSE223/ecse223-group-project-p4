@@ -14,6 +14,7 @@ import ca.mcgill.ecse.flexibook.model.*;
 
 
 
+
 public class FlexiBookController {
 	
 	public FlexiBookController() {}
@@ -60,8 +61,7 @@ public class FlexiBookController {
 					break;
 				}
 			}
-			
-			
+
 			//find the customer trying to book an appointment
 			List<Customer> customerList = flexiBook.getCustomers();
 			for(int i = 0; i < customerList.size(); i++) {
@@ -327,16 +327,10 @@ public class FlexiBookController {
 			
 			if(username.equals(appointment.getCustomer().getUsername())) {
 				flexiBook.removeAppointment(appointment);
-			}
-			else{
-				throw new InvalidInputException("A customer can only cancel their own appointments");
-			}
+
 			
-			
-			
-			
-			
-		}
+			}}
+		
 		catch(RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
@@ -486,6 +480,7 @@ public class FlexiBookController {
 		
 		return null;
 	}
+
 	
 	//************************************SERVICE FEATURES******************************
 
@@ -837,6 +832,4 @@ public class FlexiBookController {
 
 
 }
-
-
 

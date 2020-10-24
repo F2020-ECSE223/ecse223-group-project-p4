@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.sql.Date;
-import java.sql.Time;
 import java.util.Arrays;
 import java.util.List;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.Map;
 
 import ca.mcgill.ecse.flexibook.model.*;
@@ -18,10 +18,13 @@ import ca.mcgill.ecse223.flexibook.controller.*;
 import ca.mcgill.ecse.flexibook.application.*;
 
 
+
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+
 
 
 public class CucumberStepDefinitions {
@@ -404,6 +407,7 @@ public class CucumberStepDefinitions {
 	}
 	
 
+
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param string
@@ -590,9 +594,13 @@ public class CucumberStepDefinitions {
 		
 		return thisService;
 	}
+
 	
 	
 	//*******************SERVICE IMPLEMENTATION*************************
+
+
+
 	private static FlexiBook flexiBook; 
 	private static Business business; 
 	private static Owner owner;
@@ -930,6 +938,7 @@ public class CucumberStepDefinitions {
 			}
 		}
 
+
 		assertEquals(Integer.parseInt(string), numCombos);
 
 	}
@@ -957,24 +966,15 @@ public class CucumberStepDefinitions {
 
 
 
+		
+
+		
+		
 
 
 
 
+	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
 
