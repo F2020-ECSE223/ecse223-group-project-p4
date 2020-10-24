@@ -9,61 +9,65 @@ import java.sql.Time;
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse.flexibook.model.User;
 
-
-
-
 public class FlexiBookApplication {
-	private static FlexiBook flexiBook;
-	private static User currentUser;
-	
-	
-    public static FlexiBook getFlexiBook() {
-    	if(flexiBook== null) {
-    		flexiBook = new FlexiBook();
-    	}
-        return flexiBook;
-    }
+	public String getGreeting() {
+		return "Hello world.";
+	}
 
-    public static void main(String[] args) {
-        //System.out.println(new FlexiBookApplication().getGreeting());
-    }
-//
-//
-//	 
+
+
+	private static FlexiBook flexiBook;
+	private static User currentUser; 
 	private static Time currentTime;
 	private static Date currentDate; 
 
-	
+	public static FlexiBook getFlexiBook() {
 
+		if (flexiBook == null) {
+			flexiBook = new FlexiBook();
+
+		}
+
+		return flexiBook;
+
+	}
 
 	public static User getCurrentUser() {
+
 		return currentUser;
-	
 	}
+
+
 	public static User setCurrentUser(User user) {
 		currentUser = user;
 		return currentUser;
 	}
-	
-	private static Date systemDate = null;
-	private static Time systemTime = null;
-	
+
+
+	public static Date setSystemDate(String date) {
+		currentDate= Date.valueOf(date);
+		return currentDate; 
+	}
+
+	public static Time setSystemTime(String time) {
+		currentTime = Time.valueOf(time);
+		return currentTime; 
+	}
+
 	public static Date getSystemDate() {
-		return systemDate;
+
+		return currentDate; 
 	}
-	
+
+
 	public static Time getSystemTime() {
-		return systemTime;
+
+		return currentTime; 
 	}
-	
-	public static void setSystemDate(String date) {
-		systemDate = Date.valueOf(date);
-	}
-	
-	public static void setSystemTime(String time) {
-		systemTime = Time.valueOf(time);
+
+
+	public static void main(String[] args) {
+		System.out.println(new FlexiBookApplication().getGreeting());
 	}
 
 }
-
-
