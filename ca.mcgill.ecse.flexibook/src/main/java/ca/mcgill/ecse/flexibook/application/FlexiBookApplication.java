@@ -9,86 +9,49 @@ import java.sql.Time;
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse.flexibook.model.User;
 
-public class FlexiBookApplication {
-	public String getGreeting() {
-		return "Hello world.";
-	}
 
 
-<<<<<<< HEAD
 public class FlexiBookApplication {
+	private static FlexiBook flexiBook;
+	private static User currentUser;
+	
 	
     public static FlexiBook getFlexiBook() {
-        return new FlexiBook();
+    	if(flexiBook== null) {
+    		flexiBook = new FlexiBook();
+    	}
+        return flexiBook;
     }
 
     public static void main(String[] args) {
         //System.out.println(new FlexiBookApplication().getGreeting());
     }
-    
-    public static User getCurrentUser() {
-    	return null;
-    }
-    
-    public static void setCurrentUser(String username) {
-    	
-    }
-}
-=======
-
-	private static FlexiBook flexiBook;
-	private static User currentUser; 
-	private static Time currentTime;
-	private static Date currentDate; 
-
-	public static FlexiBook getFlexiBook() {
-
-		if (flexiBook == null) {
-			flexiBook = new FlexiBook();
-
-		}
-
-		return flexiBook;
-
-	}
 
 	public static User getCurrentUser() {
-
 		return currentUser;
+	
 	}
-
-
 	public static User setCurrentUser(User user) {
 		currentUser = user;
 		return currentUser;
 	}
-
-
-	public static Date setSystemDate(String date) {
-		currentDate= Date.valueOf(date);
-		return currentDate; 
-	}
-
-	public static Time setSystemTime(String time) {
-		currentTime = Time.valueOf(time);
-		return currentTime; 
-	}
-
+	
+	private static Date systemDate = null;
+	private static Time systemTime = null;
+	
 	public static Date getSystemDate() {
-
-		return currentDate; 
+		return systemDate;
 	}
-
-
+	
 	public static Time getSystemTime() {
-
-		return currentTime; 
+		return systemTime;
 	}
-
-
-	public static void main(String[] args) {
-		System.out.println(new FlexiBookApplication().getGreeting());
+	
+	public static void setSystemDate(Date date) {
+		systemDate = date;
 	}
-
+	
+	public static void setSystemTime(Time time) {
+		systemTime = time;
+	}
 }
->>>>>>> 108f0e3fe22ba62754f92bdcaef26a0351b6c275
