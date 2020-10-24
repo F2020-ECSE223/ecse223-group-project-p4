@@ -24,6 +24,7 @@ import ca.mcgill.ecse.flexibook.model.User;
 
 
 
+<<<<<<< HEAD
 public class FlexiBookController {
 	
 	public FlexiBookController() {}
@@ -496,6 +497,11 @@ public class FlexiBookController {
 		
 		return null;
 	}
+=======
+//*************************** APPOINTMENT FEATURES****************************//
+	
+
+>>>>>>> 7836a9dac4b3cd0113fb7a12774308ca90d4ebdc
 	
 	
 	//************************************SERVICE FEATURES******************************

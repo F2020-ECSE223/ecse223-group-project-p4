@@ -37,6 +37,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 
+<<<<<<< HEAD
 
 public class CucumberStepDefinitions {
 
@@ -526,6 +527,9 @@ public class CucumberStepDefinitions {
 			
 		}
 		
+=======
+public class CucumberStepDefinitions {
+>>>>>>> 7836a9dac4b3cd0113fb7a12774308ca90d4ebdc
 
 		/**
 		 * @author Shaswata Bhattacharyya
@@ -957,6 +961,7 @@ public class CucumberStepDefinitions {
 				}
 			}
 
+<<<<<<< HEAD
 			assertEquals(Integer.parseInt(string), numCombos);
 
 		}
@@ -1135,4 +1140,6 @@ public class CucumberStepDefinitions {
 
 
 
+=======
+>>>>>>> 7836a9dac4b3cd0113fb7a12774308ca90d4ebdc
 
