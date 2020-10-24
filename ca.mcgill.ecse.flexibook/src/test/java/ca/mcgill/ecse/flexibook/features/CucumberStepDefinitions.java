@@ -535,7 +535,6 @@ public class CucumberStepDefinitions {
 	
 	
 	
-	
 	//private methods
 	
 	/**
