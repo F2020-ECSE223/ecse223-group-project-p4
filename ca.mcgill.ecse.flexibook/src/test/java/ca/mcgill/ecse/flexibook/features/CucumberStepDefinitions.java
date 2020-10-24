@@ -672,7 +672,7 @@ public class CucumberStepDefinitions {
 	@Given("the Owner with username {string} is logged in")
 
 	public void thereIsAnOwnerLoggedIn(String string) {
-		currentUser = FlexiBookApplication.setCurrentUser(owner);
+		currentUser = FlexiBookApplication.setCurrentUser(User.getWithUsername(string));
 		assertEquals(string, currentUser.getUsername());
 	}
 
@@ -954,18 +954,9 @@ public class CucumberStepDefinitions {
 	}
 
 
-	//	@After
-	//	public void tearDown() {
-	//		flexiBook.delete();
-	//	}
 
 
 	//**********************************END SERVICE IMPLEMENTATION*******************8
-
-
-
-
-
 
 
 
