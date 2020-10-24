@@ -1,4 +1,4 @@
-package ca.mcgill.ecse223.flexibook.controller;
+package ca.mcgill.ecse.flexibook.controller;
 
 public class InvalidInputException extends Exception{
 
