@@ -1076,6 +1076,412 @@ public class FlexiBookController {
 		return (Service) specificService;
 	}
 
+	
+	/**
+	 * setupBusinessInfo method
+	 * @author Aroomoogon Krishna
+	 * @param name
+	 * @param address
+	 * @param phoneNumber
+	 * @param email
+	 * @param dow
+	 * @param start
+	 * @param end
+	 * @param holiday
+	 * @param vacation
+	 * @throws InvalidInputException
+	 */
+		public static void setupBusinessInfo(String name, String address, String phoneNumber, String email, ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow, Time start, Time end, TimeSlot holiday, TimeSlot vacation)
+		throws InvalidInputException {
+			
+			try {
+				
+				FlexiBook flexibook = FlexiBookApplication.getFlexiBook();
+				Business business;
+				
+				if (!checkBusinessOwner()) {
+					throw new InvalidInputException("No permission to set up business information");
+				}
+				
+				//Validates string type attributes
+//				if (name == null || address == null || phoneNumber == null || email == null) {
+//				throw new InvalidInputException("Parameters: name, address, phoneNumber, email cannot be null");
+//				}
+				
+				if (email != null) {
+					if (!validateEmail(email)) {
+						throw new InvalidInputException("Invalid email");
+					}
+				}
+				
+				if (flexibook.hasBusiness()) {
+					business = flexibook.getBusiness();
+					business.setName(name);
+					business.setAddress(address);
+					business.setPhoneNumber(phoneNumber);
+					business.setEmail(email);
+				} else {
+					business = new Business(name, address, phoneNumber, email, flexibook);
+				}
+			
+				if (dow != null && start != null && end != null) {
+					addBusinessHour(business, dow, start, end);
+				}
+				
+				if (holiday != null) {
+					addHoliday(business, holiday);
+				}
+				
+				if (vacation != null) {
+					addVacation(business, vacation);
+				}
+				
+			} catch(RuntimeException e) {
+				throw new InvalidInputException(e.getMessage());
+			}
+		}
+
+		/**
+		 * updateBusinessInfo method
+		 * @author Aroomoogon Krishna
+		 * @param name
+		 * @param address
+		 * @param phoneNumber
+		 * @param email
+		 * @param businessHours
+		 * @param holidays
+		 * @param vacation
+		 * @throws InvalidInputException
+		 */
+		public static void updateBusinessInfo(String name, String address, String phoneNumber, String email, ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow, Time start, Time end, TimeSlot holiday, TimeSlot vacation) 
+		throws InvalidInputException {
+			try{
+				FlexiBook flexibook = FlexiBookApplication.getFlexiBook();
+				Business b = flexibook.getBusiness();
+				
+				if (name != null) {
+					b.setName(name);
+				}
+				
+				if (address != null) {
+					b.setAddress(address);
+				}
+				
+				if (phoneNumber != null) {
+					b.setPhoneNumber(phoneNumber);
+				}
+				
+				if (email != null) {
+					if (!validateEmail(email)) {
+						throw new InvalidInputException("Invalid email");
+					} else {
+						b.setEmail(email);
+					}
+				}
+				
+				if (dow != null && start != null && end != null) {
+					addBusinessHour(b, dow, start, end);
+				}
+				
+				if (holiday != null) {
+					addHoliday(b, holiday);
+				}
+				
+				if (vacation != null) {
+					addVacation(b, vacation);
+				}	
+			} catch(RuntimeException e) {
+				throw new InvalidInputException(e.getMessage());
+			}
+		}
+
+		/**
+		 * Helper Method
+		 * @author Aroomoogon Krishna
+		 * @param start
+		 * @param end
+		 * @return boolean, to indicate whete validity passes or fails
+		 */
+		private static boolean validateBusinessHourForTiming(Time start, Time end) {
+			if (start.before(end)) {
+				return false;
+			}
+			return true;
+		}
+		
+		/**
+		 * Helper Method
+		 * @author Aroomoogon Krishna
+		 * @param b
+		 * @param dow
+		 * @param start
+		 * @param end
+		 * @return validity flag
+		 */
+		private static boolean validateBusinessHourForOverlap(Business b, ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow, Time start, Time end) {
+			List<BusinessHour> businessHours = b.getBusinessHours();
+			String bh_day = dow.toString();
+			List<BusinessHour> cmpArr = getBusinessHourByDay(businessHours, bh_day);
+			for (BusinessHour k: cmpArr) {
+				if (!(end.after(k.getStartTime()) || k.getEndTime().after(start))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		/**
+		 * Helper Method, getter method
+		 * @author Aroomoogon Krishna
+		 * @param businessHours
+		 * @param day
+		 * @return sorted list of business hour all having same day of week
+		 */
+		private static List<BusinessHour> getBusinessHourByDay(List<BusinessHour> businessHours, String day) {
+			List<BusinessHour> result = new ArrayList<BusinessHour>();
+			String s1, s2;
+			Time d1, d2;
+			BusinessHour temp;
+			boolean swap = true;
+			
+			s1 = day;
+			for (int i = 0; i < businessHours.size(); i++) {
+				s2 =  businessHours.get(i).getDayOfWeek().toString();
+				if (s1.equals(s2)) {
+					result.add(businessHours.get(i));
+				}
+			}
+
+			if (result.size() > 1) {
+				while (swap) {
+					swap = false;
+					for (int i = 0; i < (result.size() - 1); i++) {
+						d1 = result.get(i).getStartTime();
+						d2 = result.get(i+1).getStartTime();
+						if (d2.before(d1)) {
+							temp = result.get(i);
+							result.set(i, result.get(i+1));
+							result.set(i+1, temp);
+							swap = true;
+						}
+					}
+				}
+			}
+			return result;
+		}
+		
+		/**
+		 * Helpermethod
+		 * @author Aroomoogon Krishna
+		 * @return true if current user is owner
+		 */
+		private static boolean checkBusinessOwner() {
+			User current = FlexiBookApplication.getCurrentUser();
+			if (current instanceof Owner) {
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		 * Helper Method to validate business hour parameter and add the later
+		 * @author Aroomoogon Krishna
+		 * @param b
+		 * @param dow
+		 * @param start
+		 * @param end
+		 * @throws InvalidInputException
+		 */
+		private static void addBusinessHour(Business b, ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow, Time start, Time end) throws InvalidInputException {
+			if (!checkBusinessOwner()) {
+				throw new InvalidInputException("No permission to update business information");
+			}
+			
+			if (!validateBusinessHourForTiming(start, end)) {
+				throw new InvalidInputException("Start time must be before end time ");
+			}
+			
+			if (!validateBusinessHourForOverlap(b, dow, start, end)) {
+				throw new InvalidInputException("The business hours cannot overlap ");
+			}
+			
+			b.addBusinessHour(new BusinessHour(dow, start, end, FlexiBookApplication.getFlexiBook()));
+		}
+		
+		/**
+		 * Getter method
+		 * @author Aroomoogon Krishna
+		 * @param fb
+		 * @return Contact info in list
+		 */
+		private static List<String> getBusinessContactInfo(FlexiBook fb) {
+			List<String> info = new ArrayList<String>();
+			if (fb.hasBusiness()) {
+				Business b = fb.getBusiness();
+				info.add(b.getName());
+				info.add(b.getAddress());
+				info.add(b.getPhoneNumber());
+				info.add(b.getEmail());
+				
+			}
+			return info;
+		}
+		
+		/**
+		 * Getter method 
+		 * @author Aroomoogon Krishna
+		 * @param b
+		 * @return
+		 */
+		private static List<String> getBusinessContactInfo(Business b) {
+			List<String> info = new ArrayList<String>();
+			info.add(b.getName());
+			info.add(b.getAddress());
+			info.add(b.getPhoneNumber());
+			info.add(b.getEmail());
+			return info;
+		}
+
+		/**
+		 * helper method
+		 * @author Aroomoogon Krishna
+		 * @param email
+		 * @return validity flag
+		 * @throws InvalidInputException
+		 */
+		private static boolean validateEmail(String email) throws InvalidInputException{
+			boolean dotchk = false;
+			boolean atchk = false;
+			if (!checkBusinessOwner()) {
+				throw new InvalidInputException("No permission to set up business information");
+			}
+			for (int i = 0; i < email.length(); i++) {
+				if (email.charAt(i) == '.') {
+					dotchk = true;
+				} else if (email.charAt(i) == '@') {
+					atchk = true;
+				}
+			}
+			if (dotchk == true && atchk == true) {
+				return true;
+			}
+			return false;
+		}
+		
+		/**
+		 * helper method
+		 * @author Aroomoogon Krishna
+		 * @param ts
+		 * @return validity flag
+		 */
+		private static boolean validateOffTimeForTiming(TimeSlot ts) {
+			if (ts.getStartDate().after(ts.getEndDate())) {
+				return false;
+			} else if (ts.getStartDate().equals(ts.getEndDate())) {
+				if (ts.getStartTime().after(ts.getEndTime())) {
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		/**
+		 * @author Aroomoogon Krishna
+		 * @param off
+		 * @param t1
+		 * @return validity flag
+		 */
+		private static boolean validateOffTimeForOverlap(List<TimeSlot> off, TimeSlot t1) {
+			for(TimeSlot t2: off) {
+				if (t1.getStartDate().before(t2.getStartDate())) {
+					if (t1.getEndDate().after(t2.getStartDate())) {
+						return false;
+					}
+					if (t1.getEndDate().equals(t2.getStartDate())) {
+						if (t1.getEndTime().after(t2.getStartTime())) {
+							return false;
+						}
+					}
+				}
+				
+				if (t1.getStartDate().after(t2.getStartDate())) {
+					if (t2.getEndDate().after(t1.getStartDate())) {
+						return false;
+					}
+					if (t2.getEndDate().equals(t1.getStartDate())) {
+						if (t2.getEndTime().after(t2.getStartTime())) {
+							return false;
+						}
+					}
+				}
+				
+				if (t1.getStartDate().equals(t2.getStartDate())) {
+					if (t1.getEndDate().equals(t2.getEndDate())) {
+						if (!(t1.getEndTime().after(t2.getStartTime()) || t2.getEndTime().after(t1.getStartTime()))) {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		
+		/**
+		 * method to add holiday timeslot
+		 * @author Aroomoogon Krishna
+		 * @param b
+		 * @param hol
+		 * @throws InvalidInputException
+		 */
+		private static void addHoliday(Business b, TimeSlot hol) throws InvalidInputException {
+			if (!checkBusinessOwner()) {
+				throw new InvalidInputException("No permission to update business information");
+			}
+			
+			if (!validateOffTimeForTiming(hol)) {
+				throw new InvalidInputException("Start time must be before end time");
+			}
+			
+			if (!validateOffTimeForOverlap(b.getHolidays(), hol)) {
+				throw new InvalidInputException("Holiday times cannot overlap");
+			}
+			
+			if (!validateOffTimeForOverlap(b.getVacation(), hol)) {
+				throw new InvalidInputException("Holiday and vacation times cannot overlap");
+			}
+			
+			b.addHoliday(hol);
+		}
+		
+		/**
+		 * Method to add vacation time slot
+		 * @author Aroomoogon Krishna
+		 * @param b
+		 * @param vac
+		 * @throws InvalidInputException
+		 */
+		private static void addVacation(Business b, TimeSlot vac) throws InvalidInputException {
+			if (!checkBusinessOwner()) {
+				throw new InvalidInputException("No permission to update business information");
+			}
+			
+			if (!validateOffTimeForTiming(vac)) {
+				throw new InvalidInputException("Start time must be before end time");
+			}
+			
+			if (!validateOffTimeForOverlap(b.getVacation(), vac)) {
+				throw new InvalidInputException("Vacation times cannot overlap");
+			}
+			
+			if (!validateOffTimeForOverlap(b.getHolidays(), vac)) {
+				throw new InvalidInputException("Holiday and vacation times cannot overlap");
+			}
+			
+			b.addVacation(vac);
+		}
 
 
 }

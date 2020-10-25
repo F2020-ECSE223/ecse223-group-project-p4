@@ -31,6 +31,7 @@ public class CucumberStepDefinitions {
 	private Integer prevAppointmentCntr = 0;
 	private String updateAppointmentSuccess = null;
 	private Date SystemDateTime;
+	private boolean exception;
 	
 	
 	
@@ -1352,6 +1353,135 @@ public class CucumberStepDefinitions {
 			}
 		}
 
+	}
+	
+	/**
+	 * @author Aroomoogon Krishna
+	 */
+	@Given("an owner account exists in the system with username {string} and password {string}")
+	public void an_owner_account_exists_in_the_system_with_username_and_password(String string, String string2) {
+	    owner = flexiBook.getOwner();
+	    if (owner != null) {
+	    	owner.delete();
+	    }
+	    owner = new Owner(string, string2, flexiBook); 
+	}
+
+	/**
+	 * @author Aroomoogon Krishna
+	 */
+	@Given("no business exists")
+	public void no_business_exists() {
+		if (flexiBook.hasBusiness()) {	
+			business = flexiBook.getBusiness();
+			business.delete();
+		}
+	}
+	
+	/**
+	 * @author Aroomoogon Krishna
+	 */
+	@Given("the user is logged in to an account with username {string}")
+	public void the_user_is_logged_in_to_an_account_with_username(String string) {
+	    FlexiBookApplication.setCurrentUser(User.getWithUsername(string));
+	}
+	
+	/**
+	 * @author Aroomoogon Krishna
+	 */
+	@When("the user tries to set up the business information with new {string} and {string} and {string} and {string}")
+	public void the_user_tries_to_set_up_the_business_information_with_new_and_and_and(String string, String string2, String string3, String string4) {
+	    exception = false;
+		try {
+	    	FlexiBookController.setupBusinessInfo(string, string2, string3, string4, null, null, null, null, null);
+	    } catch (InvalidInputException e) {
+	    	exception = true;
+	    	error = e.getMessage();
+	    }
+	}
+	
+	/**
+	 * @author Aroomoogon Krishna
+	 */
+	@Then("a new business with new {string} and {string} and {string} and {string} shall {string} created")
+	public void a_new_business_with_new_and_and_and_shall_created(String string, String string2, String string3, String string4, String string5) {
+		if (exception == false) {	
+			business = flexiBook.getBusiness();
+			assertEquals(string, business.getName());
+		    assertEquals(string2, business.getAddress());
+		    assertEquals(string3, business.getPhoneNumber());
+		    assertEquals(string4, business.getEmail());
+		}
+	}
+		
+	/**
+	 * @author Aroomoogon Krishna
+	 */		
+	@Then("an error message {string} shall {string} raised")
+	public void an_error_message_shall_raised(String string, String string2) {
+	    assertEquals(string, error);
+	}
+
+	
+	/**
+	 * @author Aroomoogon Krishna
+	 */
+	@Given("a business exists with the following information:")
+	public void a_business_exists_with_the_following_information(io.cucumber.datatable.DataTable dataTable) {
+		String name = dataTable.cell(1, 0);
+		String address = dataTable.cell(1, 1);
+		String telnum = dataTable.cell(1, 2);
+		String email = dataTable.cell(1, 3);
+		business = new Business(name, address, telnum, email, flexiBook);
+	}
+
+	/**
+	 * @author Aroomoogon Krishna
+	 */
+	@Given("the business has a business hour on {string} with start time {string} and end time {string}")
+	public void the_business_has_a_business_hour_on_with_start_time_and_end_time(String string, String string2, String string3) {
+	   new BusinessHour(DayOfWeek.valueOf(string), Time.valueOf(string2), Time.valueOf(string3), flexiBook);
+	}
+	
+	/**
+	 * @author Aroomoogon Krishna
+	 */	
+	@When("the user tries to add a new business hour on {string} with start time {string} and end time {string}")
+	public void the_user_tries_to_add_a_new_business_hour_on_with_start_time_and_end_time(String string, String string2, String string3) {
+	    exception = false;
+		try {
+	    	FlexiBookController.setupBusinessInfo(null, null, null, null, DayOfWeek.valueOf(string), Time.valueOf(string2), Time.valueOf(string2), null, null);
+	    } catch (InvalidInputException e) {
+	    	exception = true;
+	    	error = e.getMessage();
+	    }
+	}
+
+	/**
+	 * @author Aroomoogon Krishna
+	 */	
+	@Then("a new business hour shall {string} created")
+	public void a_new_business_hour_shall_created(String string) {
+		return;
+	}
+	
+	
+	/**
+	 * @author Aroomoogon Krishna
+	 */	
+	@When("the user tries to access the business information")
+	public void the_user_tries_to_access_the_business_information() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	/**
+	 * @author Aroomoogon Krishna
+	 */
+	@Then("the {string} and {string} and {string} and {string} shall be provided to the user")
+	public void the_and_and_and_shall_be_provided_to_the_user(String string, String string2, String string3, String string4) {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
 	}
 
 	/**
