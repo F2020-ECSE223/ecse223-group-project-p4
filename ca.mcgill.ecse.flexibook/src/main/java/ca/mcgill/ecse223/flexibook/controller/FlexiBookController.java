@@ -1627,7 +1627,171 @@ public class FlexiBookController {
 
 
 
+////////////////////////CUSTOMER ACCOUNT////////////////////
+		    
+			/**
+			 * @author artus
+			 * @param Uname
+			 * @param Pword
+			 * @throws InvalidInputException
+			 */
 
+			public static void signUpCustomer (String Uname, String Pword) throws InvalidInputException {
+
+
+				try {
+					FlexiBook flexibook = FlexiBookApplication.getFlexiBook();
+
+					if (Uname == null || Uname.equals("")){
+						throw new InvalidInputException("The user name cannot be empty");
+					}
+					else if(Pword.equals("") || Pword == null){
+						throw new InvalidInputException("The password cannot be empty");
+					}
+					else if ( findUserByName("owner") != null && FlexiBookApplication.getCurrentUser() == findUserByName("owner")) {
+						throw new InvalidInputException("You must log out of the owner account before creating a customer account");
+					}
+					
+					else if (findUserByName(Uname) != null) throw new InvalidInputException("The username already exists");
+
+					else flexibook.addCustomer(Uname, Pword);
+				} 
+				catch (RuntimeException e) {
+					throw new InvalidInputException(e.getMessage());
+				}
+
+			}
+
+				/**
+				 * @author artus
+				 * @param oldUname
+				 * @param newUname
+				 * @param newPword
+				 * @throws InvalidInputException
+				 */
+				public static void accountUpdate (String oldUname, String newUname, String newPword) throws InvalidInputException {
+			
+					FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+					Owner owner = flexiBook.getOwner();
+
+					try {
+			
+						if (newUname == null || newUname.equals("") ) {
+							throw new InvalidInputException("The user name cannot be empty");
+						}
+						else if (newPword == null || newPword.equals("") ) {
+							throw new InvalidInputException("The password cannot be empty");
+						}
+			
+						User user = findUserByName(oldUname);
+						
+						if(owner!=null) {
+							if(oldUname.equals(owner.getUsername())) {
+								if(oldUname.equals(newUname)) {
+									owner.setPassword(newPword);
+									return;
+								}
+								else {
+									throw new InvalidInputException("Changing username of owner is not allowed");
+								}
+							}
+
+						}
+						List<Customer> customerList = flexiBook.getCustomers();
+						User customer = null;
+						for(int i = 0; i < customerList.size(); i++) {		
+							customer = customerList.get(i);
+							if (customer.getUsername().equals(newUname)) {
+								throw new InvalidInputException("Username not available");
+							}
+						}
+			
+						if (user == null) {
+							throw new InvalidInputException("No user found");
+						}
+						
+						else if (user.equals(FlexiBookApplication.getCurrentUser())) {
+			
+							user.setUsername(newUname);
+							user.setPassword(newPword);
+
+						}
+						else {
+							throw new InvalidInputException("You have to be logged in to the corresponding account to update it");
+						}
+			
+					} 
+					catch (RuntimeException e) {
+						throw new InvalidInputException(e.getMessage());
+					}
+			
+				}
+				
+				/**
+				 * @author artus
+				 * @param Uname
+				 * @return
+				 */
+				private static User findUserByName(String Uname) {
+					FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+					User thisCustomer = null;
+
+					
+					if (Uname.equals("owner") ) {
+						Owner owner = FlexiBookApplication.getFlexiBook().getOwner();
+						thisCustomer = owner;
+						return thisCustomer;
+					}
+					
+			
+					else {List<Customer> customerList = flexiBook.getCustomers();
+					
+					for(int i = 0; i < customerList.size(); i++) {
+						thisCustomer = customerList.get(i);
+						if(thisCustomer.getUsername().equals(Uname)) {
+							return thisCustomer;
+						}
+					}
+					}
+					return thisCustomer;
+				}
+
+				
+			/**
+			 * @author artus
+			 * @param Uname
+			 * @throws InvalidInputException
+			 */
+
+			public static void deleteCustomerAccount (String Uname) throws InvalidInputException {
+				
+				FlexiBook flexibook = FlexiBookApplication.getFlexiBook();
+				User user = findUserByName(Uname);
+				User current = FlexiBookApplication.getCurrentUser();
+				Appointment app;
+				
+				try {
+					if (Uname.equals("owner") || !(user.equals(current))){
+						throw new InvalidInputException("You do not have permission to delete this account");
+					}
+					if (user.equals(current)) {
+						Customer customer = (Customer) user;
+						List<Appointment> applist = customer.getAppointments();
+						for(int i = 0; i < applist.size(); i++) {
+							app = applist.get(i);
+							flexibook.removeAppointment(app);
+							app.delete();
+						}
+						flexibook.getCustomers().remove(user);
+						user.delete();
+					}
+					
+					FlexiBookApplication.setCurrentUser(null);
+				} 
+				catch (RuntimeException e) {
+					throw new InvalidInputException(e.getMessage());
+				}
+			}
 
 }
 

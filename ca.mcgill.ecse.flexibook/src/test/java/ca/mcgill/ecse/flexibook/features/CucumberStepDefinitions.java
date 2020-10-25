@@ -1487,6 +1487,291 @@ public class CucumberStepDefinitions {
 	}
 
 	
+	private static String oldUname;
+	private static String oldPword;
+
+	private static int before;
+
+
+
+
+/**---- Artus implementation */ 
+	
+		/**
+		 * @author artus
+		 * @param string
+		 */
+	
+		@Given("there is no existing username {string}")
+		public void thereIsNoExistingUsername(String string) {
+			List<Customer> customerList = flexiBook.getCustomers();
+			Customer customer = null;
+				for(int i = 0; i < customerList.size(); i++) {
+					customer = customerList.get(i);
+    			assertTrue(customer.getUsername() != string);
+    		}
+		}
+		/**
+		 * @author artus
+		 * @param string1
+		 * @param string2
+		 */
+		@When("the user provides a new username {string} and a password {string}")
+		public void theUserProvidesANewUsernameAndAPassword(String string1, String string2) {
+			before = flexiBook.getCustomers().size();
+			flexiBook = FlexiBookApplication.getFlexiBook();
+			try {
+				FlexiBookController.signUpCustomer(string1, string2);
+			}
+			catch (InvalidInputException e){
+				error += e.getMessage();
+			}
+		}
+		/**
+		 * @author artus
+		 */
+		@Then("a new customer account shall be created")
+		public void aNewCustomerAccountShallBeCreated() {
+			boolean test=false;
+    		
+    		if(flexiBook.getCustomers().size()==before+1) test = true;
+    		
+    		assertTrue(test);
+		}
+		/**
+		 * @author artus
+		 * @param string
+		 * @param string2
+		 */
+		@Then("the account shall have username {string} and password {string}")
+		public void theAccountShallHaveUsernameAndPassword(String string, String string2) {
+			 String Uname = FlexiBookApplication.getCurrentUser().getUsername();
+			 String Pword = FlexiBookApplication.getCurrentUser().getPassword();
+			List<Customer> customerList = flexiBook.getCustomers();
+			Customer customer = null;
+			boolean tf = false;
+			if(string.equals("owner")) {
+		    	assertEquals(Uname, string);
+		    	assertEquals(Pword, string2);
+		    	tf = true;
+		    }
+			else {
+				for(int i = 0; i < customerList.size(); i++) {
+					customer = customerList.get(i);
+		    	if (customer.getUsername().equals(string)) {
+		    		if (customer.getPassword().equals(string2)) tf =true;
+		    	}
+		    	
+		    }
+			}
+		    assertTrue(tf);
+		}
+		/**
+		 * @author artus
+		 */
+		@Then("no new account shall be created")
+		public void no_new_account_shall_be_created() {
+			boolean tf=false;
+    		
+    		if(flexiBook.getCustomers().size()==before) {
+    			tf = true;
+    		}
+    		assertTrue(tf);
+   		}
+		
+
+		/**
+		 * @author artus
+		 * @param string
+		 */
+		@Given("there is an existing username {string}")
+		public void there_is_an_existing_username(String string) {
+			
+			flexiBook = FlexiBookApplication.getFlexiBook();
+			Owner owner = null;
+			
+				if (string.equals("owner")) {
+					owner  = new Owner("owner", "ownerPass", flexiBook);
+					flexiBook.setOwner(owner);
+				}
+				else {
+					flexiBook.addCustomer(string, "ownerPass");
+				}
+			}
+				
+		/**
+		 * @author artus
+		 * @param string1
+		 * @param string2
+		 */
+	
+//		@Given("an owner account exists in the system with username {string} and password {string}")
+//		public void anOwnerAccountExistsInTheSystemWithUsernameAndPassword(String string1, String string2) {
+//			flexiBook = FlexiBookApplication.getFlexiBook();
+//			flexiBook.setOwner(new Owner("owner", "ownerPass", flexiBook));
+//		}
+
+		/**
+		 * @author artus
+		 * @param string
+		 */
+		@Given("the account with username {string} has pending appointments")
+		public void theAccountWithUsernameHasPendingAppointments(String string) {
+		}
+		/**
+		 * @author artus
+		 * @param string
+		 */
+//		@Given("the user is logged in to an account with username {string}")
+//		public void theUserIsLoggedInToAnAccountWithUsername(String string) {
+//
+//			FlexiBook flexibook = FlexiBookApplication.getFlexiBook();
+//			User user;
+//			List<Customer> customerList = flexiBook.getCustomers();
+//			User customer = null;
+//
+//			if (string.equals("owner")) {
+//
+//				Owner newOwner = FlexiBookApplication.getFlexiBook().getOwner();
+//				user = newOwner;
+//				FlexiBookApplication.setCurrentUser(user);
+//				
+//			}
+//
+//			else {
+//				
+//				for(int i = 0; i < customerList.size(); i++) {
+//					customer = customerList.get(i);
+//					if (customer.getUsername().equals(string)) {
+//						user = customer;
+//						FlexiBookApplication.setCurrentUser(user);
+//					}
+//				}
+//			}
+//			
+//		}	
+		
+		
+		/**
+		 * @author artus
+		 * @param string
+		 */
+		@When("the user tries to delete account with the username {string}")
+		public void theUserTriesToDeleteAccountWithTheUsername(String string) {
+		
+				try {
+					FlexiBookController.deleteCustomerAccount(string);
+				}
+				catch (InvalidInputException e){
+					error += e.getMessage();
+				}
+		}
+		/**
+		 * @author artus
+		 * @param string
+		 */
+		@Then("the account with the username {string} does not exist")
+		public void theAccountWithTheUsernameDoesNotExist(String string) {
+		    
+			boolean tf = true;
+			List<Customer> customerList = flexiBook.getCustomers();
+			Customer user = null;
+		    
+			for(int i = 0; i < customerList.size(); i++) {
+				user = customerList.get(i);
+		    	if (user.getUsername() == string) tf = false;
+		    }
+		    assertTrue(tf);
+		}
+		/**
+		 * @author artus
+		 * @param string
+		 */
+		@Then("all associated appointments of the account with the username {string} shall not exist")
+		public void allAssociatedAppointmentsOfTheAccountWithTheUsernameShallNotExist(String string) {
+			boolean tf = false;
+			
+			if (flexiBook.getAppointments().size() == 0) tf=true;
+			assertTrue(tf);
+		}
+		/**
+		 * @author artus
+		 */
+		@Then("the user shall be logged out")
+		public void theUserShallBeLoggedOut() {
+		}
+		
+		/**
+		 * @author artus
+		 * @param string
+		 */
+		@Then("an error message {string} shall be raised")
+		public void anErrorMessageShallBeRaised2(String string)  {
+			assertTrue(error.contains(string));
+		}
+		
+		/**
+		 * @author artus
+		 * @param string
+		 */
+		@Then("the account with the username {string} exists")
+		public void theAccountWithTheUsernameExists(String string) {
+		    
+			boolean tf = false;
+		    Owner owner = FlexiBookApplication.getFlexiBook().getOwner();
+		    List<Customer> customerList = flexiBook.getCustomers();
+			Customer user = null;
+
+		    
+		    if (owner !=null) tf = true;
+		    if (string.equals("owner")) tf =true;
+		    else {
+		    	for(int i = 0; i < customerList.size(); i++) {
+					user = customerList.get(i);
+		    	if (user.getUsername() == string) tf = true;
+		    }
+		    }
+		    assertTrue(tf);
+
+		}
+		
+		/**
+		 * @author artus
+		 * @param string
+		 * @param string2
+		 */
+		@When("the user tries to update account with a new username {string} and password {string}")
+		public void the_user_tries_to_update_account_with_a_new_username_and_password(String string, String string2) {
+			try {
+	    		
+	    		oldPword = FlexiBookApplication.getCurrentUser().getUsername(); 
+	    		oldUname = FlexiBookApplication.getCurrentUser().getUsername();
+	    		
+				FlexiBookController.accountUpdate(oldUname, string, string2);
+			}
+			catch (InvalidInputException e) {
+				  error += e.getMessage();
+			}
+	    	
+		}
+		
+		/**
+		 * @author artus
+		 */
+		@Then("the account shall not be updated")
+		public void the_account_shall_not_be_updated() {
+	        User user = FlexiBookApplication.getCurrentUser();
+	    	boolean test = false;
+	    	
+	    	if(oldUname.equals(user.getUsername()) || oldPword.equals(user.getPassword())) {
+	    		
+	    			test = true;
+	    		
+	    	}
+	    	assertTrue(test);
+		}
+
+	
 	@After
 	public void tearDown() {
 		flexiBook.delete();
