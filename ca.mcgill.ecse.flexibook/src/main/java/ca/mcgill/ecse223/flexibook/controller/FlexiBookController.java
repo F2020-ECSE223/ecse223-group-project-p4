@@ -3,16 +3,14 @@ package ca.mcgill.ecse223.flexibook.controller;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
-import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse.flexibook.model.*;
-
-
-
 
 
 
@@ -1482,6 +1480,153 @@ public class FlexiBookController {
 			
 			b.addVacation(vac);
 		}
+		
+/////////////////////////////////////////////////////////LOGIN, LOGOUT AND VIEW APPOINTMENT CALENDAR//////////////////////////////////////////////////////////////////
+
+
+		
+
+		  private static Date InvalidFormat;
+
+		    /**
+		     *
+		     * @author Venkata Satyanarayana Chivatam
+		     * @param username
+		     * @param password
+		     * @throws InvalidInputException
+		     *
+		     */
+
+		    public static void LogIn(String username, String password) throws InvalidInputException {
+		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		        new FlexiBookApplication().setCurrentUser(User.getWithUsername(username));
+		        String error = "";
+
+		        if(username.equals(null)||password.equals(null)){
+		            throw new InvalidInputException(error.trim());
+		        }
+		        if(username != User.getWithUsername(username).getUsername() || password != User.getWithUsername(username).getPassword()){
+		            throw new InvalidInputException("username/password not found");
+		        }
+		        if(username == flexiBook.getOwner().getUsername() && password == flexiBook.getOwner().getPassword()) {
+		            CreateUser(username,password,flexiBook);
+		        }
+
+
+
+		    }
+
+		    /**
+		     *
+		     * @author Venkata Satyanarayana Chivatam
+		     * @param username
+		     * @throws InvalidInputException
+		     *
+		     */
+		    public static void LogOut(String username) throws InvalidInputException{
+		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		        new FlexiBookApplication().setCurrentUser(null);
+
+		        if(new FlexiBookApplication().getCurrentUser()==null){
+
+		            throw new InvalidInputException("the user is already logged out");
+
+		        }
+
+
+
+		    }
+
+		    /**
+		     *
+		     * @author Venkata Satyanarayana Chivatam
+		     * @param flexiBook
+		     * @param mainServiceName
+		     * @param optionalServiceNames
+		     * @param startDate
+		     * @param startTime
+		     * @param username
+		     * @throws InvalidInputException
+		     *
+		     */
+
+		    public static void ViewAppointmentCalendar(String username, String mainServiceName, List<String> optionalServiceNames, String startTime, String startDate, FlexiBook flexiBook) throws InvalidInputException {
+		        String error = "";
+		        Appointment appointment;
+		        Customer customer = null;
+		        TimeSlot timeSlot = null;
+		        List<BookableService> serviceList = flexiBook.getBookableServices();
+
+		        if(!dateValidation(startDate)){
+		            throw new InvalidInputException("Invalid date");
+		        }
+
+		        List<TimeSlot> timeSlotList = flexiBook.getTimeSlots();
+		        List<Appointment> appointmentList = flexiBook.getAppointments();
+
+		        for(int i =0; i<7; i++) {
+		            TimeSlot ts = flexiBook.getAppointment(i).getTimeSlot();
+
+		            }
+		        }
+
+
+
+
+		    /**
+		     *
+		     * @author Venkata Satyanarayana Chivatam
+		     * @param flexibook
+		     * @param passwordO
+		     * @param usernameO
+		     *
+		     */
+		    private static User CreateUser (String usernameO, String passwordO, FlexiBook flexibook){
+		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+
+		            Owner owner = new Owner(usernameO,passwordO,flexibook);
+		            User.getWithUsername(usernameO).setUsername(usernameO);
+		            User.getWithUsername(usernameO).setPassword(passwordO);
+		            return owner;
+
+		        }
+
+
+
+		    /**
+		     *
+		     * @author Venkata Satyanarayana Chivatam
+		     * @param date
+		     * @return boolean
+		     * @throws InvalidInputException
+		     */
+		    private static boolean dateValidation(String date)
+		    {
+		        boolean status = false;
+		        if (checkDate(date)) {
+		            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		            dateFormat.setLenient(false);
+		            try {
+		                dateFormat.parse(date);
+		                status = true;
+		            } catch (Exception e) {
+		                status = false;
+		            }
+		        }
+		        return status;
+		    }
+		    static boolean checkDate(String date) {
+		        String pattern = "(0?[1-9]|1[0-2])\\/-([0-9]{4})\\/-(0?[1-9]|[12][0-9]|3[01])";
+		        boolean flag = false;
+		        if (date.matches(pattern)) {
+		            flag = true;
+		        }
+		        return flag;
+		    }
+
+
+
+
 
 
 }
