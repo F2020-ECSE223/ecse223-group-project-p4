@@ -10,9 +10,12 @@ import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse.flexibook.model.User;
 
 public class FlexiBookApplication {
+	public String getGreeting() {
+		return "Hello world.";
+	}
 
-    
-    
+
+
 	private static FlexiBook flexiBook;
 	private static User currentUser; 
 	private static Time currentTime;
@@ -24,11 +27,13 @@ public class FlexiBookApplication {
 			flexiBook = new FlexiBook();
 
 		}
+
 		return flexiBook;
 
 	}
 
 	public static User getCurrentUser() {
+
 		return currentUser;
 	}
 
@@ -61,6 +66,8 @@ public class FlexiBookApplication {
 	}
 
 
-	
-}
+	public static void main(String[] args) {
+		System.out.println(new FlexiBookApplication().getGreeting());
+	}
 
+}
