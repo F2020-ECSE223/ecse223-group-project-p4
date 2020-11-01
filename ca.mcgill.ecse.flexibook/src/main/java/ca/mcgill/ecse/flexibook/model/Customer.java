@@ -2,15 +2,20 @@
 /*This code was generated using the UMPLE 1.30.1.5099.60569f335 modeling language!*/
 
 package ca.mcgill.ecse.flexibook.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 23 "../../../../../FlexiBook.ump"
-public class Customer extends User
+// line 62 "../../../../../FlexiBookPersistence.ump"
+// line 25 "../../../../../FlexiBook.ump"
+public class Customer extends User implements Serializable
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
+
+  //Customer Attributes
+  private int noShows;
 
   //Customer Associations
   private FlexiBook flexiBook;
@@ -23,6 +28,7 @@ public class Customer extends User
   public Customer(String aUsername, String aPassword, FlexiBook aFlexiBook)
   {
     super(aUsername, aPassword);
+    noShows = 0;
     boolean didAddFlexiBook = setFlexiBook(aFlexiBook);
     if (!didAddFlexiBook)
     {
@@ -34,6 +40,19 @@ public class Customer extends User
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setNoShows(int aNoShows)
+  {
+    boolean wasSet = false;
+    noShows = aNoShows;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getNoShows()
+  {
+    return noShows;
+  }
   /* Code from template association_GetOne */
   public FlexiBook getFlexiBook()
   {
@@ -177,4 +196,19 @@ public class Customer extends User
     super.delete();
   }
 
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "noShows" + ":" + getNoShows()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "flexiBook = "+(getFlexiBook()!=null?Integer.toHexString(System.identityHashCode(getFlexiBook())):"null");
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 65 "../../../../../FlexiBookPersistence.ump"
+  private static final long serialVersionUID = -2683593616927798071L ;
+
+  
 }
