@@ -4,7 +4,7 @@ import ca.mcgill.ecse.flexibook.model.FlexiBook;
 
 public class FlexiBookPersistence {
 	
-private static String filename = "flexibook.btms";
+private static String filename = "flexibook.data";
 	
 	public static void setFilename(String filename) {
 		FlexiBookPersistence.filename = filename;
