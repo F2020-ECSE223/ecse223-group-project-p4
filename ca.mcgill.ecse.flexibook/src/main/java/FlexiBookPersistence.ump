@@ -1,1 +1,84 @@
 
+
+
+
+external interface Serializable {}
+
+class FlexiBook {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = -2683593616927798071L;
+}
+
+
+class Appointment {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = 2315072607928790501L;
+}
+
+
+class User {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = 8896099581655989380L;
+}
+
+
+class BookableService {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = 3900912597282882073L;
+}
+
+
+class  TimeSlot{
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = 2045406856025012133L;
+}
+
+
+class ComboItem {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = -7403802774454467836L;
+}
+
+
+class Business {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = -2683593616927798071L;
+}
+
+
+class BusinessHour {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = -2683593616927798071L;
+}
+
+class Customer {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = -2683593616927798071L;
+}
+
+
+
+class ServiceCombo {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = -2683593616927798071L;
+}
+
+
+class Service {
+    depend java.io.Serializable;
+    isA Serializable;
+    private static final long serialVersionUID = -2683593616927798071L;
+}
+
+
+

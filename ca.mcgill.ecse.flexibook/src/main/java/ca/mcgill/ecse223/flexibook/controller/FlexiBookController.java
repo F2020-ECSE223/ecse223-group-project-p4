@@ -13,11 +13,100 @@ import java.util.List;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.*;
+import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 
 
 public class FlexiBookController {
 	
 	public FlexiBookController() {}
+	
+	
+	
+	
+	
+	public static void startAppointment(String customerName, boolean start, boolean customerShowedUp, String startTime, String date, Date SystemDate, Time SystemTime, FlexiBook flexiBook) throws InvalidInputException {
+		Customer customer = findCustomerByName(customerName, flexiBook);
+		
+		if(customerShowedUp) {
+			Appointment appointment = null;
+			Date appointmentDate = Date.valueOf(date);
+			Time appointmentTime = Time.valueOf(startTime);
+			
+			List<Appointment> appointmentList = flexiBook.getAppointments();
+			for (int i = 0; i < appointmentList.size(); i++) {
+				Appointment thisAppointment = appointmentList.get(i);
+				if(appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate()) && (appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime()))) {
+					appointment = thisAppointment;
+					break;
+				}
+			}
+			
+			if(!SystemDate.equals(appointmentDate) || SystemTime.before(appointmentTime)) {
+				return;
+			}
+			
+			try {
+				
+			} catch(RuntimeException e){
+				throw new InvalidInputException(e.getMessage());
+			}
+			//start the appointment
+			//change the state of the appointment from "BOOKED" to "IN-PROGRESS" 
+			
+			
+		}
+		else {		//end the appointment
+			Integer noShows = customer.getNoShows();
+			noShows++;
+			customer.setNoShows(noShows);
+			
+			try {
+				endAppointment(customerName, startTime, date, flexiBook);
+			} catch(RuntimeException e){
+				throw new InvalidInputException(e.getMessage());
+			}
+			
+		}
+	}
+	
+	
+	
+	/**
+	 * @author Shaswata Bhattacharyya
+	 * @param customerName
+	 * @param startTime
+	 * @param date
+	 * @param flexiBook
+	 * @throws InvalidInputException
+	 */
+	public static void endAppointment(String customerName, String startTime, String date, FlexiBook flexiBook) throws InvalidInputException {
+		
+		Appointment appointment = null;
+		Date appointmentDate = Date.valueOf(date);
+		Time appointmentTime = Time.valueOf(startTime);
+		
+		List<Appointment> appointmentList = flexiBook.getAppointments();
+		for (int i = 0; i < appointmentList.size(); i++) {
+			Appointment thisAppointment = appointmentList.get(i);
+			if(appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate()) && (appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime()))) {
+				appointment = thisAppointment;
+				break;
+			}
+		}
+		
+		
+		try {
+			if(!FlexiBookApplication.getCurrentUser().getUsername().equals(flexiBook.getOwner().getUsername())) {
+				throw new InvalidInputException("Only the owner can end the appointment");
+			}
+			appointment.delete();
+		} catch(RuntimeException e){
+			throw new InvalidInputException(e.getMessage());
+		}
+		
+		
+		
+	}
 	
 	
 	/**
@@ -51,25 +140,11 @@ public class FlexiBookController {
 			}
 			
 			//find the available service from the flexibook corresponding to the name
-			BookableService thisService = null; 
-			
-			for(int i = 0; i < serviceList.size(); i++) {
-				thisService = serviceList.get(i);
-				if(thisService.getName().equals(mainServiceName)) {
-					break;
-				}
-			}
-			
+			BookableService thisService = findServiceByName(mainServiceName, flexiBook); 
 			
 			//find the customer trying to book an appointment
-			List<Customer> customerList = flexiBook.getCustomers();
-			for(int i = 0; i < customerList.size(); i++) {
-				customer = customerList.get(i);
-				if(customer.getUsername().equals(username)) {
-					break;
-				}
-			}
-			
+			customer = findCustomerByName(username, flexiBook);
+
 			
 			//check if the chosen bookableService is a Service or a ServiceCombo
 			if(thisService.getClass().equals(Service.class)){   //the bookableService is a Service
@@ -105,9 +180,7 @@ public class FlexiBookController {
 				
 				timeSlot = getTimeSlot(startTime, startDate, duration, flexiBook);
 				
-				
 			}
-			
 			
 			//check if the appointment is within valid business hours
 			if(checkDateAndTime(timeSlot, null, flexiBook, todaysDate) == false) {
@@ -115,6 +188,8 @@ public class FlexiBookController {
 			}
 			else {
 				appointment = new Appointment(customer, thisService, timeSlot, flexiBook);
+				/////////change the state of the appointment to "BOOKED" 
+				////////////////////////////FlexiBookPersistence.save(flexiBook);
 			}
 			
 			
@@ -142,7 +217,7 @@ public class FlexiBookController {
 	 * @throws InvalidInputException
 	 * 
 	 */
-	public static String updateAppointment(String username, String serviceName, List<String> newItems, List<String> removedItems, String newStartTime, String newDate, Time oldStartTime, Date oldDate, Date todaysDate, FlexiBook flexiBook) throws InvalidInputException {
+	public static String updateAppointment(String username, String serviceName, String newService, List<String> newItems, List<String> removedItems, String newStartTime, String newDate, Time oldStartTime, Date oldDate, Date todaysDate, FlexiBook flexiBook) throws InvalidInputException {
 
 		ServiceCombo combo = null;
 		Appointment appointment = null;
@@ -156,28 +231,15 @@ public class FlexiBookController {
 			if(username.equals(owner.getUsername())) {
 				throw new InvalidInputException("Error: An owner cannot update a customer's appointment");
 			}
-			
 			if(serviceName == null || username == null || oldStartTime == null || oldDate == null) {
 				throw new InvalidInputException("Service name, Customer username, previous start time or previous start date cannot be null");
 			}
 			
 			
 			//find the service corresponding to the name
-			for(int i = 0; i < serviceList.size(); i++) {
-				thisService = serviceList.get(i);
-				if(thisService.getName().equals(serviceName)) {
-					break;
-				}
-			}
-			
+			thisService = findServiceByName(serviceName, flexiBook); 
 			//find the customer trying to update the appointment
-			List<Customer> customerList = flexiBook.getCustomers();
-			for(int i = 0; i < customerList.size(); i++) {
-				customer = customerList.get(i);
-				if(customer.getUsername().equals(username)) {
-					break;
-				}
-			}
+			customer = findCustomerByName(username, flexiBook);
 		
 			//get the appointment being updated
 			List<Appointment> appointmentList = flexiBook.getAppointments();
@@ -194,25 +256,26 @@ public class FlexiBookController {
 			}
 				
 			
-			
 			//update optional combo items
 			if((newItems != null) || (removedItems != null)) {		//the bookableService of the appointment is a Service Combo
 				
 				combo = (ServiceCombo) thisService;
 				List<ComboItem> itemList = appointment.getChosenItems();
-				
+			
 				if(newItems != null) {
+					
 					//add new optional items
-					Service newService;
+					Service newServiceItem;
 					for(int i = 0; i < serviceList.size(); i++) {
 						if(serviceList.get(i).getClass().equals(Service.class)) {
-							newService = (Service) serviceList.get(i);
-							if(newItems.contains(newService.getName())) {
-								ComboItem newComboItem = new ComboItem(false, newService, combo);
+							newServiceItem = (Service) serviceList.get(i);
+							if(newItems.contains(newServiceItem.getName())) {
+								ComboItem newComboItem = new ComboItem(false, newServiceItem, combo);
 								appointment.addChosenItem(newComboItem);
 							}
 						}
 					}
+					
 				}
 				else if(removedItems != null) {
 					//remove unwanted items
@@ -243,11 +306,8 @@ public class FlexiBookController {
 				if(combo.getServices() != null) {
 					Service optionalService;
 					for(int i = 0; i < appointment.getChosenItems().size(); i++) {
-			
-							String ops = combo.getServices().get(i).getService().getName();
-							optionalService = appointment.getChosenItems().get(i).getService();
-							duration += optionalService.getDuration();
-							
+						optionalService = appointment.getChosenItems().get(i).getService();
+						duration += optionalService.getDuration();	
 					}
 					
 				}
@@ -255,17 +315,16 @@ public class FlexiBookController {
 				String[] oldStart = oldStartTime.toString().split(":");
 				String oldtime = oldStart[0] + ":" + oldStart[1];
 				newTimeSlot = getTimeSlot(oldtime, oldDate.toString(), duration, flexiBook);
-				String newt = newTimeSlot.getEndTime().toString();
 				if(checkDateAndTime(newTimeSlot, appointment, flexiBook, todaysDate) == false) {
 					return "unsuccessful";
 				}
 				else {
 					appointment.setTimeSlot(newTimeSlot);
+					//////////////////////////FlexiBookPersistence.save(flexiBook);
 					return "successful";
 				}
 				
 			}
-			
 			
 			
 			//update time slot if needed
@@ -279,7 +338,6 @@ public class FlexiBookController {
 					Service mainService = (Service)thisService;
 					if(newDate != null && newStartTime != null) {	
 						newTimeSlot = getTimeSlot(newStartTime, newDate, mainService.getDuration(), flexiBook);
-						
 					}
 					
 				}
@@ -307,6 +365,7 @@ public class FlexiBookController {
 				}
 				else {
 					appointment.setTimeSlot(newTimeSlot);
+					/////////////////////FlexiBookPersistence.save(flexiBook);
 					return "successful";
 				}
 				
@@ -321,8 +380,8 @@ public class FlexiBookController {
 		
 		
 	}
-		
-		
+
+	
 	
 	/**
 	 *
@@ -354,9 +413,8 @@ public class FlexiBookController {
 				throw new InvalidInputException("Customer username, start time or start date cannot be null");
 			}
 			
-			List<Appointment> appointmentList = null;
-
-			appointmentList = flexiBook.getAppointments();
+			
+			List<Appointment> appointmentList = flexiBook.getAppointments();
 			for (int i = 0; i < appointmentList.size(); i++) {
 				Appointment thisAppointment = appointmentList.get(i);
 				if(startDate.equals(thisAppointment.getTimeSlot().getStartDate()) && (startTime.equals(thisAppointment.getTimeSlot().getStartTime()))) {
@@ -367,6 +425,7 @@ public class FlexiBookController {
 			
 			if(username.equals(appointment.getCustomer().getUsername())) {
 				appointment.delete();
+				/////////////////////////FlexiBookPersistence.save(flexiBook);
 			}
 			else{
 				throw new InvalidInputException("A customer can only cancel their own appointments");
@@ -409,8 +468,6 @@ public class FlexiBookController {
 		
 		return timeSlot;
 	}
-	
-	
 	
 	/**
 	 * @author Shaswata Bhattacharyya
@@ -460,8 +517,6 @@ public class FlexiBookController {
 				
 
 		}
-			
-
 		
 		//check time slot not in the past
 		if(!(startDate.after(todaysDate))) {
@@ -469,16 +524,10 @@ public class FlexiBookController {
 
 		}
 			
-
-		
 		//check time slot not in the past
 		if(!(startDate.after(todaysDate))) {
 			return false;
 		}
-		
-		
-		
-		
 		
 		//if appointment within downtime of another
 		Appointment thisAppointment;
@@ -511,9 +560,6 @@ public class FlexiBookController {
 						
 						for(int j = 0; j < thisAppointment.getChosenItems().size(); j++) {
 							thisService = thisAppointment.getChosenItems().get(j).getService();
-							String s = thisService.getName();
-							String st = (new Time(stime + (thisService.getDowntimeStart()*60000))).toString();
-							String et = (new Time(stime + (thisService.getDowntimeStart() + thisService.getDowntimeDuration())*60000)).toString();
 							
 							if(startTime >= (stime + (thisService.getDowntimeStart()*60000)) && endTime <= (stime + (thisService.getDowntimeStart() + thisService.getDowntimeDuration())*60000) && thisService.getDowntimeStart() != 0){
 								valid = true;		//appointment during the downtime of a service
@@ -555,7 +601,6 @@ public class FlexiBookController {
 		return thisCustomer;
 	}
 	
-	
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param serviceName
@@ -575,6 +620,39 @@ public class FlexiBookController {
 		return null;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	

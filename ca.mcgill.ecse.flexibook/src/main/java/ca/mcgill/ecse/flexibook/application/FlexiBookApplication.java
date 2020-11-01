@@ -8,32 +8,26 @@ import java.sql.Time;
 
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse.flexibook.model.User;
+import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 
 public class FlexiBookApplication {
-	public String getGreeting() {
-		return "Hello world.";
-	}
-
-
 
 	private static FlexiBook flexiBook;
 	private static User currentUser; 
 	private static Time currentTime;
 	private static Date currentDate; 
+	
 
 	public static FlexiBook getFlexiBook() {
-
 		if (flexiBook == null) {
-			flexiBook = new FlexiBook();
-
+			// load model
+	        flexiBook = FlexiBookPersistence.load();
 		}
-
-		return flexiBook;
-
+ 		return flexiBook;
 	}
 
+	
 	public static User getCurrentUser() {
-
 		return currentUser;
 	}
 
@@ -55,19 +49,15 @@ public class FlexiBookApplication {
 	}
 
 	public static Date getSystemDate() {
-
 		return currentDate; 
 	}
 
 
 	public static Time getSystemTime() {
-
 		return currentTime; 
 	}
 
 
-	public static void main(String[] args) {
-		System.out.println(new FlexiBookApplication().getGreeting());
-	}
+
 
 }
