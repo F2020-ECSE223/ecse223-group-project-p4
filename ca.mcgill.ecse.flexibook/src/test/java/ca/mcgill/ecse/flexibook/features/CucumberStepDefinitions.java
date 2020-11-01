@@ -2,8 +2,9 @@ package ca.mcgill.ecse.flexibook.features;
 
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+
+//import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -47,11 +48,12 @@ public class CucumberStepDefinitions {
 	private Integer prevAppointmentCntr = 0;
 	private String updateAppointmentSuccess = null;
 	private Date SystemDateTime;
+	private boolean exception;
 	
 	
 	
 
-	
+//	
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param string
@@ -61,149 +63,141 @@ public class CucumberStepDefinitions {
 		User user = findCustomerByName(string);
 	    FlexiBookApplication.setCurrentUser(user);
 	}
-	
-	
-	
-	/**
-	 * @author Shaswata Bhattacharyya
-	 */
-	@Given("a Flexibook system exists")
-	public void a_flexibook_system_exists() {
-	    flexiBook = FlexiBookApplication.getFlexiBook();
-	    appointmentCntr = 0;
-		prevAppointmentCntr = 0;
-		updateAppointmentSuccess = "";
-	    error = "";
-	    errorCntr = 0;
-	}
-	
-	/**
-	 * @author Shaswata Bhattacharyya
-	 * @param string
-	 */
-	@Given("the system's time and date is {string}")
-	public void the_system_s_time_and_date_is(String string) {
-	    SystemDateTime = Date.valueOf(string.substring(0, 10));
-	}
-	
-	
+//	
+//	
+//	
+//	/**
+//	 * @author Shaswata Bhattacharyya
+//	 */
+//	@Given("a Flexibook system exists")
+//	public void a_flexibook_system_exists() {
+//	    flexiBook = FlexiBookApplication.getFlexiBook();
+//	    appointmentCntr = 0;
+//		prevAppointmentCntr = 0;
+//		updateAppointmentSuccess = "";
+//	    error = "";
+//	    errorCntr = 0;
+//	}
+//	
+//	/**
+//	 * @author Shaswata Bhattacharyya
+//	 * @param string
+//	 */
+//	@Given("the system's time and date is {string}")
+//	public void the_system_s_time_and_date_is(String string) {
+//	    SystemDateTime = Date.valueOf(string.substring(0, 10));
+//	}
+//	
+//	
+//
+//	/**
+//	 * @author Shaswata Bhattacharyya
+//	 */
+//	@Given("an owner account exists in the system")
+//	public void an_owner_account_exists_in_the_system() {
+//		Owner owner = flexiBook.getOwner();
+//		if(owner == null) {
+//			owner = new Owner("owner", "admin", flexiBook);
+//			flexiBook.setOwner(owner);
+//		}  
+//	}
+//	
+//	
+//
+//	/**
+//	 * @author Shaswata Bhattacharyya
+//	 */
+//	@Given("a business exists in the system")
+//	public void a_business_exists_in_the_system() {
+//	    Business business = flexiBook.getBusiness();
+//	    if(business == null) {
+//	    	business = new Business("aName", "anAddress", "aPhoneNo", "enEmail", flexiBook);
+//	    }
+//	}
+//	
+///**
+//	 * @author Shaswata Bhattacharyya
+//	 * @param dataTable
+//	 */
+//	@Given("the following customers exist in the system:")
+//	public void the_following_customers_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+//		
+//		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
+//		for(Map<String, String> columns : rows) {
+//			flexiBook.addCustomer(new Customer(columns.get("username"), columns.get("password"), flexiBook));
+//			
+//		}
+//	    
+//	}
+//
+//
+///**
+//	 * @author Shaswata Bhattacharyya
+//	 * @param dataTable
+//	 */
+//	@Given("the following services exist in the system:")
+//	public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+//		
+//		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
+//		for(Map<String, String> columns : rows) {
+//			flexiBook.addBookableService(new Service(columns.get("name"), flexiBook, Integer.parseInt(columns.get("duration")), Integer.parseInt(columns.get("downtimeDuration")), Integer.parseInt(columns.get("downtimeStart"))));
+//			
+//		}
+//	}
+//
+//
+///**
+//	 * @author Shaswata Bhattacharyya
+//	 * @param dataTable
+//	 */
+//	@Given("the following service combos exist in the system:")
+//	public void the_following_service_combos_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+//	    
+//	    List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
+//		for(Map<String, String> columns : rows) {
+//			ServiceCombo combo = new ServiceCombo(columns.get("name"), flexiBook);
+//			flexiBook.addBookableService(combo);
+//			Service main = (Service) findServiceByName(columns.get("mainService"));
+//			
+//			//extract the combo items
+//			String itemList = columns.get("services");
+//			String[] items = itemList.split(",");
+//			String mandatoryList = columns.get("mandatory");
+//			String[] mandatory = mandatoryList.split(",");
+//			
+//			for(int i = 0; i < items.length; i++) {
+//				
+//				BookableService thisService = findServiceByName(items[i]);
+//				boolean thisMandatory = Boolean.parseBoolean(mandatory[i]);
+//				if(thisService.getClass().equals(Service.class)) {
+//					Service serviceItem = (Service)thisService;
+//					if(items[i].equals(main.getName())) {
+//						combo.setMainService(new ComboItem(true, serviceItem, combo));
+//					}
+//					else {
+//						combo.addService(thisMandatory, serviceItem);
+//					}	
+//				}
+//				
+//				
+//
+//			}
+//				
+//			
+//		}
+//	}
+//
+//
+///**
+//	 * @author Shaswata Bhattacharyya
+//	 */
+//	@After
+//    public void tearDown() {
+//        flexiBook.delete();
+//    }
+//
 
-	/**
-	 * @author Shaswata Bhattacharyya
-	 */
-	@Given("an owner account exists in the system")
-	public void an_owner_account_exists_in_the_system() {
-		Owner owner = flexiBook.getOwner();
-		if(owner == null) {
-			owner = new Owner("owner", "admin", flexiBook);
-			flexiBook.setOwner(owner);
-		}  
-	}
-	
-	
-
-	/**
-	 * @author Shaswata Bhattacharyya
-	 */
-	@Given("a business exists in the system")
-	public void a_business_exists_in_the_system() {
-	    Business business = flexiBook.getBusiness();
-	    if(business == null) {
-	    	business = new Business("aName", "anAddress", "aPhoneNo", "enEmail", flexiBook);
-	    }
-	}
-	
-/**
-	 * @author Shaswata Bhattacharyya
-	 * @param dataTable
-	 */
-	@Given("the following customers exist in the system:")
-	public void the_following_customers_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
 		
-		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
-		for(Map<String, String> columns : rows) {
-			flexiBook.addCustomer(new Customer(columns.get("username"), columns.get("password"), flexiBook));
-			
-		}
-	    
-	}
-
-
-/**
-	 * @author Shaswata Bhattacharyya
-	 * @param dataTable
-	 */
-	@Given("the following services exist in the system:")
-	public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-		
-		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
-		for(Map<String, String> columns : rows) {
-			flexiBook.addBookableService(new Service(columns.get("name"), flexiBook, Integer.parseInt(columns.get("duration")), Integer.parseInt(columns.get("downtimeDuration")), Integer.parseInt(columns.get("downtimeStart"))));
-			
-		}
-	}
-
-
-/**
-	 * @author Shaswata Bhattacharyya
-	 * @param dataTable
-	 */
-	@Given("the following service combos exist in the system:")
-	public void the_following_service_combos_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-	    
-	    List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
-		for(Map<String, String> columns : rows) {
-			ServiceCombo combo = new ServiceCombo(columns.get("name"), flexiBook);
-			flexiBook.addBookableService(combo);
-			Service main = (Service) findServiceByName(columns.get("mainService"));
-			
-			//extract the combo items
-			String itemList = columns.get("services");
-			String[] items = itemList.split(",");
-			String mandatoryList = columns.get("mandatory");
-			String[] mandatory = mandatoryList.split(",");
-			
-			for(int i = 0; i < items.length; i++) {
-				
-				BookableService thisService = findServiceByName(items[i]);
-				boolean thisMandatory = Boolean.parseBoolean(mandatory[i]);
-				if(thisService.getClass().equals(Service.class)) {
-					Service serviceItem = (Service)thisService;
-					if(items[i].equals(main.getName())) {
-						combo.setMainService(new ComboItem(true, serviceItem, combo));
-					}
-					else {
-						combo.addService(thisMandatory, serviceItem);
-					}	
-				}
-				
-				
-
-			}
-				
-			
-		}
-	}
-
-
-/**
-	 * @author Shaswata Bhattacharyya
-	 */
-	@After
-    public void tearDown() {
-        flexiBook.delete();
-    }
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param dataTable
@@ -259,44 +253,44 @@ public class CucumberStepDefinitions {
 	 * @author Shaswata Bhattacharyya
 	 * @param dataTable
 	 */
-	@Given("the following appointments exist in the system:")
-	public void the_following_appointments_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-		Appointment appointment = null;
-		
-		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
-		for(Map<String, String> columns : rows) {
+//	@Given("the following appointments exist in the system:")
+//	public void the_following_appointments_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+//		Appointment appointment = null;
+//		
+//		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
+//		for(Map<String, String> columns : rows) {
+//
+//			Customer customer = findCustomerByName(columns.get("customer"));
+//			BookableService bookableService = findServiceByName(columns.get("serviceName"));
+//			
+//			TimeSlot timeSlot = new TimeSlot(Date.valueOf(columns.get("date")), Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("date")), Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+//			
+//			
+//			appointment = new Appointment(customer, bookableService, timeSlot, flexiBook);
+//			
+//			if(bookableService.getClass().equals(ServiceCombo.class)) {		//check if chosen service is a ServiceCombo
+//				ServiceCombo combo = (ServiceCombo) bookableService;
+//				
+//				//set main service
+//				int index = columns.get("serviceName").indexOf('-');
+//				Service main = (Service)findServiceByName(columns.get("serviceName").substring(0, index));
+//				ComboItem newItem = new ComboItem(true, main, combo);
+//				appointment.addChosenItem(newItem);
+//				
+//				//get the optional services
+//				String itemList = columns.get("optServices");
+//				String[] items = itemList.split(",");
+//				for(String item : items) {
+//					Service thisService = (Service) findServiceByName(item);
+//					newItem = new ComboItem(false, thisService, combo);
+//					appointment.addChosenItem(newItem);
+//				}
+//
+//			}
+//			
+//		}
+//	}
 
-			Customer customer = findCustomerByName(columns.get("customer"));
-			BookableService bookableService = findServiceByName(columns.get("serviceName"));
-			
-			TimeSlot timeSlot = new TimeSlot(Date.valueOf(columns.get("date")), Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("date")), Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
-			
-			
-			appointment = new Appointment(customer, bookableService, timeSlot, flexiBook);
-			
-			if(bookableService.getClass().equals(ServiceCombo.class)) {		//check if chosen service is a ServiceCombo
-				ServiceCombo combo = (ServiceCombo) bookableService;
-				
-				//set main service
-				int index = columns.get("serviceName").indexOf('-');
-				Service main = (Service)findServiceByName(columns.get("serviceName").substring(0, index));
-				ComboItem newItem = new ComboItem(true, main, combo);
-				appointment.addChosenItem(newItem);
-				
-				//get the optional services
-				String itemList = columns.get("optServices");
-				String[] items = itemList.split(",");
-				for(String item : items) {
-					Service thisService = (Service) findServiceByName(item);
-					newItem = new ComboItem(false, thisService, combo);
-					appointment.addChosenItem(newItem);
-				}
-
-			}
-			
-		}
-	    
-	}
 	
 	
 	
@@ -414,7 +408,7 @@ public class CucumberStepDefinitions {
 	public void s_appointment_on_at_shall_be_removed_from_the_system(String username, String serviceName, String date, String time) {
 	    
 		Appointment appointment = findAppointment(username, Date.valueOf(date), Time.valueOf(time + ":00"));
-		assertNull(null, appointment);
+		assertNull(appointment);
 		
 	}
 	
@@ -962,7 +956,10 @@ public class CucumberStepDefinitions {
 			temp.setMainService(mainService);
 		}
 
+
 	}
+
+		
 
 	/**
 	 * @author Sneha Singh
@@ -1796,6 +1793,7 @@ public class CucumberStepDefinitions {
 	
 	
 
+
 	
 	
 	
@@ -1962,7 +1960,14 @@ public class CucumberStepDefinitions {
 	
 	
 	
-	
+
+
+		
+			@After
+		    public void tearDown() {
+		        flexiBook.delete();
+		    }
+
 	
 	
 	
