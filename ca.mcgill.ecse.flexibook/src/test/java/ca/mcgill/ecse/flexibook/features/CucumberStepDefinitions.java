@@ -1961,8 +1961,7 @@ private static Appointment appointment;
 			    throw new io.cucumber.java.PendingException();
 			}
 			
-			
-			//SNEHA
+		
 			/**
 			 * @author Sneha Singh
 			 */
@@ -1971,8 +1970,7 @@ private static Appointment appointment;
 			    // Write code here that turns the phrase above into concrete actions
 			    throw new io.cucumber.java.PendingException();
 			}
-			
-			//SNEHA
+		
 			/**
 			 * @author Sneha Singh
 			 * @param string
@@ -1996,18 +1994,18 @@ private static Appointment appointment;
 			    assertEquals(appointment.getTimeSlot().getEndTime(), Time.valueOf(string3 + ":00"));
 			}
 			
-			//SNEHA
+	
 			/** 
 			 * @author Sneha Singh
 			 * @param string
 			 */
 			@Then("the username associated with the appointment shall be {string}")
 			public void the_username_associated_with_the_appointment_shall_be(String string) {
-			    // Write code here that turns the phrase above into concrete actions
+			    assertEquals(appointment.getCustomer().getUsername(), string);
 			    throw new io.cucumber.java.PendingException();
 			}
 			
-			//SNEHA
+		
 			/** 
 			 * @author Sneha Singh
 			 * @param string
@@ -2017,6 +2015,8 @@ private static Appointment appointment;
 			public void the_user_shall_have_no_show_records(String string, Integer int1) {
 			    assertEquals(((Customer) Customer.getWithUsername(string)).getNoShows(), int1);
 			}
+			
+			
 			
 			@Then("the system shall have {int} appointments")
 			public void the_system_shall_have_appointments(Integer int1) {
