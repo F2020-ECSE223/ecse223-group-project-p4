@@ -1935,7 +1935,13 @@ public class CucumberStepDefinitions {
 	
 ////////////////////////////APPOINTMENT MANAGEMENT/////////////
 			
+<<<<<<< HEAD
 			//TODO
+=======
+private static Appointment appointment; 
+
+			
+>>>>>>> 30c8bce4c6836d28ff0e688eda28eb609eea2867
 			@Given("a {string} time slot exists with start time {string} at {string} and end time {string} at {string}")
 			public void a_time_slot_exists_with_start_time_at_and_end_time_at(String string, String string2, String string3, String string4, String string5) {
 			  
@@ -2010,41 +2016,62 @@ public class CucumberStepDefinitions {
 			    }
 			}
 			
-			
-			//SNEHA
+		
+			/**
+			 * @author Sneha Singh
+			 */
 			@Then("the appointment shall be booked")
 			public void the_appointment_shall_be_booked() {
 			    // Write code here that turns the phrase above into concrete actions
 			    throw new io.cucumber.java.PendingException();
 			}
-			
-			//SNEHA
+		
+			/**
+			 * @author Sneha Singh
+			 * @param string
+			 */
 			@Then("the service in the appointment shall be {string}")
 			public void the_service_in_the_appointment_shall_be(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
+			    assertEquals(appointment.getBookableService(), BookableService.getWithName(string));
 			}
 			
 			//SNEHA
+			/**
+			 * @author Sneha Singh
+			 * @param string
+			 * @param string2
+			 * @param string3
+			 */
 			@Then("the appointment shall be for the date {string} with start time {string} and end time {string}")
 			public void the_appointment_shall_be_for_the_date_with_start_time_and_end_time(String string, String string2, String string3) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
+			    assertEquals(appointment.getTimeSlot().getStartDate(), Date.valueOf(string));
+			    assertEquals(appointment.getTimeSlot().getStartTime(), Time.valueOf(string2 + ":00"));
+			    assertEquals(appointment.getTimeSlot().getEndTime(), Time.valueOf(string3 + ":00"));
 			}
 			
-			//SNEHA
+	
+			/** 
+			 * @author Sneha Singh
+			 * @param string
+			 */
 			@Then("the username associated with the appointment shall be {string}")
 			public void the_username_associated_with_the_appointment_shall_be(String string) {
-			    // Write code here that turns the phrase above into concrete actions
+			    assertEquals(appointment.getCustomer().getUsername(), string);
 			    throw new io.cucumber.java.PendingException();
 			}
 			
-			//SNEHA
+		
+			/** 
+			 * @author Sneha Singh
+			 * @param string
+			 * @param int1
+			 */
 			@Then("the user {string} shall have {int} no-show records")
 			public void the_user_shall_have_no_show_records(String string, Integer int1) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
+			    assertEquals(((Customer) Customer.getWithUsername(string)).getNoShows(), int1);
 			}
+			
+			
 			
 			@Then("the system shall have {int} appointments")
 			public void the_system_shall_have_appointments(Integer int1) {
