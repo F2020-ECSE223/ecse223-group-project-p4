@@ -350,7 +350,7 @@ public class CucumberStepDefinitions {
 	}
 	
 	
-	
+	/////////UNCOMMENT
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param username
@@ -360,18 +360,18 @@ public class CucumberStepDefinitions {
 	 * @param newDate
 	 * @param newTime
 	 */
-	@When("{string} attempts to update their {string} appointment on {string} at {string} to {string} at {string}")
-	public void attempts_to_update_their_appointment_on_at_to_at(String username, String serviceName, String oldDate, String oldTime, String newDate, String newTime) {
-	    
-		try {
-			updateAppointmentSuccess = FlexiBookController.updateAppointment(username, serviceName, null, null, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), SystemDateTime, flexiBook);
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-			errorCntr++;
-		}
-		
-	}
-	
+//	@When("{string} attempts to update their {string} appointment on {string} at {string} to {string} at {string}")
+//	public void attempts_to_update_their_appointment_on_at_to_at(String username, String serviceName, String oldDate, String oldTime, String newDate, String newTime) {
+//	    
+//		try {
+//			updateAppointmentSuccess = FlexiBookController.updateAppointment(username, serviceName, null, null, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), SystemDateTime, flexiBook);
+//		} catch (InvalidInputException e) {
+//			error = e.getMessage();
+//			errorCntr++;
+//		}
+//		
+//	}
+//	
 		
 	
 	/**
@@ -502,7 +502,7 @@ public class CucumberStepDefinitions {
 		
 	}
 	
-	
+	////UNCOMMENT
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param username
@@ -512,25 +512,25 @@ public class CucumberStepDefinitions {
 	 * @param date
 	 * @param time
 	 */
-	@When("{string} attempts to {string} {string} from their {string} appointment on {string} at {string}")
-	public void attempts_to_from_their_appointment_on_at(String username, String action, String optService, String mainService, String date, String time) {
-		String[] optionalServices = optService.split(",");	
-		List<String> optionalServiceList = Arrays.asList(optionalServices);
-	    
-	    try {
-	    	if(action.equals("add")) {
-	    		updateAppointmentSuccess = FlexiBookController.updateAppointment(username, mainService, optionalServiceList, null, null, null, Time.valueOf(time + ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
-		    }
-		    else if(action.equals("remove")) {
-		    	updateAppointmentSuccess = FlexiBookController.updateAppointment(username, mainService, null, optionalServiceList, null, null, Time.valueOf(time + ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
-		    }
-			
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-			errorCntr++;
-		}
-	    
-	}
+//	@When("{string} attempts to {string} {string} from their {string} appointment on {string} at {string}")
+//	public void attempts_to_from_their_appointment_on_at(String username, String action, String optService, String mainService, String date, String time) {
+//		String[] optionalServices = optService.split(",");	
+//		List<String> optionalServiceList = Arrays.asList(optionalServices);
+//	    
+//	    try {
+//	    	if(action.equals("add")) {
+//	    		updateAppointmentSuccess = FlexiBookController.updateAppointment(username, mainService, optionalServiceList, null, null, null, Time.valueOf(time + ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
+//		    }
+//		    else if(action.equals("remove")) {
+//		    	updateAppointmentSuccess = FlexiBookController.updateAppointment(username, mainService, null, optionalServiceList, null, null, Time.valueOf(time + ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
+//		    }
+//			
+//		} catch (InvalidInputException e) {
+//			error = e.getMessage();
+//			errorCntr++;
+//		}
+//	    
+//	}
 	
 	
 	
@@ -545,7 +545,7 @@ public class CucumberStepDefinitions {
 		
 	}
 	
-	
+	//////UNCOMMENT
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param username1
@@ -556,18 +556,18 @@ public class CucumberStepDefinitions {
 	 * @param newDate
 	 * @param newTime
 	 */
-	@When("{string} attempts to update {string}'s {string} appointment on {string} at {string} to {string} at {string}")
-	public void attempts_to_update_s_appointment_on_at_to_at(String username1, String username2, String serviceName, String oldDate, String oldTime, String newDate, String newTime) {
-	    
-	
-		try {
-			updateAppointmentSuccess = FlexiBookController.updateAppointment(username1, serviceName, null, null, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), SystemDateTime, flexiBook);
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-			errorCntr++;
-		}
-		
-	}
+//	@When("{string} attempts to update {string}'s {string} appointment on {string} at {string} to {string} at {string}")
+//	public void attempts_to_update_s_appointment_on_at_to_at(String username1, String username2, String serviceName, String oldDate, String oldTime, String newDate, String newTime) {
+//	    
+//	
+//		try {
+//			updateAppointmentSuccess = FlexiBookController.updateAppointment(username1, serviceName, null, null, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), SystemDateTime, flexiBook);
+//		} catch (InvalidInputException e) {
+//			error = e.getMessage();
+//			errorCntr++;
+//		}
+//		
+//	}
 	
 
 	/**
@@ -1827,7 +1827,9 @@ public class CucumberStepDefinitions {
 		    	assertTrue(test);
 			}
 	
-
+////////////////////////////APPOINTMENT MANAGEMENT/////////////
+			
+			
 		
 			@After
 		    public void tearDown() {
