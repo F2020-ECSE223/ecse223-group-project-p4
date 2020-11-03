@@ -49,6 +49,7 @@ public class CucumberStepDefinitions {
 	private String updateAppointmentSuccess = null;
 	private Date SystemDateTime;
 	private boolean exception;
+	private static Appointment  appointment;
 	
 	
 	
@@ -1934,28 +1935,79 @@ public class CucumberStepDefinitions {
 	
 ////////////////////////////APPOINTMENT MANAGEMENT/////////////
 			
+			//TODO
 			@Given("a {string} time slot exists with start time {string} at {string} and end time {string} at {string}")
 			public void a_time_slot_exists_with_start_time_at_and_end_time_at(String string, String string2, String string3, String string4, String string5) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
+			  
+				Date startDate = Date.valueOf(string2);
+				Date endDate = Date.valueOf(string4);
+				Time startTime = Time.valueOf(string3 + ":00");
+				Time endTime = Time.valueOf(string5 + ":00");
 			
+				
+				
+				
+				//How to add the name of a time slot
+//				for(int i=0; i<flexiBook.getBusiness().getVacation().size();i++)
+//				{
+//					flexiBook.getBusiness().getVacation(i).get
+//				}
+				TimeSlot timeSlot = new TimeSlot(startDate, startTime, endDate, endTime,flexiBook);
+				if(!flexiBook.getBusiness().getVacation().contains(timeSlot)) {
+					flexiBook.getBusiness().addVacation(timeSlot);
+				}
+
+				
+				
+				
+			}
+			//TODO
 			@Given("{string} has {int} no-show records")
 			public void has_no_show_records(String string, Integer int1) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
+			   for(int i=0; i<flexiBook.getAppointments().size();i++) {
+				   if(flexiBook.getAppointments().get(i).getCustomer().getUsername().equals(string)){
+					   assertEquals(flexiBook.getAppointments().get(i).getCustomer().getNoShows(),int1);
+				   }
+			   }
+			   
+			   
+				
+				
 			}
-			
+			//TODO
 			@When("{string} makes a {string} appointment for the date {string} and time {string} at {string}")
 			public void makes_a_appointment_for_the_date_and_time_at(String string, String string2, String string3, String string4, String string5) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
+				Customer customer = (Customer) FlexiBookApplication.findUser(string);
+				Service service = (Service) findServiceByName(string2);
+				Date date = Date.valueOf(string3);
+				Time time = Time.valueOf(string4 + ":00");
+				
 			
+				LocalTime localTime = LocalTime.parse(string4 +":00");
+				LocalTime plusValue = localTime.plusMinutes(service.getDuration());
+				
+				Time endTime = Time.valueOf(plusValue);
+				
+				TimeSlot timeSlot = new TimeSlot(date, time, date, endTime ,flexiBook);
+				 appointment = new Appointment(customer, service, timeSlot, flexiBook);
+				
+				flexiBook.addAppointment(appointment);
+			
+			}
+			//TODO
 			@When("{string} attempts to change the service in the appointment to {string} at {string}")
 			public void attempts_to_change_the_service_in_the_appointment_to_at(String string, String string2, String string3) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
+				String datePart = string3.substring(0,10);
+				String timePart = string3.substring(11, 16);
+				
+			    Customer customer = (Customer) FlexiBookApplication.findUser(string);
+			    for(int i=0; i<flexiBook.getAppointments().size();i++) {
+			    if(flexiBook.getAppointment(i).getCustomer().equals(customer)) {
+			    	if(Date.valueOf(datePart).compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate())<0 && Time.valueOf(timePart).compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime())<0){
+			    		flexiBook.getAppointment(i).setBookableService(findServiceByName(string2));
+			    	}
+			    }
+			    }
 			}
 			
 			
