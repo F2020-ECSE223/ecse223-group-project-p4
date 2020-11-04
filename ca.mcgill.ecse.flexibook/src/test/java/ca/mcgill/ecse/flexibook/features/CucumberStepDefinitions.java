@@ -200,34 +200,34 @@ public class CucumberStepDefinitions {
 	 * @author Shaswata Bhattacharyya
 	 * @param dataTable
 	 */
-	@Given("the following services exist in the system:")
-	public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-		
-		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
-		for(Map<String, String> columns : rows) {
-			flexiBook.addBookableService(new Service(columns.get("name"), flexiBook, Integer.parseInt(columns.get("duration")), Integer.parseInt(columns.get("downtimeDuration")), Integer.parseInt(columns.get("downtimeStart"))));
-			
-		}
-	}
+//	@Given("the following services exist in the system:")
+//	public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+//		
+//		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
+//		for(Map<String, String> columns : rows) {
+//			flexiBook.addBookableService(new Service(columns.get("name"), flexiBook, Integer.parseInt(columns.get("duration")), Integer.parseInt(columns.get("downtimeDuration")), Integer.parseInt(columns.get("downtimeStart"))));
+//			
+//		}
+//	}
 
 
 
 
-
-/**
-	 * @author Shaswata Bhattacharyya
-	 */
-	@After
-    public void tearDown() {
-        flexiBook.delete();
-    }
-
-
-
-	
-	
-	
-	
+//
+///**
+//	 * @author Shaswata Bhattacharyya
+//	 */
+//	@After
+//    public void tearDown() {
+//        flexiBook.delete();
+//    }
+//
+//
+//
+//	
+//	
+//	
+//	
 	
 	
 	
@@ -293,7 +293,7 @@ public class CucumberStepDefinitions {
 			
 			
 		
-	}
+	
 
 
 			
@@ -453,12 +453,12 @@ public class CucumberStepDefinitions {
 			String time) {
 
 		try {
-<<<<<<< HEAD
+
 			FlexiBookController.cancelAppointment(username, time + ":00", date, SystemDateTime, flexiBook);
-=======
+
 			FlexiBookController.cancelAppointment(username, Time.valueOf(time + ":00"), Date.valueOf(date),
 					SystemDateTime, flexiBook);
->>>>>>> dfcea8915db665bed9c7f4e96800ac4067d057a3
+
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr--;
 		} catch (InvalidInputException e) {
@@ -685,24 +685,24 @@ public class CucumberStepDefinitions {
 	 * @param time
 	 */
 	@When("{string} attempts to cancel {string}'s {string} appointment on {string} at {string}")
-	public void attempts_to_cancel_s_appointment_on_at(String username1, String username2, String serviceName,
-			String date, String time) {
-
-		try {
-<<<<<<< HEAD
-			FlexiBookController.cancelAppointment(username1, time + ":00", date, SystemDateTime, flexiBook);
-=======
-			FlexiBookController.cancelAppointment(username1, Time.valueOf(time + ":00"), Date.valueOf(date),
-					SystemDateTime, flexiBook);
->>>>>>> dfcea8915db665bed9c7f4e96800ac4067d057a3
-			prevAppointmentCntr = appointmentCntr;
-			appointmentCntr--;
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-			errorCntr++;
-		}
-
-	}
+//	public void attempts_to_cancel_s_appointment_on_at(String username1, String username2, String serviceName,
+//			String date, String time) {
+//
+//		try {
+//
+//			FlexiBookController.cancelAppointment(username1, time + ":00", date, SystemDateTime, flexiBook);
+//
+//			FlexiBookController.cancelAppointment(username1, Time.valueOf(time + ":00"), Date.valueOf(date),
+//					SystemDateTime, flexiBook);
+//
+//			prevAppointmentCntr = appointmentCntr;
+//			appointmentCntr--;
+//		} catch (InvalidInputException e) {
+//			error = e.getMessage();
+//			errorCntr++;
+//		}
+//
+//	}
 
 	// private methods
 
@@ -773,14 +773,15 @@ public class CucumberStepDefinitions {
 			}
 		}
 
-		return appointment;
+		
 
 		
 	}
+		return appointment;
 	
 	
 
-
+	}
 	
 	
 		
@@ -812,27 +813,7 @@ public class CucumberStepDefinitions {
 
 	
 
-	// *******************SERVICE IMPLEMENTATION*************************
-
-	private static Business business;
-	private static Owner owner;
-	private static User currentUser;
-	// private int errorCntr;
-
-	private static List<Map<String, String>> preservedProperties;
-	private static List<Map<String, String>> customers;
-	private static List<Map<String, String>> existingServices;
-	private static List<Map<String, String>> appointments;
-	private static List<Map<String, String>> serviceCombos;
-	private static List<ComboItem> combosInService;
-	private static int numCombos = 0;
-	private static int numServices = 0;
-	private static List<BookableService> allBookableServices;
-	private static Date startDate;
-	private static Date endDate;
-	private static Time startTime;
-	private static Time endTime;
-
+	
 
 //		@Given ("a Flexibook system exists")
 //		public void thereIsAFlexiBookSystem() {
@@ -1638,17 +1619,16 @@ public class CucumberStepDefinitions {
 			owner.delete();
 		}
 
-			
+	}	
 		/**
 		 * @author Aroomoogon Krishna
 		 */		
-		@Then("an error message {string} shall {string} raised")
-		public void an_error_message_shall_raised(String string, String string2) {
-		    assertEquals(string, error);
-
-=======
-		owner = new Owner(string, string2, flexiBook);
-	}
+//		@Then("an error message {string} shall {string} raised")
+//		public void an_error_message_shall_raised(String string, String string2) {
+//		    assertEquals(string, error);
+//
+//		owner = new Owner(string, string2, flexiBook);
+//	}
 
 	/**
 	 * @author Aroomoogon Krishna
@@ -1658,7 +1638,6 @@ public class CucumberStepDefinitions {
 		if (flexiBook.hasBusiness()) {
 			business = flexiBook.getBusiness();
 			business.delete();
->>>>>>> dfcea8915db665bed9c7f4e96800ac4067d057a3
 		}
 	}
 
@@ -1784,15 +1763,15 @@ public class CucumberStepDefinitions {
 	 * @param string
 	 */
 
-	@Given("there is no existing username {string}")
-	public void thereIsNoExistingUsername(String string) {
-		List<Customer> customerList = flexiBook.getCustomers();
-		Customer customer = null;
-		for (int i = 0; i < customerList.size(); i++) {
-			customer = customerList.get(i);
-			assertTrue(customer.getUsername() != string);
-		}
-	}
+//	@Given("there is no existing username {string}")
+//	public void thereIsNoExistingUsername(String string) {
+//		List<Customer> customerList = flexiBook.getCustomers();
+//		Customer customer = null;
+//		for (int i = 0; i < customerList.size(); i++) {
+//			customer = customerList.get(i);
+//			assertTrue(customer.getUsername() != string);
+//		}
+//	}
 
 	/**
 	 * @author artus
@@ -1892,68 +1871,68 @@ public class CucumberStepDefinitions {
 			 * @param string1
 			 * @param string2
 			 */
-			@When("the user provides a new username {string} and a password {string}")
-			public void theUserProvidesANewUsernameAndAPassword(String string1, String string2) {
-				before = flexiBook.getCustomers().size();
-				flexiBook = FlexiBookApplication.getFlexiBook();
-				try {
-					FlexiBookController.signUpCustomer(string1, string2);
-				}
-				catch (InvalidInputException e){
-					error += e.getMessage();
-				}
-			}
+//			@When("the user provides a new username {string} and a password {string}")
+//			public void theUserProvidesANewUsernameAndAPassword(String string1, String string2) {
+//				before = flexiBook.getCustomers().size();
+//				flexiBook = FlexiBookApplication.getFlexiBook();
+//				try {
+//					FlexiBookController.signUpCustomer(string1, string2);
+//				}
+//				catch (InvalidInputException e){
+//					error += e.getMessage();
+//				}
+		//	}
 			/**
 			 * @author artus
 			 */
-			@Then("a new customer account shall be created")
-			public void aNewCustomerAccountShallBeCreated() {
-				boolean test=false;
-	    		
-	    		if(flexiBook.getCustomers().size()==before+1) test = true;
-	    		
-	    		assertTrue(test);
-			}
+//			@Then("a new customer account shall be created")
+//			public void aNewCustomerAccountShallBeCreated() {
+//				boolean test=false;
+//	    		
+//	    		if(flexiBook.getCustomers().size()==before+1) test = true;
+//	    		
+//	    		assertTrue(test);
+//			}
 			/**
 			 * @author artus
 			 * @param string
 			 * @param string2
 			 */
-			@Then("the account shall have username {string} and password {string}")
-			public void theAccountShallHaveUsernameAndPassword(String string, String string2) {
-				 String Uname = FlexiBookApplication.getCurrentUser().getUsername();
-				 String Pword = FlexiBookApplication.getCurrentUser().getPassword();
-				List<Customer> customerList = flexiBook.getCustomers();
-				Customer customer = null;
-				boolean tf = false;
-				if(string.equals("owner")) {
-			    	assertEquals(Uname, string);
-			    	assertEquals(Pword, string2);
-			    	tf = true;
-			    }
-				else {
-					for(int i = 0; i < customerList.size(); i++) {
-						customer = customerList.get(i);
-			    	if (customer.getUsername().equals(string)) {
-			    		if (customer.getPassword().equals(string2)) tf =true;
-			    	}
-			    	
-			    }
-				}
-			    assertTrue(tf);
-			}
+//			@Then("the account shall have username {string} and password {string}")
+//			public void theAccountShallHaveUsernameAndPassword(String string, String string2) {
+//				 String Uname = FlexiBookApplication.getCurrentUser().getUsername();
+//				 String Pword = FlexiBookApplication.getCurrentUser().getPassword();
+//				List<Customer> customerList = flexiBook.getCustomers();
+//				Customer customer = null;
+//				boolean tf = false;
+//				if(string.equals("owner")) {
+//			    	assertEquals(Uname, string);
+//			    	assertEquals(Pword, string2);
+//			    	tf = true;
+//			    }
+//				else {
+//					for(int i = 0; i < customerList.size(); i++) {
+//						customer = customerList.get(i);
+//			    	if (customer.getUsername().equals(string)) {
+//			    		if (customer.getPassword().equals(string2)) tf =true;
+//			    	}
+//			    	
+//			    }
+//				}
+//			    assertTrue(tf);
+//			}
 			/**
 			 * @author artus
 			 */
-			@Then("no new account shall be created")
-			public void no_new_account_shall_be_created() {
-				boolean tf=false;
-	    		
-	    		if(flexiBook.getCustomers().size()==before) {
-	    			tf = true;
-	    		}
-	    		assertTrue(tf);
-	   		}
+//			@Then("no new account shall be created")
+//			public void no_new_account_shall_be_created() {
+//				boolean tf=false;
+//	    		
+//	    		if(flexiBook.getCustomers().size()==before) {
+//	    			tf = true;
+//	    		}
+//	    		assertTrue(tf);
+//	   		}
 			
 
 			/**
@@ -1981,8 +1960,7 @@ public class CucumberStepDefinitions {
 			 * @param string2
 			 */
 		
-=======
->>>>>>> dfcea8915db665bed9c7f4e96800ac4067d057a3
+
 //			@Given("an owner account exists in the system with username {string} and password {string}")
 //			public void anOwnerAccountExistsInTheSystemWithUsernameAndPassword(String string1, String string2) {
 //				flexiBook = FlexiBookApplication.getFlexiBook();
@@ -2245,155 +2223,92 @@ public class CucumberStepDefinitions {
 					flexiBook.getAppointment(i).setBookableService(findServiceByName(string2));
 				}
 			}
-<<<<<<< HEAD
+		}
+	}
 	
 ////////////////////////////APPOINTMENT MANAGEMENT/////////////
 			
-			
-			
-			
-			
-			
-			@Given("a {string} time slot exists with start time {string} at {string} and end time {string} at {string}")
-			public void a_time_slot_exists_with_start_time_at_and_end_time_at(String string, String string2, String string3, String string4, String string5) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@Given("{string} has {int} no-show records")
-			public void has_no_show_records(String string, Integer int1) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@When("{string} makes a {string} appointment for the date {string} and time {string} at {string}")
-			public void makes_a_appointment_for_the_date_and_time_at(String string, String string2, String string3, String string4, String string5) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@When("{string} attempts to change the service in the appointment to {string} at {string}")
-			public void attempts_to_change_the_service_in_the_appointment_to_at(String string, String string2, String string3) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@Then("the appointment shall be booked")
-			public void the_appointment_shall_be_booked() {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@Then("the service in the appointment shall be {string}")
-			public void the_service_in_the_appointment_shall_be(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@Then("the appointment shall be for the date {string} with start time {string} and end time {string}")
-			public void the_appointment_shall_be_for_the_date_with_start_time_and_end_time(String string, String string2, String string3) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@Then("the username associated with the appointment shall be {string}")
-			public void the_username_associated_with_the_appointment_shall_be(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@Then("the user {string} shall have {int} no-show records")
-			public void the_user_shall_have_no_show_records(String string, Integer int1) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@Then("the system shall have {int} appointments")
-			public void the_system_shall_have_appointments(Integer int1) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
 	
+//			
+//			@Then("the system shall have {int} appointments")
+//			public void the_system_shall_have_appointments(Integer int1) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//	
+//			
+//			@When("the owner starts the appointment at {string}")
+//			public void the_owner_starts_the_appointment_at(String string) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			@When("{string} attempts to cancel the appointment at {string}")
+//			public void attempts_to_cancel_the_appointment_at(String string, String string2) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			@Then("the appointment shall be in progress")
+//			public void the_appointment_shall_be_in_progress() {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//
+//	
+//			@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
+//			public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string, String string2, String string3, String string4, String string5) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			
+//			@When("{string} attempts to add the optional service {string} to the service combo in the appointment at {string}")
+//			public void attempts_to_add_the_optional_service_to_the_service_combo_in_the_appointment_at(String string, String string2, String string3) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			
+//			@Then("the service combo in the appointment shall be {string}")
+//			public void the_service_combo_in_the_appointment_shall_be(String string) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			@Then("the service combo shall have {string} selected services")
+//			public void the_service_combo_shall_have_selected_services(String string) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			
+//			@When("{string} attempts to update the date to {string} and time to {string} at {string}")
+//			public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3, String string4) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			
+//			@When("the owner attempts to end the appointment at {string}")
+//			public void the_owner_attempts_to_end_the_appointment_at(String string) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			
+//			
+//			@When("the owner attempts to register a no-show for the appointment at {string}")
+//			public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//			
+//
+//			@Then("the system shall have {int} appointment")
+//			public void the_system_shall_have_appointment(Integer int1) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}
+//
+//			@When("the owner ends the appointment at {string}")
+//			public void the_owner_ends_the_appointment_at(String string) {
+//			    // Write code here that turns the phrase above into concrete actions
+//			    throw new io.cucumber.java.PendingException();
+//			}	
 			
-			@When("the owner starts the appointment at {string}")
-			public void the_owner_starts_the_appointment_at(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			@When("{string} attempts to cancel the appointment at {string}")
-			public void attempts_to_cancel_the_appointment_at(String string, String string2) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			@Then("the appointment shall be in progress")
-			public void the_appointment_shall_be_in_progress() {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-
-	
-			@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
-			public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string, String string2, String string3, String string4, String string5) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@When("{string} attempts to add the optional service {string} to the service combo in the appointment at {string}")
-			public void attempts_to_add_the_optional_service_to_the_service_combo_in_the_appointment_at(String string, String string2, String string3) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@Then("the service combo in the appointment shall be {string}")
-			public void the_service_combo_in_the_appointment_shall_be(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			@Then("the service combo shall have {string} selected services")
-			public void the_service_combo_shall_have_selected_services(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@When("{string} attempts to update the date to {string} and time to {string} at {string}")
-			public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3, String string4) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			@When("the owner attempts to end the appointment at {string}")
-			public void the_owner_attempts_to_end_the_appointment_at(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-			
-			@When("the owner attempts to register a no-show for the appointment at {string}")
-			public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-			
-
-			@Then("the system shall have {int} appointment")
-			public void the_system_shall_have_appointment(Integer int1) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}
-
-			@When("the owner ends the appointment at {string}")
-			public void the_owner_ends_the_appointment_at(String string) {
-			    // Write code here that turns the phrase above into concrete actions
-			    throw new io.cucumber.java.PendingException();
-			}	
-
-
-			
-
-=======
-		}
-	}
-
 	/**
 	 * @author Sneha Singh
 	 */
@@ -2452,6 +2367,7 @@ public class CucumberStepDefinitions {
 		// Write code here that turns the phrase above into concrete actions
 		throw new io.cucumber.java.PendingException();
 	}
+	
 
 	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
 	public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3,
@@ -2526,6 +2442,6 @@ public class CucumberStepDefinitions {
 	public void tearDown() {
 		flexiBook.delete();
 	}
->>>>>>> dfcea8915db665bed9c7f4e96800ac4067d057a3
+
 
 }
