@@ -1810,7 +1810,8 @@ public class FlexiBookController {
 			fb.getBusiness().addVacation(new TimeSlot(sD, sT, eD, eT, fb));
 		}
 		
-	private static BusinessHour findBusinessHour(ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow, Time start, FlexiBook fb) {
+	public static BusinessHour findBusinessHour(String s, Time start, FlexiBook fb) {
+			ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow = getDow(s);
 			Business b = fb.getBusiness();
 			List<BusinessHour> businessHours = b.getBusinessHours();
 			for (BusinessHour k: businessHours) {
@@ -1827,7 +1828,7 @@ public class FlexiBookController {
 			throws InvalidInputException {
 			ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow = getDow(s1);
 			
-			BusinessHour temp = findBusinessHour(dow, start, fb);
+			BusinessHour temp = findBusinessHour(s1, start, fb);
 			
 			if (dow == null || temp == null) {
 				throw new InvalidInputException("Invalid Day of Week");

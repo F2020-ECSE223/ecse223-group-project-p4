@@ -8,6 +8,7 @@ import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -1724,7 +1725,13 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("a new {string} shall {string} be added with start date {string} at {string} and end date {string} at {string}")
 	public void a_new_shall_be_added_with_start_date_at_and_end_date_at(String string, String string2, String string3, String string4, String string5, String string6) {
-	    return; //to complete
+		Date sD = Date.valueOf(string3);
+	    Time sT = Time.valueOf(string4 + ":00");
+		TimeSlot ts = FlexiBookController.findOfftime(sD, sT, string, flexiBook);
+		if (!exception) {
+	    	assertEquals(ts.getEndDate(), Date.valueOf(string5));
+	    	assertEquals(ts.getEndTime(), Time.valueOf(string6 + ":00"));
+	    }
 	}
 	
 	
@@ -1802,7 +1809,12 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the business hour starting {string} at {string} shall {string} exist")
 	public void the_business_hour_starting_at_shall_exist(String string, String string2, String string3) {
-	    return;
+	    BusinessHour bh = FlexiBookController.findBusinessHour(string, Time.valueOf(string2 + ":00"), flexiBook);
+		if (exception) {
+	    	assertNotNull(bh);
+	    } else {
+	    	assertNull(bh);
+	    }
 	}
 	
 	/**
