@@ -1,4 +1,5 @@
-class AppointmentBooking {
+
+class Appointment {
  
 	AppointmentStatus {
 		Available {
