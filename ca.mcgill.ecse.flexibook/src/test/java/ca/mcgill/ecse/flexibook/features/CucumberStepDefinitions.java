@@ -213,15 +213,15 @@ public class CucumberStepDefinitions {
 	 * @author Shaswata Bhattacharyya
 	 * @param dataTable
 	 */
-//	@Given("the following services exist in the system:")
-//	public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-//		
-//		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
-//		for(Map<String, String> columns : rows) {
-//			flexiBook.addBookableService(new Service(columns.get("name"), flexiBook, Integer.parseInt(columns.get("duration")), Integer.parseInt(columns.get("downtimeDuration")), Integer.parseInt(columns.get("downtimeStart"))));
-//			
-//		}
-//	}
+	@Given("the following services exist in the system:")
+	public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+		
+		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class); 
+		for(Map<String, String> columns : rows) {
+			flexiBook.addBookableService(new Service(columns.get("name"), flexiBook, Integer.parseInt(columns.get("duration")), Integer.parseInt(columns.get("downtimeDuration")), Integer.parseInt(columns.get("downtimeStart"))));
+			
+		}
+	}
 
 
 

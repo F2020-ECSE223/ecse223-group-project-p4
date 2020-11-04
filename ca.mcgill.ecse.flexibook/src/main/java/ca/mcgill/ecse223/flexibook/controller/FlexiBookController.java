@@ -88,7 +88,21 @@ public class FlexiBookController {
 		}
 	}
 	
-	
+	public static void registerNoShow(String dateTime, Appointment appointment, FlexiBook flexiBook) {
+		String datePart = dateTime.substring(0, 10);
+		String timePart = dateTime.substring(11, 16);
+		Date date = Date.valueOf(datePart);
+		Time time = Time.valueOf(timePart + ":00");
+		
+		if(!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
+			return;
+		}
+		if(appointment.getTimeSlot().getStartDate().compareTo(date)>0 && appointment.getTimeSlot().getStartTime().compareTo(time)>0) {
+			return;
+		}
+		appointment.noShow(appointment.getCustomer());
+		
+	}
 	
 	/**
 	 * 
