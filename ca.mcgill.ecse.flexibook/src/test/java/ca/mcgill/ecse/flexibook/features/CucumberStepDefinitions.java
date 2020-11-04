@@ -1970,9 +1970,12 @@ public class CucumberStepDefinitions {
 					flexiBook.getAppointment(i).setBookableService(findServiceByName(string2));
 				}
 			}
+		
 		}
 	}
+	
 
+	
 	/**
 	 * @author Sneha Singh
 	 */
@@ -2028,77 +2031,86 @@ public class CucumberStepDefinitions {
 
 	@Then("the system shall have {int} appointments")
 	public void the_system_shall_have_appointments(Integer int1) {
+		assertEquals(flexiBook.getAppointments().size(), int1);
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
 	public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3,
 			String string4) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@When("{string} attempts to cancel the appointment at {string}")
 	public void attempts_to_cancel_the_appointment_at(String string, String string2) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@Then("the system shall have {int} appointment")
 	public void the_system_shall_have_appointment(Integer int1) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
 	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string,
 			String string2, String string3, String string4, String string5) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@When("{string} attempts to add the optional service {string} to the service combo in the appointment at {string}")
 	public void attempts_to_add_the_optional_service_to_the_service_combo_in_the_appointment_at(String string,
 			String string2, String string3) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@Then("the service combo in the appointment shall be {string}")
 	public void the_service_combo_in_the_appointment_shall_be(String string) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@Then("the service combo shall have {string} selected services")
 	public void the_service_combo_shall_have_selected_services(String string) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@When("the owner starts the appointment at {string}")
 	public void the_owner_starts_the_appointment_at(String string) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@When("the owner ends the appointment at {string}")
 	public void the_owner_ends_the_appointment_at(String string) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
+	
+		@When("the owner attempts to end the appointment at {string}")
+		public void the_owner_attempts_to_end_the_appointment_at(String string) {
+		    // Write code here that turns the phrase above into concrete actions
+		    throw new io.cucumber.java.PendingException();
+		}
+
+
 
 	@Then("the appointment shall be in progress")
 	public void the_appointment_shall_be_in_progress() {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@When("the owner attempts to register a no-show for the appointment at {string}")
 	public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) {
 		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		//throw new io.cucumber.java.PendingException();
 	}
 
 	@After
