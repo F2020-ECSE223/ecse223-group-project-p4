@@ -1843,7 +1843,20 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the {string} shall {string} updated with start date {string} at {string} and end date {string} at {string}")
 	public void the_shall_updated_with_start_date_at_and_end_date_at(String string, String string2, String string3, String string4, String string5, String string6) {
-	    return;
+	    Date sD = Date.valueOf(string3);
+	    Time sT = Time.valueOf(string4 + ":00");
+		TimeSlot ts = FlexiBookController.findOfftime(sD, sT, string, flexiBook);
+		if (!exception) {
+	    	assertEquals(ts.getEndDate(), Date.valueOf(string5));
+	    	assertEquals(ts.getEndTime(), Time.valueOf(string6 + ":00"));
+	    } else {
+	    	if (ts != null) {
+		    	assertNotEquals(ts.getEndDate(), Date.valueOf(string5));
+		    	assertNotEquals(ts.getEndTime(), Time.valueOf(string6 + ":00"));
+	    	} else {
+	    		assertNull(ts);
+	    	}
+	    }
 	}
 
 
@@ -1869,7 +1882,9 @@ public class CucumberStepDefinitions {
 	}
 	
 	
-
+	/**
+	 * @author Aroomoogon Krishna
+	 */
 	@Then("the {string} with start date {string} at {string} shall {string} exist")
 	public void the_with_start_date_at_shall_exist(String string, String string2, String string3, String string4) {
 		TimeSlot ts = FlexiBookController.findOfftime(Date.valueOf(string2), Time.valueOf(string3 + ":00"), string, flexiBook);
