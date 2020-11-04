@@ -1952,7 +1952,7 @@ public class FlexiBookController {
 				
 			}
 		
-	private static TimeSlot findOfftime(Date sD, Time sT, String type, FlexiBook fb) {
+	public static TimeSlot findOfftime(Date sD, Time sT, String type, FlexiBook fb) {
 			List<TimeSlot> off = null;
 			if (type.equals("vacation")) {
 				off = fb.getBusiness().getVacation();

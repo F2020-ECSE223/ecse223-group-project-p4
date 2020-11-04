@@ -1867,6 +1867,22 @@ public class CucumberStepDefinitions {
 	    	error = e.getMessage();
 	    };
 	}
+	
+	
+
+	@Then("the {string} with start date {string} at {string} shall {string} exist")
+	public void the_with_start_date_at_shall_exist(String string, String string2, String string3, String string4) {
+		TimeSlot ts = FlexiBookController.findOfftime(Date.valueOf(string2), Time.valueOf(string3 + ":00"), string, flexiBook);
+		if (!exception) {
+	    	assertNull(ts);
+	    } else {
+	    	assertEquals(ts.getStartDate().toString(), string2);
+	    	assertEquals(ts.getStartTime().toString(), string3 + ":00");
+	    }
+	}
+
+
+
 
 	private static String oldUname;
 	private static String oldPword;
