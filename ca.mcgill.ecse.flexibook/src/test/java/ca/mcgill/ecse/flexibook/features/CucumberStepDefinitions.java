@@ -2401,8 +2401,14 @@ public class CucumberStepDefinitions {
 	@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
 	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string,
 			String string2, String string3, String string4, String string5) {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		String dateAndtime[] = string5.split("+");
+		FlexiBookApplication.setSystemDate(dateAndtime[0]);
+		FlexiBookApplication.setSystemTime(dateAndtime[1] + ":00");
+		try {
+			FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook, FlexiBookApplication.getSystemDate());
+		} catch (InvalidInputException e) {
+			error += e.getMessage();
+		}
 	}
 
 	@When("{string} attempts to add the optional service {string} to the service combo in the appointment at {string}")
