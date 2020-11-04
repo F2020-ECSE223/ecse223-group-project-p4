@@ -1,7 +1,4 @@
 
-
-
-
 external interface Serializable {}
 
 class FlexiBook {

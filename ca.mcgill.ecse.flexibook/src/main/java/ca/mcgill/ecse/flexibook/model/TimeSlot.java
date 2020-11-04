@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 35 "../../../../../FlexiBookPersistence.ump"
-// line 54 "../../../../../FlexiBook.ump"
+// line 32 "../../../../../FlexiBookPersistence.ump"
+// line 55 "../../../../../FlexiBook.ump"
 public class TimeSlot implements Serializable
 {
 
@@ -145,7 +145,7 @@ public class TimeSlot implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 38 "../../../../../FlexiBookPersistence.ump"
+  // line 35 "../../../../../FlexiBookPersistence.ump"
   private static final long serialVersionUID = 2045406856025012133L ;
 
   
