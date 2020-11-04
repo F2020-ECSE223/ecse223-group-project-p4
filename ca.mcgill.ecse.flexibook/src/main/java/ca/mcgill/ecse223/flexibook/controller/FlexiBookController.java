@@ -88,7 +88,13 @@ public class FlexiBookController {
 		}
 	}
 	
-	public static void registerNoShow(String dateTime, Appointment appointment, FlexiBook flexiBook) {
+	/**
+	 * @author yasminamatta
+	 * @param dateTime
+	 * @param appointment
+	 * @param flexiBook
+	 */
+	public static void registerNoShow(String dateTime, Appointment appointment) {
 		String datePart = dateTime.substring(0, 10);
 		String timePart = dateTime.substring(11, 16);
 		Date date = Date.valueOf(datePart);
