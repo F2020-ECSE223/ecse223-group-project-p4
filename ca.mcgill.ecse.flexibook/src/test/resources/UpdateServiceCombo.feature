@@ -87,3 +87,4 @@ Feature: Update Service Combo
       | username  | error                                            |
       | customer1 | You are not authorized to perform this operation |
       | customer2 | You are not authorized to perform this operation |
+
