@@ -6,7 +6,9 @@ package ca.mcgill.ecse.flexibook.application;
 import java.sql.Date;
 import java.sql.Time;
 
+import ca.mcgill.ecse.flexibook.model.Customer;
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
+import ca.mcgill.ecse.flexibook.model.Owner;
 import ca.mcgill.ecse.flexibook.model.User;
 import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 
@@ -57,6 +59,21 @@ public class FlexiBookApplication {
 		return currentTime; 
 	}
 
+	public static User findUser(String name) {
+		if(name.equalsIgnoreCase("owner")) {
+			Owner owner = flexiBook.getOwner();
+			return owner;
+		}
+		else {
+			for (int i=0; i<flexiBook.getCustomers().size(); i++) {
+				if(flexiBook.getCustomer(i).getUsername().equalsIgnoreCase(name)) {
+					Customer customer = flexiBook.getCustomer(i);
+					return customer;
+				}
+			}
+		}
+		return null;
+	}
 
 
 

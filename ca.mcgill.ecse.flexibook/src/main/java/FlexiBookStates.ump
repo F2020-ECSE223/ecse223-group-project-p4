@@ -1,0 +1,85 @@
+class AppointmentBooking {
+ 
+	AppointmentStatus {
+		Available {
+      		makeAnAppointment()  / {
+      			makeAppointment()
+     		 } -> Booked;
+    	}
+    
+	   	Booked {
+	   	 
+			//change optional services or appointment time
+			//must cancel appointment and rebook to change service
+			modifyTheAppointment () [atleastDayBefore()]/ {
+	      		modifyAppointment()
+	      	}  -> Booked; 
+	
+	      	cancelTheAppointment () [atleastDayBefore()] / {
+	     	 	cancelAppointment()
+	     	 }  -> Available;
+	      
+	      	cancelTheAppointment () [!atleastDayBefore()] / {
+	      		rejectCancelAppointment()
+	     	 } -> Booked;
+	      
+	    	startAppointment() -> InProgress;
+	      
+	      	noShow(Customer customer) / {
+	      		addNoShow(customer)
+	      	} -> Finished;
+	    }
+	    
+	    InProgress {
+	    	finishAppointment() -> Finished;
+	    	
+	    	modifyTheService() [!atleastDayBefore()] / {
+	      		changeOptServices()
+	       } -> InProgress;
+	       
+	    }
+	    
+	    Finished {}
+	  }
+
+
+
+	private void makeAppointment() {
+		//TODO: Implement;
+	}
+	
+	private void modifyAppointment() {
+		//TODO: Implement; 
+	}
+
+	private void cancelAppointment() {
+		//TODO: Implement; 
+	}
+	
+	private void rejectCancelAppointment() {
+		throw new RuntimeException("Cannot cancel an appointment on the appointment date");
+	}
+	
+	private void changeOptServices() {
+		//TODO: Implement; 
+	}
+	
+	private void addNoShow(Customer customer) {
+		//TODO: Implement;
+	}
+	
+	private boolean atleastDayBefore() {
+		//TODO: Implement; 
+	}
+
+
+
+
+
+
+
+
+
+
+
+}
