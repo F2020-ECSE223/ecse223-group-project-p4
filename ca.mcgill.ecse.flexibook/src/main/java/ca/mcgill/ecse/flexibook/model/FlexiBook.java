@@ -7,8 +7,8 @@ import java.util.*;
 import java.sql.Time;
 import java.sql.Date;
 
-// line 7 "../../../../../FlexiBookPersistence.ump"
-// line 5 "../../../../../FlexiBook.ump"
+// line 4 "../../../../../FlexiBookPersistence.ump"
+// line 6 "../../../../../FlexiBook.ump"
 public class FlexiBook implements Serializable
 {
 
@@ -682,7 +682,7 @@ public class FlexiBook implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 10 "../../../../../FlexiBookPersistence.ump"
+  // line 7 "../../../../../FlexiBookPersistence.ump"
   private static final long serialVersionUID = -2683593616927798071L ;
 
   

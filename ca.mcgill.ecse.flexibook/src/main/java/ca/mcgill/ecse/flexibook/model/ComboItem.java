@@ -4,8 +4,8 @@
 package ca.mcgill.ecse.flexibook.model;
 import java.io.Serializable;
 
-// line 42 "../../../../../FlexiBookPersistence.ump"
-// line 82 "../../../../../FlexiBook.ump"
+// line 39 "../../../../../FlexiBookPersistence.ump"
+// line 83 "../../../../../FlexiBook.ump"
 public class ComboItem implements Serializable
 {
 
@@ -134,7 +134,7 @@ public class ComboItem implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 45 "../../../../../FlexiBookPersistence.ump"
+  // line 42 "../../../../../FlexiBookPersistence.ump"
   private static final long serialVersionUID = -7403802774454467836L ;
 
   

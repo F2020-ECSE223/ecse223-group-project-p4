@@ -1,42 +1,52 @@
 
+
 class Appointment {
  
 	AppointmentStatus {
-		Available {
-      		makeAnAppointment()  / {
-      			makeAppointment()
-     		 } -> Booked;
-    	}
     
 	   	Booked {
-	   	 
 			//change optional services or appointment time
 			//must cancel appointment and rebook to change service
-			modifyTheAppointment () [atleastDayBefore()]/ {
-	      		modifyAppointment()
-	      	}  -> Booked; 
+			modifyAppointmentTime (Date systemDate, TimeSlot newSlot) [atleastDayBefore(systemDate)]/ {
+	      		doUpdateAppointment(newSlot);
+	      	} -> Booked; 
+	      	
+	      	modifyOptionalServices(List<ComboItem> newServices, List<ComboItem> removedServices) / {
+	      		changeOptServices(newServices, removedServices);
+	        } -> Booked;
+	      	
+	      	modifyAppointmentTime (Date systemDate, TimeSlot newSlot) [!atleastDayBefore(systemDate)]/ {
+	      		rejectUpdateAppointment();
+	      	} -> Booked;
 	
-	      	cancelTheAppointment () [atleastDayBefore()] / {
-	     	 	cancelAppointment()
-	     	 }  -> Available;
+	      	cancelAppointment (Date systemDate) [atleastDayBefore(systemDate)] / {
+	     	 	doCancelAppointment();
+	     	} -> Finished;
 	      
-	      	cancelTheAppointment () [!atleastDayBefore()] / {
-	      		rejectCancelAppointment()
+	      	cancelAppointment (Date systemDate) [!atleastDayBefore(systemDate)] / {
+	      		rejectCancelAppointment();
 	     	 } -> Booked;
 	      
-	    	startAppointment() -> InProgress;
+	    	startAppointment(Date systemDate, Time systemTime) [isAfterStartTime(systemDate, systemTime)]/{
+	    		doStartAppointment();
+	    	} -> InProgress;
+	    	
+	    	startAppointment(Date systemDate, Time systemTime) [!isAfterStartTime(systemDate, systemTime)]/{
+	    		rejectStartAppointment();
+	    	} -> Booked;
 	      
 	      	noShow(Customer customer) / {
-	      		addNoShow(customer)
+	      		addNoShow(customer);
 	      	} -> Finished;
 	    }
 	    
 	    InProgress {
+	    
 	    	finishAppointment() -> Finished;
-	    	
-	    	modifyTheService() [!atleastDayBefore()] / {
-	      		changeOptServices()
-	       } -> InProgress;
+	    		
+	    	modifyOptionalServices(List<ComboItem> newServices, List<ComboItem> removedServices) /{
+	      		changeOptServices(newServices, removedServices);
+	        } -> InProgress;
 	       
 	    }
 	    
@@ -44,33 +54,66 @@ class Appointment {
 	  }
 
 
+	private void doStartAppointment(){
+	}
+	
+	private void rejectStartAppointment(){
+		throw new RuntimeException("Not yet time for appointment.");
+	}
 
 	private void makeAppointment() {
 		//TODO: Implement;
 	}
 	
-	private void modifyAppointment() {
-		//TODO: Implement; 
-	}
 
-	private void cancelAppointment() {
-		//TODO: Implement; 
+	private void doCancelAppointment() {
+		FlexiBook flexiBook = this.getFlexiBook();
+		this.delete(); 
 	}
 	
 	private void rejectCancelAppointment() {
 		throw new RuntimeException("Cannot cancel an appointment on the appointment date");
 	}
 	
-	private void changeOptServices() {
-		//TODO: Implement; 
+	private void doUpdateAppointment(TimeSlot newSlot) {
+		this.setTimeSlot(newSlot);
+	}
+	
+	private void rejectUpdateAppointment() {
+		throw new RuntimeException("Cannot change appointment date and time on the appointment date");
+	}
+	
+	private void changeOptServices(List<ComboItem> newServices, List<ComboItem> removedServices) {
+		for(int i = 0; i < newServices.size(); i++){
+			this.addChosenItem(newServices.get(i));
+		}
+		for(int i = 0; i < removedServices.size(); i++){
+			this.removeChosenItem(removedServices.get(i));
+		}
 	}
 	
 	private void addNoShow(Customer customer) {
-		//TODO: Implement;
+		Integer noShows = customer.getNoShows();
+		noShows++;
+		customer.setNoShows(noShows);
 	}
 	
-	private boolean atleastDayBefore() {
-		//TODO: Implement; 
+	private boolean isAfterStartTime(Date systemDate, Time systemTime) {
+		if(systemDate.equals(this.getTimeSlot().getStartDate()) && !systemTime.before(this.getTimeSlot().getStartTime())){
+			return true;
+		}
+		else{
+		 	return false;
+		}
+	}
+	
+	private boolean atleastDayBefore(Date systemDate) {
+		if(systemDate.before(this.getTimeSlot().getStartDate())){
+			return true;
+		}
+		else{
+		 	return false;
+		}
 	}
 
 
