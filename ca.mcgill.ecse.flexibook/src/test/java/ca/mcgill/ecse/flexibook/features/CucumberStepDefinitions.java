@@ -2450,6 +2450,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Aroomoogon Krishna
 	 */
+
 //	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
 //	public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3,
 //			String string4) {
@@ -2467,13 +2468,32 @@ public class CucumberStepDefinitions {
 //			error += e.getMessage();
 //		}
 //	}
+
+	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
+	public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3,
+			String string4) {
+		String dateAndtime[] = string4.split("\\+");
+		FlexiBookApplication.setSystemDate(dateAndtime[0]);
+		FlexiBookApplication.setSystemTime(dateAndtime[1] + ":00");
+		Time oldTime = Time.valueOf(dateAndtime[1] + ":00");
+		Date oldDate = Date.valueOf(dateAndtime[0]);
+		Appointment toDelete = FlexiBookController.findClosestAppointment(string, flexiBook);
+		String serviceName = toDelete.getBookableService().getName();
+		
+		try {
+			FlexiBookController.updateAppointmentTime(string, serviceName, string3, string2, oldTime, oldDate, FlexiBookApplication.getSystemDate(), flexiBook);
+		} catch (InvalidInputException e) {
+			error += e.getMessage();
+		}
+	}
+
 	
 	/**
 	 * @author Aroomoogon Krishna
 	 */
 	@When("{string} attempts to cancel the appointment at {string}")
 	public void attempts_to_cancel_the_appointment_at(String string, String string2) {
-		String dateAndtime[] = string2.split("+");
+		String dateAndtime[] = string2.split("\\+");
 		
 		try {
 			FlexiBookController.cancelAppointment(string, dateAndtime[1], dateAndtime[0], FlexiBookApplication.getSystemDate(), flexiBook);
@@ -2496,7 +2516,7 @@ public class CucumberStepDefinitions {
 	@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
 	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string,
 			String string2, String string3, String string4, String string5) {
-		String dateAndtime[] = string5.split("+");
+		String dateAndtime[] = string5.split("\\+");
 		FlexiBookApplication.setSystemDate(dateAndtime[0]);
 		FlexiBookApplication.setSystemTime(dateAndtime[1] + ":00");
 		try {
