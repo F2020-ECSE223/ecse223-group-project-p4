@@ -2391,8 +2391,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the appointment shall be booked")
 	public void the_appointment_shall_be_booked() {
-		// Write code here that turns the phrase above into concrete actions
-		// throw new io.cucumber.java.PendingException();
+		assertEquals(appointment.getAppointmentStatusFullName(), "Booked");
 	}
 
 	/**
