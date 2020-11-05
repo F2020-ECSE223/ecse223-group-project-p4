@@ -323,11 +323,10 @@ public class CucumberStepDefinitions {
 	@Then("{string} shall have a {string} appointment on {string} from {string} to {string}")
 	public void shall_have_a_appointment_on_from_to(String username, String serviceName, String date, String startTime, String endTime) {
 
-<<<<<<< HEAD
+
 		Appointment appointment = findAppointment(username, date, startTime + ":00", serviceName, flexiBook);
-=======
-		Appointment thisAppointment = findAppointment(username, date, startTime + ":00", serviceName);
->>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
+
+		Appointment thisAppointment = findAppointment(username, date, startTime + ":00", serviceName, flexiBook);
 
 		assertTrue(username.equals(thisAppointment.getCustomer().getUsername()));
 		assertTrue(serviceName.equals(thisAppointment.getBookableService().getName()));
@@ -425,13 +424,12 @@ public class CucumberStepDefinitions {
 	@Then("{string}'s {string} appointment on {string} at {string} shall be removed from the system")
 	public void s_appointment_on_at_shall_be_removed_from_the_system(String username, String serviceName, String date, String time) {
 
-<<<<<<< HEAD
+
 		Appointment appointment = findAppointment(username, date, time + ":00", serviceName, flexiBook);
 		assertNull(appointment);
-=======
-		Appointment thisAppointment = findAppointment(username,date, time + ":00", serviceName);
+Appointment thisAppointment = findAppointment(username,date, time + ":00", serviceName, flexiBook);
 		assertNull(thisAppointment);
->>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
+
 
 	}
 
@@ -703,7 +701,7 @@ public class CucumberStepDefinitions {
 	 * @param startTime
 	 * @return
 	 */
-<<<<<<< HEAD
+
 	// private Appointment findAppointment(String username, String date, String
 	// time, String bookableService, FlexiBook flexiBook) {
 //		Appointment appointment = null;
@@ -756,27 +754,32 @@ public class CucumberStepDefinitions {
 							app = specificAppointment;
 							return app;
 						}
-=======
-	private Appointment findAppointment(String username, String date, String time, String bookableService) {
-		Appointment theAppointment = null;
-
-		List<Appointment> appointmentList = flexiBook.getAppointments();
-		for (int i = 0; i < appointmentList.size(); i++) {
-			Appointment thisAppointment = appointmentList.get(i);
-			String Username = thisAppointment.getCustomer().getUsername();
-			
-			Date d = Date.valueOf(date);
-			Time t = Time.valueOf(time);
-
-			if (d.equals(thisAppointment.getTimeSlot().getStartDate()) && t.equals(thisAppointment.getTimeSlot().getStartTime()) && Username.equals(username)) {
-					theAppointment = thisAppointment;
-					break;
+					}
+				}
 			}
-				
 		}
-		
-		return theAppointment;
+		return null;
 	}
+//	private Appointment findAppointment(String username, String date, String time, String bookableService) {
+//		Appointment theAppointment = null;
+//
+//		List<Appointment> appointmentList = flexiBook.getAppointments();
+//		for (int i = 0; i < appointmentList.size(); i++) {
+//			Appointment thisAppointment = appointmentList.get(i);
+//			String Username = thisAppointment.getCustomer().getUsername();
+//			
+//			Date d = Date.valueOf(date);
+//			Time t = Time.valueOf(time);
+//
+//			if (d.equals(thisAppointment.getTimeSlot().getStartDate()) && t.equals(thisAppointment.getTimeSlot().getStartTime()) && Username.equals(username)) {
+//					theAppointment = thisAppointment;
+//					break;
+//			}
+//				
+//		}
+//		
+//		return theAppointment;
+//	}
 
 		
 
@@ -811,7 +814,7 @@ public class CucumberStepDefinitions {
 		
 	
 	
->>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
+
 	// *******************SERVICE IMPLEMENTATION*************************
 
 	private static Business business;
@@ -2442,7 +2445,7 @@ public class CucumberStepDefinitions {
 			Customer customer = (Customer) FlexiBookApplication.findUser(string);
 			for (int i = 0; i < flexiBook.getAppointments().size(); i++) {
 				if (flexiBook.getAppointment(i).getCustomer().equals(customer)) {
-<<<<<<< HEAD
+
 					if (Date.valueOf(datePart).compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) < 0
 							&& Time.valueOf(timePart + ":00")
 									.compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime()) < 0) {
@@ -2452,15 +2455,15 @@ public class CucumberStepDefinitions {
 								FlexiBookApplication.getSystemDate(), flexiBook);
 //						appointment = findAppointment(string, ap.getTimeSlot().getStartDate().toString(),
 //								ap.getTimeSlot().getStartTime().toString(), string2, flexiBook);
-=======
+
 					if (Date.valueOf(datePart).compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) < 0 && Time.valueOf(timePart + ":00").compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime()) < 0) {
 						FlexiBookController.cancelAndBookNewService(string, appointment.getBookableService().getName(), string2, null, appointment.getTimeSlot().getStartTime().toString(), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), flexiBook);
 						//appointment = findAppointment(string, appointment.getTimeSlot().getStartDate().toString(), appointment.getTimeSlot().getStartTime().toString(), string2);
->>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
 					}
 				}
 			}
-		} catch (RuntimeException e) {
+		} 
+		}catch (RuntimeException e) {
 			error += e.getMessage();
 			errorCntr++;
 		}
@@ -2721,13 +2724,13 @@ public class CucumberStepDefinitions {
 		// Write code here that turns the phrase above into concrete actions
 		throw new io.cucumber.java.PendingException();
 	}
-<<<<<<< HEAD
 
-	@When("the owner attempts to end the appointment at {string}")
-	public void the_owner_attempts_to_end_the_appointment_at(String string) {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
-=======
+
+//	@When("the owner attempts to end the appointment at {string}")
+//	public void the_owner_attempts_to_end_the_appointment_at(String string) {
+//		// Write code here that turns the phrase above into concrete actions
+//		throw new io.cucumber.java.PendingException();
+
 	
 	
 	/**
@@ -2747,7 +2750,6 @@ public class CucumberStepDefinitions {
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
->>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
 	}
 
 	@After
