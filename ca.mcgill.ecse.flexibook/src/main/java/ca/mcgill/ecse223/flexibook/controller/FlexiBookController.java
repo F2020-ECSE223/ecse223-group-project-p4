@@ -126,10 +126,12 @@ public class FlexiBookController {
 			if(!FlexiBookApplication.getCurrentUser().getUsername().equals(flexiBook.getOwner().getUsername())) {
 				throw new InvalidInputException("Error: Only the owner can end the appointment");
 			}
+			
 			//owner attempts to end appointment before appointment starts
 			if(todaysDate.before(appointmentDate) || (todaysDate.equals(appointmentDate) && currentTime.before(appointmentTime))) {
 				return;
 			}
+			
 			appointment.finishAppointment();
 		} catch(RuntimeException e){
 			throw new InvalidInputException(e.getMessage());
