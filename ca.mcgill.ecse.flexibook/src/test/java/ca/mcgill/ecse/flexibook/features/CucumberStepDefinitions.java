@@ -1359,6 +1359,28 @@ public class CucumberStepDefinitions {
 		}
 	}
 
+
+		@Given("the following services exist in the system:")
+		public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+			List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
+	
+			for (int i = 0; i < list.size(); i++) {
+				flexiBook.addBookableService(
+					new Service((list.get(i).get("name")), (flexiBook), (Integer.parseInt(list.get(i).get("duration"))),
+								(Integer.parseInt(list.get(i).get("downtimeStart"))),
+								(Integer.parseInt(list.get(i).get("downtimeDuration")))));
+			}
+	
+		}
+
+//		/**
+//		 * @author yasminamatta
+//		 * @param string
+//		 */
+//		@Given("the Owner with username {string} is logged in")
+//		public void the_owner_with_username_is_logged_in(String string) {
+//			FlexiBookApplication.setCurrentUser(User.getWithUsername(string));
+
 	// @Given("the following services exist in the system:")
 	// public void
 	// the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable
@@ -1383,6 +1405,7 @@ public class CucumberStepDefinitions {
 	// @Given("the Owner with username {string} is logged in")
 	// public void the_owner_with_username_is_logged_in(String string) {
 	// FlexiBookApplication.setCurrentUser(User.getWithUsername(string));
+
 	//
 	// }
 
@@ -2524,6 +2547,12 @@ public class CucumberStepDefinitions {
 	public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) {
 		// Write code here that turns the phrase above into concrete actions
 		throw new io.cucumber.java.PendingException();
+	}
+	
+	@When("the owner attempts to end the appointment at {string}")
+	public void the_owner_attempts_to_end_the_appointment_at(String string) {
+		// Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
 	}
 
 	@After

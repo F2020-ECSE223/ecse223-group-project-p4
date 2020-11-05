@@ -40,8 +40,7 @@ public class FlexiBookController {
 	 * Start appointment called even if customer does not show up. In case customer does not show up, this method calls endAppointment.
 	 * 
 	 */
-	public static void startAppointment(String customerName, boolean start, boolean customerShowedUp, String startTime, String date, Date SystemDate, Time SystemTime, FlexiBook flexiBook) throws InvalidInputException {
-		Customer customer = findCustomerByName(customerName, flexiBook);
+	public static void startAppointment(String customerName, String startTime, String date, Date SystemDate, Time SystemTime, FlexiBook flexiBook) throws InvalidInputException {
 		Appointment appointment = null;
 		Date appointmentDate = Date.valueOf(date);
 		Time appointmentTime = Time.valueOf(startTime);
@@ -60,32 +59,17 @@ public class FlexiBookController {
 			return;
 		}
 		
-		if(customerShowedUp) {
-			
-			if(!SystemDate.equals(appointmentDate) || SystemTime.before(appointmentTime)) {
-				return;			//appointment reamins booked
-			}
-			
-			try {
-				
-				appointment.startAppointment(SystemDate, SystemTime);
-				
-			} catch(RuntimeException e){
-				throw new InvalidInputException(e.getMessage());
-			}
-			
-			
+		if(!SystemDate.equals(appointmentDate) || SystemTime.before(appointmentTime)) {
+			return;			//appointment reamins booked
 		}
-		else {		//end the appointment
+		
+		try {
+			appointment.startAppointment(SystemDate, SystemTime);
+		} catch(RuntimeException e){
+			throw new InvalidInputException(e.getMessage());
+		}	
 			
-			appointment.noShow(customer);
-			try {
-				endAppointment(customerName, startTime, date, flexiBook);
-			} catch(RuntimeException e){
-				throw new InvalidInputException(e.getMessage());
-			}
 			
-		}
 	}
 	
 	/**
@@ -122,7 +106,7 @@ public class FlexiBookController {
 	 * Called when owner ends an appointment. Also called by startAppointment if customer does not show up. 
 	 * 
 	 */
-	public static void endAppointment(String customerName, String startTime, String date, FlexiBook flexiBook) throws InvalidInputException {
+	public static void endAppointment(String customerName, String startTime, String date, Date todaysDate, Time currentTime, FlexiBook flexiBook) throws InvalidInputException {
 		
 		Appointment appointment = null;
 		Date appointmentDate = Date.valueOf(date);
@@ -138,8 +122,13 @@ public class FlexiBookController {
 		}
 		
 		try {
+			//someone else attempts to end the appointment
 			if(!FlexiBookApplication.getCurrentUser().getUsername().equals(flexiBook.getOwner().getUsername())) {
 				throw new InvalidInputException("Error: Only the owner can end the appointment");
+			}
+			//owner attempts to end appointment before appointment starts
+			if(todaysDate.before(appointmentDate) || (todaysDate.equals(appointmentDate) && currentTime.before(appointmentTime))) {
+				return;
 			}
 			appointment.finishAppointment();
 		} catch(RuntimeException e){
@@ -163,24 +152,48 @@ public class FlexiBookController {
 	 * @param flexiBook
 	 * @throws InvalidInputException
 	 * No change in appointment state(Appointment initially booked. Then it gets cancelled and booked again.)
+	 * The only thing that changes for the appointment is the bookableService. No change in date and time.
 	 * 
 	 */
 	public static void cancelAndBookNewService(String username, String service, String newService, List<String> optionalServices, String startTime, String date, Date todaysDate, FlexiBook flexiBook) throws InvalidInputException {
 		Date appointmentDate = Date.valueOf(date);
 		if(todaysDate.before(appointmentDate)) {
 			
+			//attemp to cancel existing appointment
 			try {
-				
 				FlexiBookController.cancelAppointment(username, startTime, date, todaysDate, flexiBook);
-				FlexiBookController.makeAppointment(username, newService, optionalServices, startTime, date, flexiBook, todaysDate);
+			}catch(RuntimeException e) {
+				throw new InvalidInputException(e.getMessage());
+			}
 			
+			//successfully cancelled appointment, so attempt to book new appointment
+			try {
+				FlexiBookController.makeAppointment(username, newService, optionalServices, startTime, date, flexiBook, todaysDate);
 			} catch(RuntimeException e) {
+				//booking new appointment fails so restore original appointment
+				FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
 				throw new InvalidInputException(e.getMessage());
 			}
 			
 		}
 	} 
 	
+	
+	
+	
+	
+	
+	
+
+		
+		
+		
+		
+		
+		
+
+
+
 	
 	/**
 	 * 
