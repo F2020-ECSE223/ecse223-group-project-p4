@@ -1360,18 +1360,18 @@ public class CucumberStepDefinitions {
 	}
 
 
-		@Given("the following services exist in the system:")
-		public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-			List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
-	
-			for (int i = 0; i < list.size(); i++) {
-				flexiBook.addBookableService(
-					new Service((list.get(i).get("name")), (flexiBook), (Integer.parseInt(list.get(i).get("duration"))),
-								(Integer.parseInt(list.get(i).get("downtimeStart"))),
-								(Integer.parseInt(list.get(i).get("downtimeDuration")))));
-			}
-	
-		}
+//		@Given("the following services exist in the system:")
+//		public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+//			List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
+//	
+//			for (int i = 0; i < list.size(); i++) {
+//				flexiBook.addBookableService(
+//					new Service((list.get(i).get("name")), (flexiBook), (Integer.parseInt(list.get(i).get("duration"))),
+//								(Integer.parseInt(list.get(i).get("downtimeStart"))),
+//								(Integer.parseInt(list.get(i).get("downtimeDuration")))));
+//			}
+//	
+//		}
 
 //		/**
 //		 * @author yasminamatta
@@ -2450,23 +2450,23 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Aroomoogon Krishna
 	 */
-	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
-	public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3,
-			String string4) {
-		String dateAndtime[] = string4.split("+");
-		Time oldTime = Time.valueOf(dateAndtime[1] + ":00");
-		Date oldDate = Date.valueOf(dateAndtime[0]);
-		Appointment toDelete = findAppointment(string, oldDate, oldTime);
-		String serviceName = toDelete.getBookableService().getName();
-		
-		try {
-			FlexiBookController.updateAppointmentTime(string, serviceName, string3, string2, oldTime, oldDate, FlexiBookApplication.getSystemDate(), flexiBook);
-		} catch (InvalidInputException e) {
-			
-			
-			error += e.getMessage();
-		}
-	}
+//	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
+//	public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3,
+//			String string4) {
+//		String dateAndtime[] = string4.split("+");
+//		Time oldTime = Time.valueOf(dateAndtime[1] + ":00");
+//		Date oldDate = Date.valueOf(dateAndtime[0]);
+//		Appointment toDelete = findAppointment(string, oldDate, oldTime);
+//		String serviceName = toDelete.getBookableService().getName();
+//		
+//		try {
+//			FlexiBookController.updateAppointmentTime(string, serviceName, string3, string2, oldTime, oldDate, FlexiBookApplication.getSystemDate(), flexiBook);
+//		} catch (InvalidInputException e) {
+//			
+//			
+//			error += e.getMessage();
+//		}
+//	}
 	
 	/**
 	 * @author Aroomoogon Krishna
