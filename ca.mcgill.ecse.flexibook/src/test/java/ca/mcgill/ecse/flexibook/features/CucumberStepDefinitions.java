@@ -302,8 +302,7 @@ public class CucumberStepDefinitions {
 	public void schedules_an_appointment_on_for_at(String username, String date, String serviceName, String startTime) {
 
 		try {
-			FlexiBookController.makeAppointment(username, serviceName, null, startTime, date, flexiBook,
-					SystemDateTime);
+			FlexiBookController.makeAppointment(username, serviceName, null, startTime, date, flexiBook, SystemDateTime);
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr++;
 		} catch (InvalidInputException e) {
@@ -322,16 +321,19 @@ public class CucumberStepDefinitions {
 	 * @param endTime
 	 */
 	@Then("{string} shall have a {string} appointment on {string} from {string} to {string}")
-	public void shall_have_a_appointment_on_from_to(String username, String serviceName, String date, String startTime,
-			String endTime) {
+	public void shall_have_a_appointment_on_from_to(String username, String serviceName, String date, String startTime, String endTime) {
 
+<<<<<<< HEAD
 		Appointment appointment = findAppointment(username, date, startTime + ":00", serviceName, flexiBook);
+=======
+		Appointment thisAppointment = findAppointment(username, date, startTime + ":00", serviceName);
+>>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
 
-		assertTrue(username.equals(appointment.getCustomer().getUsername()));
-		assertTrue(serviceName.equals(appointment.getBookableService().getName()));
-		assertTrue(Date.valueOf(date).equals(appointment.getTimeSlot().getStartDate()));
-		assertTrue(Time.valueOf(startTime + ":00").equals(appointment.getTimeSlot().getStartTime()));
-		assertTrue(Time.valueOf(endTime + ":00").equals(appointment.getTimeSlot().getEndTime()));
+		assertTrue(username.equals(thisAppointment.getCustomer().getUsername()));
+		assertTrue(serviceName.equals(thisAppointment.getBookableService().getName()));
+		assertTrue(Date.valueOf(date).equals(thisAppointment.getTimeSlot().getStartDate()));
+		assertTrue(Time.valueOf(startTime + ":00").equals(thisAppointment.getTimeSlot().getStartTime()));
+		assertTrue(Time.valueOf(endTime + ":00").equals(thisAppointment.getTimeSlot().getEndTime()));
 
 	}
 
@@ -421,11 +423,15 @@ public class CucumberStepDefinitions {
 	 * @param time
 	 */
 	@Then("{string}'s {string} appointment on {string} at {string} shall be removed from the system")
-	public void s_appointment_on_at_shall_be_removed_from_the_system(String username, String serviceName, String date,
-			String time) {
+	public void s_appointment_on_at_shall_be_removed_from_the_system(String username, String serviceName, String date, String time) {
 
+<<<<<<< HEAD
 		Appointment appointment = findAppointment(username, date, time + ":00", serviceName, flexiBook);
 		assertNull(appointment);
+=======
+		Appointment thisAppointment = findAppointment(username,date, time + ":00", serviceName);
+		assertNull(thisAppointment);
+>>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
 
 	}
 
@@ -456,8 +462,7 @@ public class CucumberStepDefinitions {
 		List<String> optionalServiceList = Arrays.asList(optionalServices);
 
 		try {
-			FlexiBookController.makeAppointment(username, serviceName, optionalServiceList, time, date, flexiBook,
-					SystemDateTime);
+			FlexiBookController.makeAppointment(username, serviceName, optionalServiceList, time, date, flexiBook, SystemDateTime);
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr++;
 		} catch (InvalidInputException e) {
@@ -490,13 +495,12 @@ public class CucumberStepDefinitions {
 	public void has_a_appointment_with_optional_sevices_on_at(String username, String serviceName, String optServices,
 			String date, String time) {
 
-		Appointment appointment = null;
+		Appointment thisAppointment = null;
 		Customer customer = findCustomerByName(username);
 		BookableService bookableService = findServiceByName(serviceName);
 
-		TimeSlot timeSlot = new TimeSlot(Date.valueOf(date), Time.valueOf(time + ":00"), Date.valueOf(date),
-				Time.valueOf("11:35:00"), flexiBook);
-		appointment = new Appointment(customer, bookableService, timeSlot, flexiBook);
+		TimeSlot timeSlot = new TimeSlot(Date.valueOf(date), Time.valueOf(time + ":00"), Date.valueOf(date), Time.valueOf("11:35:00"), flexiBook);
+		thisAppointment = new Appointment(customer, bookableService, timeSlot, flexiBook);
 
 		if (bookableService.getClass().equals(ServiceCombo.class)) { // check if chosen service is a ServiceCombo
 			ServiceCombo combo = (ServiceCombo) bookableService;
@@ -504,16 +508,16 @@ public class CucumberStepDefinitions {
 			// set main service
 			Service main = (Service) findServiceByName("color");
 			ComboItem newItem = new ComboItem(true, main, combo);
-			appointment.addChosenItem(newItem);
+			thisAppointment.addChosenItem(newItem);
 
 			// get the optional services
 			Service thisService = (Service) findServiceByName("wash");
 			newItem = new ComboItem(false, thisService, combo);
-			appointment.addChosenItem(newItem);
+			thisAppointment.addChosenItem(newItem);
 
 			thisService = (Service) findServiceByName("dry");
 			newItem = new ComboItem(true, thisService, combo);
-			appointment.addChosenItem(newItem);
+			thisAppointment.addChosenItem(newItem);
 
 		}
 
@@ -531,19 +535,15 @@ public class CucumberStepDefinitions {
 	 */
 
 	@When("{string} attempts to {string} {string} from their {string} appointment on {string} at {string}")
-	public void attempts_to_from_their_appointment_on_at(String username, String action, String optService,
-			String mainService, String date, String time) {
+	public void attempts_to_from_their_appointment_on_at(String username, String action, String optService, String mainService, String date, String time) {
 		String[] optionalServices = optService.split(",");
 		List<String> optionalServiceList = Arrays.asList(optionalServices);
 
 		try {
 			if (action.equals("add")) {
-				updateAppointmentSuccess = FlexiBookController.updateAppointmentServices(username, mainService,
-						optionalServiceList, null, Time.valueOf(time + ":00"), Date.valueOf(date), SystemDateTime,
-						flexiBook);
+				updateAppointmentSuccess = FlexiBookController.updateAppointmentServices(username, mainService, optionalServiceList, null, Time.valueOf(time + ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
 			} else if (action.equals("remove")) {
-				updateAppointmentSuccess = FlexiBookController.updateAppointmentServices(username, mainService, null,
-						optionalServiceList, Time.valueOf(time + ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
+				updateAppointmentSuccess = FlexiBookController.updateAppointmentServices(username, mainService, null, optionalServiceList, Time.valueOf(time + ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
 			}
 
 		} catch (InvalidInputException e) {
@@ -641,8 +641,7 @@ public class CucumberStepDefinitions {
 	 * @param time
 	 */
 	@When("{string} attempts to cancel {string}'s {string} appointment on {string} at {string}")
-	public void attempts_to_cancel_s_appointment_on_at(String username1, String username2, String serviceName,
-			String date, String time) {
+	public void attempts_to_cancel_s_appointment_on_at(String username1, String username2, String serviceName, String date, String time) {
 
 		try {
 
@@ -704,6 +703,7 @@ public class CucumberStepDefinitions {
 	 * @param startTime
 	 * @return
 	 */
+<<<<<<< HEAD
 	// private Appointment findAppointment(String username, String date, String
 	// time, String bookableService, FlexiBook flexiBook) {
 //		Appointment appointment = null;
@@ -756,14 +756,62 @@ public class CucumberStepDefinitions {
 							app = specificAppointment;
 							return app;
 						}
+=======
+	private Appointment findAppointment(String username, String date, String time, String bookableService) {
+		Appointment theAppointment = null;
+
+		List<Appointment> appointmentList = flexiBook.getAppointments();
+		for (int i = 0; i < appointmentList.size(); i++) {
+			Appointment thisAppointment = appointmentList.get(i);
+			String Username = thisAppointment.getCustomer().getUsername();
+			
+			Date d = Date.valueOf(date);
+			Time t = Time.valueOf(time);
+
+			if (d.equals(thisAppointment.getTimeSlot().getStartDate()) && t.equals(thisAppointment.getTimeSlot().getStartTime()) && Username.equals(username)) {
+					theAppointment = thisAppointment;
+					break;
+			}
+				
+		}
+		
+		return theAppointment;
+	}
+
+		
+
+
+	
+/*	
+		
+		Date aDate = Date.valueOf(date);
+		Time aStartTime = Time.valueOf(time+ ":00");
+		// Time aEndTime = Time.valueOf(endTime + ":00");
+		
+		Appointment appointment = null;
+		for(Appointment specificAppointment : flexiBook.getAppointments()) {
+			if(specificAppointment.getCustomer().getUsername().equals(username)) {
+			if(specificAppointment.getBookableService().getName().equals(bookableService)) {
+				if(specificAppointment.getTimeSlot().getStartDate().equals(aDate)&& specificAppointment.getTimeSlot().getEndDate().equals(aDate)) {
+					if(specificAppointment.getTimeSlot().getStartTime().equals(aStartTime)) {
+						appointment = specificAppointment;
+						return appointment;
+>>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
 					}
 				}
 			}
 		}
 
 		return null;
+<<<<<<< HEAD
 
 	}
+=======
+*/
+		
+	
+	
+>>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
 	// *******************SERVICE IMPLEMENTATION*************************
 
 	private static Business business;
@@ -2394,6 +2442,7 @@ public class CucumberStepDefinitions {
 			Customer customer = (Customer) FlexiBookApplication.findUser(string);
 			for (int i = 0; i < flexiBook.getAppointments().size(); i++) {
 				if (flexiBook.getAppointment(i).getCustomer().equals(customer)) {
+<<<<<<< HEAD
 					if (Date.valueOf(datePart).compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) < 0
 							&& Time.valueOf(timePart + ":00")
 									.compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime()) < 0) {
@@ -2403,6 +2452,11 @@ public class CucumberStepDefinitions {
 								FlexiBookApplication.getSystemDate(), flexiBook);
 //						appointment = findAppointment(string, ap.getTimeSlot().getStartDate().toString(),
 //								ap.getTimeSlot().getStartTime().toString(), string2, flexiBook);
+=======
+					if (Date.valueOf(datePart).compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) < 0 && Time.valueOf(timePart + ":00").compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime()) < 0) {
+						FlexiBookController.cancelAndBookNewService(string, appointment.getBookableService().getName(), string2, null, appointment.getTimeSlot().getStartTime().toString(), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), flexiBook);
+						//appointment = findAppointment(string, appointment.getTimeSlot().getStartDate().toString(), appointment.getTimeSlot().getStartTime().toString(), string2);
+>>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
 					}
 				}
 			}
@@ -2417,8 +2471,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the appointment shall be booked")
 	public void the_appointment_shall_be_booked() {
-		// Write code here that turns the phrase above into concrete actions
-		// throw new io.cucumber.java.PendingException();
+		assertEquals(appointment.getAppointmentStatusFullName(), "Booked");
 	}
 
 	/**
@@ -2554,29 +2607,99 @@ public class CucumberStepDefinitions {
 		}
 	}
 
+
+	/**
+	 * @author artus
+	 * @param string
+	 * @param string2
+	 * @param string3
+	 * @param string4
+	 * @param string5
+	
+	@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
+	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string,
+			String string2, String string3, String string4, String string5) {
+		Customer customer = (Customer) FlexiBookApplication.findUser(string);
+		Service service = (Service) findServiceByName(string2);
+		Date date = Date.valueOf(string3);
+		Time time = Time.valueOf(string4 + ":00");
+		FlexiBookApplication.setSystemDate(string5.substring(0, 10));
+		FlexiBookApplication.setSystemTime(string5.substring(11, 16) + ":00");
+		
+		//try {
+			LocalTime localTime = LocalTime.parse(string4 + ":00");
+			LocalTime plusValue = localTime.plusMinutes(service.getDuration());
+	
+			Time endTime = Time.valueOf(plusValue);
+	
+			TimeSlot timeSlot = new TimeSlot(date, time, date, endTime, flexiBook);
+			appointment = new Appointment(customer, service, timeSlot, flexiBook);
+	
+			flexiBook.addAppointment(appointment);
+		//}
+		//catch (InvalidInputException e) {
+		//	error += e.getMessage();
+		//}		
+	} */
+	
+	/**
+	 * @author artus
+	 * @param string
+	 * @param string2
+	 * @param string3
+	 */
+
 	@When("{string} attempts to add the optional service {string} to the service combo in the appointment at {string}")
 	public void attempts_to_add_the_optional_service_to_the_service_combo_in_the_appointment_at(String string,
 			String string2, String string3) {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		Customer customer = (Customer) FlexiBookApplication.findUser(string);
+		Service service = (Service) findServiceByName(string2);
+		FlexiBookApplication.setSystemDate(string3.substring(0, 10));
+		FlexiBookApplication.setSystemTime(string3.substring(11, 16) + ":00");
+		
+		//flexiBook.addBookableServiceAt(service , index)
 	}
+
+	
+
+	/**
+	 * @author artus
+	 * @param string
+	 */
 
 	@Then("the service combo in the appointment shall be {string}")
 	public void the_service_combo_in_the_appointment_shall_be(String string) {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		ServiceCombo combo = new ServiceCombo(string, flexiBook);
+		boolean test = false;
+		if (BookableService.getWithName(string).equals(combo)) {
+			test = true;
+		}
+		assertTrue(test);
 	}
+	
 
-	@Then("the service combo shall have {string} selected services")
-	public void the_service_combo_shall_have_selected_services(String string) {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
-	}
 
+	
 	@When("the owner starts the appointment at {string}")
 	public void the_owner_starts_the_appointment_at(String string) {
 		// Write code here that turns the phrase above into concrete actions
 		throw new io.cucumber.java.PendingException();
+	}
+
+	
+
+	/**
+	 * @author artus
+	 * @param string
+	 */
+	@Then("the service combo shall have {string} selected services")
+	public void the_service_combo_shall_have_selected_services(String string) {
+		Service service = (Service) findServiceByName(string);
+		boolean test = false;
+		if (BookableService.getWithName(string).equals(service)) {
+			test = true;
+		}
+		assertTrue(test);
 	}
 
 	@When("the owner ends the appointment at {string}")
@@ -2585,22 +2708,46 @@ public class CucumberStepDefinitions {
 		throw new io.cucumber.java.PendingException();
 	}
 
+	
 	@Then("the appointment shall be in progress")
 	public void the_appointment_shall_be_in_progress() {
 		// Write code here that turns the phrase above into concrete actions
 		throw new io.cucumber.java.PendingException();
 	}
 
+	
 	@When("the owner attempts to register a no-show for the appointment at {string}")
 	public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) {
 		// Write code here that turns the phrase above into concrete actions
 		throw new io.cucumber.java.PendingException();
 	}
+<<<<<<< HEAD
 
 	@When("the owner attempts to end the appointment at {string}")
 	public void the_owner_attempts_to_end_the_appointment_at(String string) {
 		// Write code here that turns the phrase above into concrete actions
 		throw new io.cucumber.java.PendingException();
+=======
+	
+	
+	/**
+	 * @author Shaswata Bhattacharyya
+	 * @param string
+	 */
+	@When("the owner attempts to end the appointment at {string}")
+	public void the_owner_attempts_to_end_the_appointment_at(String string) {
+		String customerName = appointment.getCustomer().getUsername();
+		String appointmentDate = appointment.getTimeSlot().getStartDate().toString();
+		String appointmentTime = appointment.getTimeSlot().getStartTime().toString();
+		Date currentDate = Date.valueOf(string.substring(0, 10));
+		Time currentTime = Time.valueOf(string.substring(11, 16));
+		
+		try {
+			FlexiBookController.endAppointment(customerName, appointmentTime, appointmentDate, currentDate, currentTime, flexiBook);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+>>>>>>> 958a044472ee3c72b98c13674ee49391f80195be
 	}
 
 	@After

@@ -21,9 +21,6 @@ public class FlexiBookController {
 	
 	public FlexiBookController() {}
 	
-	
-	
-	
 
 	/**
 	 * @author Shaswata Bhattacharyya
@@ -126,10 +123,12 @@ public class FlexiBookController {
 			if(!FlexiBookApplication.getCurrentUser().getUsername().equals(flexiBook.getOwner().getUsername())) {
 				throw new InvalidInputException("Error: Only the owner can end the appointment");
 			}
+			
 			//owner attempts to end appointment before appointment starts
 			if(todaysDate.before(appointmentDate) || (todaysDate.equals(appointmentDate) && currentTime.before(appointmentTime))) {
 				return;
 			}
+			
 			appointment.finishAppointment();
 		} catch(RuntimeException e){
 			throw new InvalidInputException(e.getMessage());
@@ -239,7 +238,7 @@ public class FlexiBookController {
 			if(thisService.getClass().equals(Service.class)){   //the bookableService is a Service
 				
 				Service mainService = (Service) thisService;
-				timeSlot = getTimeSlot(startTime.substring(0, 5), startDate, mainService.getDuration(), flexiBook);
+				timeSlot = getTimeSlot(startTime, startDate, mainService.getDuration(), flexiBook);
 				
 				
 			}
