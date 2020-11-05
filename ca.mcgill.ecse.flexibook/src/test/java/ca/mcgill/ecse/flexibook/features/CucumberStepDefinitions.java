@@ -1360,18 +1360,18 @@ public class CucumberStepDefinitions {
 	}
 
 
-		@Given("the following services exist in the system:")
-		public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-			List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
-	
-			for (int i = 0; i < list.size(); i++) {
-				flexiBook.addBookableService(
-					new Service((list.get(i).get("name")), (flexiBook), (Integer.parseInt(list.get(i).get("duration"))),
-								(Integer.parseInt(list.get(i).get("downtimeStart"))),
-								(Integer.parseInt(list.get(i).get("downtimeDuration")))));
-			}
-	
-		}
+//		@Given("the following services exist in the system:")
+//		public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
+//			List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
+//	
+//			for (int i = 0; i < list.size(); i++) {
+//				flexiBook.addBookableService(
+//					new Service((list.get(i).get("name")), (flexiBook), (Integer.parseInt(list.get(i).get("duration"))),
+//								(Integer.parseInt(list.get(i).get("downtimeStart"))),
+//								(Integer.parseInt(list.get(i).get("downtimeDuration")))));
+//			}
+//	
+//		}
 
 //		/**
 //		 * @author yasminamatta
@@ -2452,10 +2452,12 @@ public class CucumberStepDefinitions {
 	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
 	public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3,
 			String string4) {
-		String dateAndtime[] = string4.split("+");
+		String dateAndtime[] = string4.split("\\+");
+		FlexiBookApplication.setSystemDate(dateAndtime[0]);
+		FlexiBookApplication.setSystemTime(dateAndtime[1] + ":00");
 		Time oldTime = Time.valueOf(dateAndtime[1] + ":00");
 		Date oldDate = Date.valueOf(dateAndtime[0]);
-		Appointment toDelete = findAppointment(string, oldDate, oldTime);
+		Appointment toDelete = FlexiBookController.findClosestAppointment(string, flexiBook);
 		String serviceName = toDelete.getBookableService().getName();
 		
 		try {
@@ -2470,7 +2472,7 @@ public class CucumberStepDefinitions {
 	 */
 	@When("{string} attempts to cancel the appointment at {string}")
 	public void attempts_to_cancel_the_appointment_at(String string, String string2) {
-		String dateAndtime[] = string2.split("+");
+		String dateAndtime[] = string2.split("\\+");
 		
 		try {
 			FlexiBookController.cancelAppointment(string, dateAndtime[1], dateAndtime[0], FlexiBookApplication.getSystemDate(), flexiBook);
@@ -2493,7 +2495,7 @@ public class CucumberStepDefinitions {
 	@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
 	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string,
 			String string2, String string3, String string4, String string5) {
-		String dateAndtime[] = string5.split("+");
+		String dateAndtime[] = string5.split("\\+");
 		FlexiBookApplication.setSystemDate(dateAndtime[0]);
 		FlexiBookApplication.setSystemTime(dateAndtime[1] + ":00");
 		try {
