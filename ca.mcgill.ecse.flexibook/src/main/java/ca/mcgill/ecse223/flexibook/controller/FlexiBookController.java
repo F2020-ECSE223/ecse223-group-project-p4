@@ -238,7 +238,7 @@ public class FlexiBookController {
 			if(thisService.getClass().equals(Service.class)){   //the bookableService is a Service
 				
 				Service mainService = (Service) thisService;
-				timeSlot = getTimeSlot(startTime, startDate, mainService.getDuration(), flexiBook);
+				timeSlot = getTimeSlot(startTime.substring(0, 5), startDate, mainService.getDuration(), flexiBook);
 				
 				
 			}
@@ -2006,7 +2006,32 @@ public class FlexiBookController {
 			return null;
 		}
 	
-	
+	public static Appointment findClosestAppointment(String username, FlexiBook fb) {
+		Date today = FlexiBookApplication.getSystemDate();
+		Time now = FlexiBookApplication.getSystemTime();
+		
+		Customer c = findCustomerByName(username, fb);
+		
+		Appointment result = null;
+		
+		List<Appointment> toSearch = c.getAppointments();
+		
+		for (Appointment k: toSearch) {
+			if (k.getTimeSlot().getStartDate().after(today) && k.getTimeSlot().getStartTime().after(now)) {
+				if (result == null) {
+					result = k;
+				} else if (k.getTimeSlot().getStartDate().before(result.getTimeSlot().getStartDate())) {
+					result = k;
+				} else if (k.getTimeSlot().getStartDate().equals(result.getTimeSlot().getStartDate())) {
+					if (k.getTimeSlot().getStartTime().before(result.getTimeSlot().getStartTime())) {
+						result = k;
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
 /////////////////////////////////////////////////////////LOGIN, LOGOUT AND VIEW APPOINTMENT CALENDAR//////////////////////////////////////////////////////////////////
 
 
