@@ -21,9 +21,6 @@ public class FlexiBookController {
 	
 	public FlexiBookController() {}
 	
-	
-	
-	
 
 	/**
 	 * @author Shaswata Bhattacharyya
@@ -238,7 +235,7 @@ public class FlexiBookController {
 			if(thisService.getClass().equals(Service.class)){   //the bookableService is a Service
 				
 				Service mainService = (Service) thisService;
-				timeSlot = getTimeSlot(startTime.substring(0, 5), startDate, mainService.getDuration(), flexiBook);
+				timeSlot = getTimeSlot(startTime, startDate, mainService.getDuration(), flexiBook);
 				
 				
 			}
