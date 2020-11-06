@@ -2679,14 +2679,27 @@ Appointment thisAppointment = findAppointment(username,date, time + ":00", servi
 		}
 		assertTrue(test);
 	}
-	
 
 
+	/**
+	 * @author Venkata Satyanarayana Chivatam
+	 * @param string
+	 */
 	
 	@When("the owner starts the appointment at {string}")
 	public void the_owner_starts_the_appointment_at(String string) {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		String customerName = appointment.getCustomer().getUsername();
+		String appointmentDate = appointment.getTimeSlot().getStartDate().toString();
+		String appointmentTime = appointment.getTimeSlot().getStartTime().toString();
+		Date currentDate = Date.valueOf(string.substring(0, 10));
+		Time currentTime = Time.valueOf(string.substring(11, 16));
+
+		try {
+			FlexiBookController.startAppointment(customerName, appointmentTime, appointmentDate, currentDate, currentTime, flexiBook);
+			appointment.startAppointment(currentDate, currentTime);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
 	}
 
 	
@@ -2705,24 +2718,55 @@ Appointment thisAppointment = findAppointment(username,date, time + ":00", servi
 		assertTrue(test);
 	}
 
+	/**
+	 * @author Venkata Satyanarayana Chivatam
+	 * @param string
+	 */
+
 	@When("the owner ends the appointment at {string}")
 	public void the_owner_ends_the_appointment_at(String string) {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		String customerName = appointment.getCustomer().getUsername();
+		String appointmentDate = appointment.getTimeSlot().getStartDate().toString();
+		String appointmentTime = appointment.getTimeSlot().getStartTime().toString();
+		Date currentDate = Date.valueOf(string.substring(0, 10));
+		Time currentTime = Time.valueOf(string.substring(11, 16));
+
+		try {
+			FlexiBookController.endAppointment(customerName, appointmentTime, appointmentDate, currentDate, currentTime, flexiBook);
+			appointment.finishAppointment();
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
 	}
 
-	
+	/**
+	 * @author Venkata Satyanarayana Chivatam
+	 */
 	@Then("the appointment shall be in progress")
 	public void the_appointment_shall_be_in_progress() {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		if(appointment.startAppointment(startDate,startTime) && !appointment.finishAppointment()){
+			assertEquals(appointment.getAppointmentStatus(), Appointment.AppointmentStatus.InProgress);
+		}
 	}
 
-	
+	/**
+	 * @author Venkata Satyanarayana Chivatam
+	 * @param string
+	 */
 	@When("the owner attempts to register a no-show for the appointment at {string}")
 	public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) {
-		// Write code here that turns the phrase above into concrete actions
-		throw new io.cucumber.java.PendingException();
+		Date cDate = Date.valueOf(string.substring(0, 10));
+		Time cTime = Time.valueOf(string.substring(11, 16));
+
+
+		List<Appointment> appointmentList = flexiBook.getAppointments();
+		for (int i = 0; i < appointmentList.size(); i++) {
+			Appointment thisAppointment = appointmentList.get(i);
+			if (appointment.getTimeSlot().getStartTime().equals(cTime) && appointment.getTimeSlot().getStartDate().equals(cDate)) {
+				FlexiBookController.registerNoShow(string, thisAppointment);
+			}
+
+		}
 	}
 
 
