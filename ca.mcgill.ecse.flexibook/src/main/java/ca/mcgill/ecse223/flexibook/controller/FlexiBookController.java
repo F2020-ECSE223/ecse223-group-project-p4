@@ -2371,5 +2371,3 @@ public class FlexiBookController {
 			
 			
 }
-
-
