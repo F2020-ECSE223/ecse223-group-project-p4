@@ -2479,10 +2479,9 @@ public class CucumberStepDefinitions {
 	 */
 	@When("{string} attempts to cancel the appointment at {string}")
 	public void attempts_to_cancel_the_appointment_at(String string, String string2) {
-		String dateAndtime[] = string2.split("\\+");
 		
 		try {
-			FlexiBookController.cancelAppointment(string, dateAndtime[1], dateAndtime[0], FlexiBookApplication.getSystemDate(), flexiBook);
+			FlexiBookController.cancelAppointment(string, appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(), Date.valueOf(string2.substring(0, 10)), flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2493,7 +2492,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the system shall have {int} appointment")
 	public void the_system_shall_have_appointment(Integer int1) {
-		assertEquals(flexiBook.numberOfAppointments(), int1);
+		assertEquals(int1, flexiBook.numberOfAppointments());
 	}
 
 	/**
