@@ -2296,13 +2296,17 @@ public class CucumberStepDefinitions {
 		Time endTime = Time.valueOf(string5 + ":00");
 
 		TimeSlot timeSlot = new TimeSlot(startDate, startTime, endDate, endTime, flexiBook);
-		if (!flexiBook.getBusiness().getVacation().contains(timeSlot)) {
+		if (string.equals("vacation")) {
 			flexiBook.getBusiness().addVacation(timeSlot);
+		}
+		if(string.equals("holiday")) {
+			flexiBook.getBusiness().addHoliday(timeSlot);
+			}
 		}
 
 		
 
-	}
+	
 
 	/**
 	 * @author yasminamatta
@@ -2490,8 +2494,8 @@ public class CucumberStepDefinitions {
 		FlexiBookApplication.setSystemTime(dateAndtime[1] + ":00");
 		Time oldTime = Time.valueOf(dateAndtime[1] + ":00");
 		Date oldDate = Date.valueOf(dateAndtime[0]);
-		Appointment toDelete = FlexiBookController.findClosestAppointment(string, flexiBook);
-		String serviceName = toDelete.getBookableService().getName();
+	//	Appointment toDelete = FlexiBookController.findClosestAppointment(string, flexiBook);
+		String serviceName = appointment.getBookableService().getName();
 		
 		try {
 			FlexiBookController.updateAppointmentTime(string, serviceName, string3, string2, oldTime, oldDate, FlexiBookApplication.getSystemDate(), flexiBook);
