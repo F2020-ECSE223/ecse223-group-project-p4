@@ -180,7 +180,7 @@ public class FlexiBookController {
 				
 				appointmentReturned = FlexiBookController.makeAppointment(username, newService, optionalServices, startTime, date, flexiBook, todaysDate);
 				
-			} catch(RuntimeException e) {
+			} catch(InvalidInputException e) {
 				//booking new appointment fails so restore original appointment
 				return FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
 				//throw new InvalidInputException(e.getMessage());
