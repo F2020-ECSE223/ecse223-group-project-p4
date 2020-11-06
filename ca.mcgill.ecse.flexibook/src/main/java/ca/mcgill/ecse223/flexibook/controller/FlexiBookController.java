@@ -275,8 +275,9 @@ public class FlexiBookController {
 				throw new InvalidInputException("There are no available slots for " + mainServiceName + " on " + startDate.toString() + " at " + startTime.toString());
 			}
 			else {
-				flexiBook.addAppointment(customer, thisService, timeSlot);
 				Appointment appoint = new Appointment(customer,thisService,timeSlot, flexiBook);
+				flexiBook.addAppointment(appoint);
+				
 				return appoint;
 				//FlexiBookPersistence.save(flexiBook);
 			}	
