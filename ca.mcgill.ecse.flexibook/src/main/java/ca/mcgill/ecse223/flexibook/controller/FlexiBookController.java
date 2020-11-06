@@ -670,7 +670,7 @@ public class FlexiBookController {
 		//check time slot not in the weekend
 		Calendar c = Calendar.getInstance();
 		c.setTime(startDate);
-		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 		if(dayOfWeek == 6 || dayOfWeek == 7) {
 			return false;
 		}
