@@ -335,8 +335,8 @@ public class FlexiBookController {
 		BookableService thisService = null;
 		TimeSlot newTimeSlot = null;
 		List<BookableService> serviceList = flexiBook.getBookableServices();
-		List<ComboItem> newServices = Collections.emptyList();
-		List<ComboItem> removedServices = Collections.emptyList();
+		List<ComboItem> newServices = new ArrayList <ComboItem>();
+		List<ComboItem> removedServices = new ArrayList <ComboItem>();
 		
 		try {
 			Owner owner = flexiBook.getOwner();
