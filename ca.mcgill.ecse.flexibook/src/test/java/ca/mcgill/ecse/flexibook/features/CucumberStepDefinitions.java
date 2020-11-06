@@ -2291,17 +2291,22 @@ public class CucumberStepDefinitions {
 	public void a_time_slot_exists_with_start_time_at_and_end_time_at(String string, String string2, String string3,
 			String string4, String string5) {
 
+	
 		Date startDate = Date.valueOf(string2);
 		Date endDate = Date.valueOf(string4);
 		Time startTime = Time.valueOf(string3 + ":00");
 		Time endTime = Time.valueOf(string5 + ":00");
 
 		TimeSlot timeSlot = new TimeSlot(startDate, startTime, endDate, endTime, flexiBook);
-		if (!flexiBook.getBusiness().getVacation().contains(timeSlot)) {
+		if (string.equals("vacation")) {
 			flexiBook.getBusiness().addVacation(timeSlot);
 		}
+		if(string.equals("holiday")) {
+			flexiBook.getBusiness().addHoliday(timeSlot);
+			}
+		}
 
-	}
+	
 
 	/**
 	 * @author yasminamatta
