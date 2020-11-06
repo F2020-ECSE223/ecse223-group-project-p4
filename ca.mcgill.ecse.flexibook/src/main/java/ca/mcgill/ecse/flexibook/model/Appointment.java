@@ -435,43 +435,38 @@ public class Appointment implements Serializable
     }
   }
 
-  // line 58 "../../../../../FlexiBookStates.ump"
+  // line 59 "../../../../../FlexiBookStates.ump"
    private void doStartAppointment(){
     
   }
 
-  // line 61 "../../../../../FlexiBookStates.ump"
+  // line 62 "../../../../../FlexiBookStates.ump"
    private void rejectStartAppointment(){
     throw new RuntimeException("Not yet time for appointment.");
   }
 
-  // line 65 "../../../../../FlexiBookStates.ump"
-   private void makeAppointment(){
-    //TODO: Implement;
-  }
-
-  // line 70 "../../../../../FlexiBookStates.ump"
+  // line 67 "../../../../../FlexiBookStates.ump"
    private void doCancelAppointment(){
     FlexiBook flexiBook = this.getFlexiBook();
 		this.delete();
   }
 
-  // line 75 "../../../../../FlexiBookStates.ump"
+  // line 72 "../../../../../FlexiBookStates.ump"
    private void rejectCancelAppointment(){
     throw new RuntimeException("Cannot cancel an appointment on the appointment date");
   }
 
-  // line 79 "../../../../../FlexiBookStates.ump"
+  // line 76 "../../../../../FlexiBookStates.ump"
    private void doUpdateAppointment(TimeSlot newSlot){
     this.setTimeSlot(newSlot);
   }
 
-  // line 83 "../../../../../FlexiBookStates.ump"
+  // line 80 "../../../../../FlexiBookStates.ump"
    private void rejectUpdateAppointment(){
     throw new RuntimeException("Cannot change appointment date and time on the appointment date");
   }
 
-  // line 87 "../../../../../FlexiBookStates.ump"
+  // line 84 "../../../../../FlexiBookStates.ump"
    private void changeOptServices(List<ComboItem> newServices, List<ComboItem> removedServices){
     for(int i = 0; i < newServices.size(); i++){
 			this.addChosenItem(newServices.get(i));
@@ -481,14 +476,14 @@ public class Appointment implements Serializable
 		}
   }
 
-  // line 96 "../../../../../FlexiBookStates.ump"
+  // line 93 "../../../../../FlexiBookStates.ump"
    private void addNoShow(Customer customer){
     Integer noShows = customer.getNoShows();
 		noShows++;
 		customer.setNoShows(noShows);
   }
 
-  // line 102 "../../../../../FlexiBookStates.ump"
+  // line 99 "../../../../../FlexiBookStates.ump"
    private boolean isAfterStartTime(Date systemDate, Time systemTime){
     if(systemDate.equals(this.getTimeSlot().getStartDate()) && !systemTime.before(this.getTimeSlot().getStartTime())){
 			return true;
@@ -498,7 +493,7 @@ public class Appointment implements Serializable
 		}
   }
 
-  // line 111 "../../../../../FlexiBookStates.ump"
+  // line 108 "../../../../../FlexiBookStates.ump"
    private boolean atleastDayBefore(Date systemDate){
     if(systemDate.before(this.getTimeSlot().getStartDate())){
 			return true;
@@ -514,6 +509,12 @@ public class Appointment implements Serializable
   
   // line 14 "../../../../../FlexiBookPersistence.ump"
   private static final long serialVersionUID = 2315072607928790501L ;
+
+// line 116 "../../../../../FlexiBookStates.ump"
+  private void removeAppointment () 
+  {
+    this.delete();
+  }
 
   
 }

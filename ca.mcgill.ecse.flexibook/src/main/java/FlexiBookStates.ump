@@ -50,7 +50,8 @@ class Appointment {
 	       
 	    }
 	    
-	    Finished {}
+	    Finished {
+	    }
 	  }
 
 
@@ -59,10 +60,6 @@ class Appointment {
 	
 	private void rejectStartAppointment(){
 		throw new RuntimeException("Not yet time for appointment.");
-	}
-
-	private void makeAppointment() {
-		//TODO: Implement;
 	}
 	
 
@@ -115,6 +112,10 @@ class Appointment {
 		 	return false;
 		}
 	}
+	
+	private void do removeAppointment(){
+		this.delete();
+	} 
 
 
 

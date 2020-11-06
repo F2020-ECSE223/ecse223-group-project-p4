@@ -39,7 +39,7 @@ public class CucumberStepDefinitions {
 
 			private static FlexiBook flexiBook;
 			private String error;
-			private int errorCntr;
+			private int errorCntr = 0;
 			private Integer appointmentCntr = 0;
 			private Integer prevAppointmentCntr = 0;
 			private String updateAppointmentSuccess = null;
@@ -62,7 +62,7 @@ public class CucumberStepDefinitions {
 			// /**
 			// * @author Shaswata Bhattacharyya
 			// */
-
+			
 			@Given("a Flexibook system exists")
 			public void a_flexibook_system_exists() {
 				flexiBook = FlexiBookApplication.getFlexiBook();
@@ -326,7 +326,7 @@ public class CucumberStepDefinitions {
 
 				//Appointment appointment = findAppointment(username, date, startTime + ":00", serviceName, flexiBook);
 
-				Appointment thisAppointment = findAppointment(username, date, startTime + ":00", serviceName, flexiBook);
+				Appointment thisAppointment = findAppointment(username, date, startTime, serviceName, flexiBook);
 
 				assertTrue(username.equals(thisAppointment.getCustomer().getUsername()));
 				assertTrue(serviceName.equals(thisAppointment.getBookableService().getName()));
@@ -424,10 +424,7 @@ public class CucumberStepDefinitions {
 			@Then("{string}'s {string} appointment on {string} at {string} shall be removed from the system")
 			public void s_appointment_on_at_shall_be_removed_from_the_system(String username, String serviceName, String date, String time) {
 
-
-				Appointment appointment = findAppointment(username, date, time + ":00", serviceName, flexiBook);
-				assertNull(appointment);
-		Appointment thisAppointment = findAppointment(username,date, time + ":00", serviceName, flexiBook);
+				Appointment thisAppointment = findAppointment(username,date, time, serviceName, flexiBook);
 				assertNull(thisAppointment);
 
 
@@ -2353,7 +2350,7 @@ public class CucumberStepDefinitions {
 			//////////////////////////// APPOINTMENT MANAGEMENT/////////////
 
 			private static Appointment appointment;
-			private static int numbOfApp = flexiBook.numberOfAppointments();
+			
 
 			/**
 			 * @author yasminamatta
@@ -2417,7 +2414,7 @@ public class CucumberStepDefinitions {
 					appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook,
 							FlexiBookApplication.getSystemDate());
 					// appointment =findAppointment(string, string3, string4, string2, flexiBook);
-					numbOfApp++;
+
 				} catch (RuntimeException e) {
 
 					error += e.getMessage();
@@ -2446,17 +2443,12 @@ public class CucumberStepDefinitions {
 					for (int i = 0; i < flexiBook.getAppointments().size(); i++) {
 						if (flexiBook.getAppointment(i).getCustomer().equals(customer)) {
 
-							if (Date.valueOf(datePart).compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) < 0
-									&& Time.valueOf(timePart + ":00")
-											.compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime()) < 0) {
-								appointment = FlexiBookController.cancelAndBookNewService(string,
-										ap.getBookableService().getName(), string2, null,
-										ap.getTimeSlot().getStartTime().toString(), ap.getTimeSlot().getStartDate().toString(),
-										FlexiBookApplication.getSystemDate(), flexiBook);
+							if (Date.valueOf(datePart).before(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) && Time.valueOf(timePart + ":00").before(flexiBook.getAppointment(i).getTimeSlot().getStartTime())) {
+								appointment = FlexiBookController.cancelAndBookNewService(string, ap.getBookableService().getName(), string2, null, ap.getTimeSlot().getStartTime().toString(), ap.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), flexiBook);
 //								appointment = findAppointment(string, ap.getTimeSlot().getStartDate().toString(),
 //										ap.getTimeSlot().getStartTime().toString(), string2, flexiBook);
 
-							if (Date.valueOf(datePart).compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) < 0 && Time.valueOf(timePart + ":00").compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime()) < 0) {
+							if (Date.valueOf(datePart).before(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) && Time.valueOf(timePart + ":00").before(flexiBook.getAppointment(i).getTimeSlot().getStartTime())) {
 								FlexiBookController.cancelAndBookNewService(string, appointment.getBookableService().getName(), string2, null, appointment.getTimeSlot().getStartTime().toString(), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), flexiBook);
 								//appointment = findAppointment(string, appointment.getTimeSlot().getStartDate().toString(), appointment.getTimeSlot().getStartTime().toString(), string2);
 							}
@@ -2795,6 +2787,9 @@ public class CucumberStepDefinitions {
 					error = e.getMessage();
 				}
 			}
+
+			
+			
 			
 
 			@After
