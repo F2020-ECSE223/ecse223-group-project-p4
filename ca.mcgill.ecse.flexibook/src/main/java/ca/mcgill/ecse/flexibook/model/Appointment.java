@@ -117,7 +117,7 @@ public class Appointment implements Serializable
         wasEventProcessed = true;
         break;
       case InProgress:
-        // line 47 "../../../../../FlexiBookStates.ump"
+        // line 50 "../../../../../FlexiBookStates.ump"
         changeOptServices(newServices, removedServices);
         setAppointmentStatus(AppointmentStatus.InProgress);
         wasEventProcessed = true;
@@ -203,6 +203,7 @@ public class Appointment implements Serializable
       case Booked:
         // line 38 "../../../../../FlexiBookStates.ump"
         addNoShow(customer);
+	      		removeAppointment();
         setAppointmentStatus(AppointmentStatus.Finished);
         wasEventProcessed = true;
         break;
@@ -221,6 +222,8 @@ public class Appointment implements Serializable
     switch (aAppointmentStatus)
     {
       case InProgress:
+        // line 46 "../../../../../FlexiBookStates.ump"
+        removeAppointment();
         setAppointmentStatus(AppointmentStatus.Finished);
         wasEventProcessed = true;
         break;
@@ -435,38 +438,38 @@ public class Appointment implements Serializable
     }
   }
 
-  // line 59 "../../../../../FlexiBookStates.ump"
+  // line 62 "../../../../../FlexiBookStates.ump"
    private void doStartAppointment(){
     
   }
 
-  // line 62 "../../../../../FlexiBookStates.ump"
+  // line 65 "../../../../../FlexiBookStates.ump"
    private void rejectStartAppointment(){
     throw new RuntimeException("Not yet time for appointment.");
   }
 
-  // line 67 "../../../../../FlexiBookStates.ump"
+  // line 70 "../../../../../FlexiBookStates.ump"
    private void doCancelAppointment(){
     FlexiBook flexiBook = this.getFlexiBook();
 		this.delete();
   }
 
-  // line 72 "../../../../../FlexiBookStates.ump"
+  // line 75 "../../../../../FlexiBookStates.ump"
    private void rejectCancelAppointment(){
     throw new RuntimeException("Cannot cancel an appointment on the appointment date");
   }
 
-  // line 76 "../../../../../FlexiBookStates.ump"
+  // line 79 "../../../../../FlexiBookStates.ump"
    private void doUpdateAppointment(TimeSlot newSlot){
     this.setTimeSlot(newSlot);
   }
 
-  // line 80 "../../../../../FlexiBookStates.ump"
+  // line 83 "../../../../../FlexiBookStates.ump"
    private void rejectUpdateAppointment(){
     throw new RuntimeException("Cannot change appointment date and time on the appointment date");
   }
 
-  // line 84 "../../../../../FlexiBookStates.ump"
+  // line 87 "../../../../../FlexiBookStates.ump"
    private void changeOptServices(List<ComboItem> newServices, List<ComboItem> removedServices){
     for(int i = 0; i < newServices.size(); i++){
 			this.addChosenItem(newServices.get(i));
@@ -476,14 +479,14 @@ public class Appointment implements Serializable
 		}
   }
 
-  // line 93 "../../../../../FlexiBookStates.ump"
+  // line 96 "../../../../../FlexiBookStates.ump"
    private void addNoShow(Customer customer){
     Integer noShows = customer.getNoShows();
 		noShows++;
 		customer.setNoShows(noShows);
   }
 
-  // line 99 "../../../../../FlexiBookStates.ump"
+  // line 102 "../../../../../FlexiBookStates.ump"
    private boolean isAfterStartTime(Date systemDate, Time systemTime){
     if(systemDate.equals(this.getTimeSlot().getStartDate()) && !systemTime.before(this.getTimeSlot().getStartTime())){
 			return true;
@@ -493,7 +496,7 @@ public class Appointment implements Serializable
 		}
   }
 
-  // line 108 "../../../../../FlexiBookStates.ump"
+  // line 111 "../../../../../FlexiBookStates.ump"
    private boolean atleastDayBefore(Date systemDate){
     if(systemDate.before(this.getTimeSlot().getStartDate())){
 			return true;
@@ -502,6 +505,11 @@ public class Appointment implements Serializable
 		 	return false;
 		}
   }
+
+  // line 120 "../../../../../FlexiBookStates.ump"
+   private void removeAppointment(){
+    this.delete();
+  }
   
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
@@ -509,12 +517,6 @@ public class Appointment implements Serializable
   
   // line 14 "../../../../../FlexiBookPersistence.ump"
   private static final long serialVersionUID = 2315072607928790501L ;
-
-// line 116 "../../../../../FlexiBookStates.ump"
-  private void removeAppointment () 
-  {
-    this.delete();
-  }
 
   
 }

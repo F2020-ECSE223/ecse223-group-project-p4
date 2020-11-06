@@ -37,12 +37,15 @@ class Appointment {
 	      
 	      	noShow(Customer customer) / {
 	      		addNoShow(customer);
+	      		removeAppointment();
 	      	} -> Finished;
 	    }
 	    
 	    InProgress {
 	    
-	    	finishAppointment() -> Finished;
+	    	finishAppointment() / {
+	    		removeAppointment();
+	    	}->Finished;
 	    		
 	    	modifyOptionalServices(List<ComboItem> newServices, List<ComboItem> removedServices) /{
 	      		changeOptServices(newServices, removedServices);
@@ -113,7 +116,7 @@ class Appointment {
 		}
 	}
 	
-	private void do removeAppointment(){
+	private void removeAppointment(){
 		this.delete();
 	} 
 
