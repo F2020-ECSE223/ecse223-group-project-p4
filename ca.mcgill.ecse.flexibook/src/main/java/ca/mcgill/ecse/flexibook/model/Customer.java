@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.*;
 
 // line 59 "../../../../../FlexiBookPersistence.ump"
-// line 26 "../../../../../FlexiBook.ump"
+// line 27 "../../../../../FlexiBook.ump"
 public class Customer extends User implements Serializable
 {
 

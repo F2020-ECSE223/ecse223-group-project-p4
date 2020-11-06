@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.*;
 
 // line 25 "../../../../../FlexiBookPersistence.ump"
-// line 62 "../../../../../FlexiBook.ump"
+// line 63 "../../../../../FlexiBook.ump"
 public abstract class BookableService implements Serializable
 {
 

@@ -8,7 +8,7 @@ import java.sql.Time;
 import java.sql.Date;
 
 // line 4 "../../../../../FlexiBookPersistence.ump"
-// line 6 "../../../../../FlexiBook.ump"
+// line 7 "../../../../../FlexiBook.ump"
 public class FlexiBook implements Serializable
 {
 

@@ -8,7 +8,7 @@ import java.util.*;
 
 // line 11 "../../../../../FlexiBookPersistence.ump"
 // line 3 "../../../../../FlexiBookStates.ump"
-// line 88 "../../../../../FlexiBook.ump"
+// line 89 "../../../../../FlexiBook.ump"
 public class Appointment implements Serializable
 {
 
