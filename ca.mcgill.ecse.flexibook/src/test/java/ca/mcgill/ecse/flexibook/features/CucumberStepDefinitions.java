@@ -2290,7 +2290,6 @@ public class CucumberStepDefinitions {
 	@Given("a {string} time slot exists with start time {string} at {string} and end time {string} at {string}")
 	public void a_time_slot_exists_with_start_time_at_and_end_time_at(String string, String string2, String string3,
 			String string4, String string5) {
-
 		Date startDate = Date.valueOf(string2);
 		Date endDate = Date.valueOf(string4);
 		Time startTime = Time.valueOf(string3 + ":00");
@@ -2300,6 +2299,8 @@ public class CucumberStepDefinitions {
 		if (!flexiBook.getBusiness().getVacation().contains(timeSlot)) {
 			flexiBook.getBusiness().addVacation(timeSlot);
 		}
+
+		
 
 	}
 
@@ -2336,9 +2337,9 @@ public class CucumberStepDefinitions {
 			appointmentCntr = flexiBook.numberOfAppointments();
 			FlexiBookApplication.setSystemDate(string5.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string5.substring(11, 16) + ":00");
-
 			appointment =FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook,FlexiBookApplication.getSystemDate());
 			
+
 			appointmentCntr++;
 
 		} catch (RuntimeException e) {
@@ -2360,19 +2361,40 @@ public class CucumberStepDefinitions {
 	@When("{string} attempts to change the service in the appointment to {string} at {string}")
 	public void attempts_to_change_the_service_in_the_appointment_to_at(String string, String string2, String string3)
 			throws InvalidInputException {
-		String datePart = string3.substring(0, 10);
-		String timePart = string3.substring(11, 16);
+//		String datePart = string3.substring(0, 10);
+//		String timePart = string3.substring(11, 16);
+//		try {
+//			FlexiBookApplication.setSystemDate(datePart);
+//			FlexiBookApplication.setSystemTime(timePart + ":00");
+//			Customer customer = (Customer) FlexiBookApplication.findUser(string);
+//			for (int i = 0; i < flexiBook.getAppointments().size(); i++) {
+//				if (FlexiBookApplication.getSystemDate().compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) < 0 && FlexiBookApplication.getSystemTime().compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime()) < 0) {
+//						appointment = FlexiBookController.cancelAndBookNewService(string, appointment.getBookableService().getName(), string2, null, appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), flexiBook);
+//					}
+//				}
+//			
+//		} catch (RuntimeException e) {
+//			error += e.getMessage();
+//			errorCntr++;
+//		}
+//		
+
 		try {
+			String datePart = string3.substring(0, 10);
+			String timePart = string3.substring(11, 16);
 			FlexiBookApplication.setSystemDate(datePart);
-			FlexiBookApplication.setSystemTime(timePart + ":00");
-			Customer customer = (Customer) FlexiBookApplication.findUser(string);
-			for (int i = 0; i < flexiBook.getAppointments().size(); i++) {
-				if (FlexiBookApplication.getSystemDate().compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartDate()) < 0 && FlexiBookApplication.getSystemTime().compareTo(flexiBook.getAppointment(i).getTimeSlot().getStartTime()) < 0) {
-						appointment = FlexiBookController.cancelAndBookNewService(string, appointment.getBookableService().getName(), string2, null, appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), flexiBook);
-					}
-				}
+			FlexiBookApplication.setSystemTime(timePart+ ":00");
+			Appointment app = appointment;
+			if(FlexiBookApplication.getSystemDate().before(app.getTimeSlot().getStartDate() )){
+				appointment = FlexiBookController.cancelAndBookNewService(string, app.getBookableService().getName(), string2, null, app.getTimeSlot().getStartTime().toString(), app.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), flexiBook);
+			}
+//			else if(FlexiBookApplication.getSystemDate().equals(app.getTimeSlot().getStartDate() ) && FlexiBookApplication.getSystemTime().before(app.getTimeSlot().getStartTime())) {
+//				appointment = FlexiBookController.cancelAndBookNewService(string, app.getBookableService().getName(), string2, null, app.getTimeSlot().getStartTime().toString(), app.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), flexiBook);
+//
+//			}
 			
-		} catch (RuntimeException e) {
+			
+		}catch(RuntimeException e ) {
 			error += e.getMessage();
 			errorCntr++;
 		}
@@ -2435,7 +2457,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the system shall have {int} appointments")
 	public void the_system_shall_have_appointments(Integer int1) {
-		assertEquals(flexiBook.numberOfAppointments(), int1);
+		assertEquals(appointmentCntr, int1);
 	}
 	
 	/**
@@ -2488,6 +2510,7 @@ public class CucumberStepDefinitions {
 		
 		try {
 			FlexiBookController.cancelAppointment(string, dateAndtime[1], dateAndtime[0], FlexiBookApplication.getSystemDate(), flexiBook);
+			appointmentCntr--;
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
 		}
@@ -2663,7 +2686,7 @@ public class CucumberStepDefinitions {
 	@When("the owner attempts to register a no-show for the appointment at {string}")
 	public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) {
 		Date cDate = Date.valueOf(string.substring(0, 10));
-		Time cTime = Time.valueOf(string.substring(11, 16));
+		Time cTime = Time.valueOf(string.substring(11, 16) + ":00");
 
 
 		List<Appointment> appointmentList = flexiBook.getAppointments();

@@ -157,7 +157,8 @@ public class FlexiBookController {
 	public static Appointment cancelAndBookNewService(String username, String service, String newService, List<String> optionalServices, String startTime, String date, Date todaysDate, FlexiBook flexiBook) throws InvalidInputException {
 		Appointment appointmentReturned = null;
 		Date appointmentDate = Date.valueOf(date);
-		if(todaysDate.before(appointmentDate)) {
+		//Time appointmentStartTime = Time.valueOf(startTime);
+		if(todaysDate.before(appointmentDate)  ) {
 			
 			//attemp to cancel existing appointment
 			try {
@@ -168,7 +169,7 @@ public class FlexiBookController {
 			
 			//successfully cancelled appointment, so attempt to book new appointment
 			try {
-				appointmentReturned =FlexiBookController.makeAppointment(username, newService, optionalServices, startTime, date, flexiBook, todaysDate);
+				appointmentReturned =FlexiBookController.makeAppointment(username, newService, optionalServices, startTime.substring(0, 5), date, flexiBook, todaysDate);
 				
 			} catch(RuntimeException e) {
 				//booking new appointment fails so restore original appointment
@@ -177,6 +178,8 @@ public class FlexiBookController {
 			}
 			
 		}
+		
+		
 		return appointmentReturned;
 	} 
 	
@@ -275,8 +278,9 @@ public class FlexiBookController {
 				throw new InvalidInputException("There are no available slots for " + mainServiceName + " on " + startDate.toString() + " at " + startTime.toString());
 			}
 			else {
-				flexiBook.addAppointment(customer, thisService, timeSlot);
 				Appointment appoint = new Appointment(customer,thisService,timeSlot, flexiBook);
+				flexiBook.addAppointment(appoint);
+								
 				return appoint;
 				//FlexiBookPersistence.save(flexiBook);
 			}	
@@ -543,7 +547,7 @@ public class FlexiBookController {
 		//FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Appointment appointment = null;
 		Date appointmentDate = Date.valueOf(startDate);
-		Time appointmentTime = Time.valueOf(startTime+":00");
+		Time appointmentTime = Time.valueOf(startTime);
 		
 		try {
 			
