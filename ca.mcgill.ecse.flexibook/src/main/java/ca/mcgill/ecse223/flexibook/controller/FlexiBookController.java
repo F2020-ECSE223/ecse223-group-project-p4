@@ -84,7 +84,7 @@ public class FlexiBookController {
 		if(!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 			return;
 		}
-		if(appointment.getTimeSlot().getStartDate().compareTo(date)>0 && appointment.getTimeSlot().getStartTime().compareTo(time)>0) {
+		if(appointment.getTimeSlot().getStartDate().after(date) || appointment.getTimeSlot().getStartTime().after(time)) {
 			return;
 		}
 		appointment.noShow(appointment.getCustomer());
@@ -119,17 +119,13 @@ public class FlexiBookController {
 		}
 		
 		try {
-			//someone else attempts to end the appointment
-			if(!FlexiBookApplication.getCurrentUser().getUsername().equals(flexiBook.getOwner().getUsername())) {
-				throw new InvalidInputException("Error: Only the owner can end the appointment");
-			}
-			
+
 			//owner attempts to end appointment before appointment starts
 			if(todaysDate.before(appointmentDate) || (todaysDate.equals(appointmentDate) && currentTime.before(appointmentTime))) {
 				return;
 			}
-			
 			appointment.finishAppointment();
+			
 		} catch(RuntimeException e){
 			throw new InvalidInputException(e.getMessage());
 		}
@@ -186,8 +182,8 @@ public class FlexiBookController {
 				
 			} catch(RuntimeException e) {
 				//booking new appointment fails so restore original appointment
-				FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
-				throw new InvalidInputException(e.getMessage());
+				return FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
+				//throw new InvalidInputException(e.getMessage());
 			}
 		}
 			
@@ -670,7 +666,7 @@ public class FlexiBookController {
 		//check time slot not in the weekend
 		Calendar c = Calendar.getInstance();
 		c.setTime(startDate);
-		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
 		if(dayOfWeek == 6 || dayOfWeek == 7) {
 			return false;
 		}
@@ -2371,5 +2367,4 @@ public class FlexiBookController {
 			
 			
 }
-
 
