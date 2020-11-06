@@ -543,7 +543,7 @@ public class FlexiBookController {
 		//FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Appointment appointment = null;
 		Date appointmentDate = Date.valueOf(startDate);
-		Time appointmentTime = Time.valueOf(startTime);
+		Time appointmentTime = Time.valueOf(startTime+":00");
 		
 		try {
 			
