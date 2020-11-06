@@ -481,9 +481,9 @@ public class Appointment implements Serializable
 
   // line 96 "../../../../../FlexiBookStates.ump"
    private void addNoShow(Customer customer){
-    Integer noShows = customer.getNoShows();
-		noShows++;
-		customer.setNoShows(noShows);
+	   Integer noShows = customer.getNoShows();
+	   noShows++;
+	   customer.setNoShows(noShows);
   }
 
   // line 102 "../../../../../FlexiBookStates.ump"

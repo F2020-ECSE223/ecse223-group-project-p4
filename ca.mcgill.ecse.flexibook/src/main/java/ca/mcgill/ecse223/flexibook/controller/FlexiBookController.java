@@ -84,7 +84,7 @@ public class FlexiBookController {
 		if(!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 			return;
 		}
-		if(appointment.getTimeSlot().getStartDate().compareTo(date)>0 && appointment.getTimeSlot().getStartTime().compareTo(time)>0) {
+		if(appointment.getTimeSlot().getStartDate().after(date) || appointment.getTimeSlot().getStartTime().after(time)) {
 			return;
 		}
 		appointment.noShow(appointment.getCustomer());
@@ -186,8 +186,8 @@ public class FlexiBookController {
 				
 			} catch(RuntimeException e) {
 				//booking new appointment fails so restore original appointment
-				FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
-				throw new InvalidInputException(e.getMessage());
+				return FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
+				//throw new InvalidInputException(e.getMessage());
 			}
 		}
 			
