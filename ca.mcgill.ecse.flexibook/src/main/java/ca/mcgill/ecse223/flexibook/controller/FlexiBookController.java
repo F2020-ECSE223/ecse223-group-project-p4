@@ -643,7 +643,8 @@ public class FlexiBookController {
 	private static boolean checkDateAndTime(TimeSlot timeSlot, Appointment appointment, FlexiBook flexiBook, Date todaysDate) {
 		
 		List<Appointment> existingAppointments = flexiBook.getAppointments();
-		
+		Time startTimeApp = timeSlot.getStartTime();
+		Time endTimeApp = timeSlot.getEndTime();
 		long startTime = timeSlot.getStartTime().getTime();
 		long endTime = timeSlot.getEndTime().getTime();
 		Date startDate = timeSlot.getStartDate();
@@ -655,9 +656,10 @@ public class FlexiBookController {
 			TimeSlot thisHoliday = holidays.get(i);
 			Date sdate = thisHoliday.getStartDate();  		//in ms
 			Date edate = thisHoliday.getEndDate();
+			Time etime = thisHoliday.getEndTime();
+			Time stime = thisHoliday.getStartTime();
 			
-			
-			if((startDate.after(sdate) && endDate.before(edate)) || (startDate.after(sdate) && startDate.before(edate)) || (endDate.after(sdate) && endDate.before(edate)) || startDate.equals(sdate)) {		//overlap with holiday
+			if((startDate.after(sdate) && endDate.before(edate)) || (startDate.after(sdate) && startDate.before(edate)) || (endDate.after(sdate) && endDate.before(edate)) || (startDate.equals(sdate)&& endTimeApp.after(stime))){		//overlap with holiday
 				return false;
 			}
 		}

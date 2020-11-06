@@ -2623,7 +2623,6 @@ public class CucumberStepDefinitions {
 			}
 		}
 		
-		assertTrue(test);
 	}
 
 	/**
