@@ -2557,7 +2557,8 @@ public class CucumberStepDefinitions {
 		items.add(string2);
 		
 		try {
-			FlexiBookController.updateAppointmentServices(string, appointment.getBookableService().getName(), items, null, appointment.getTimeSlot().getStartTime(), appointment.getTimeSlot().getStartDate(), Date.valueOf(string3.substring(0, 10)), flexiBook);
+			Appointment app = appointment;
+			FlexiBookController.updateAppointmentServices(string, app.getBookableService().getName(), items, null, app.getTimeSlot().getStartTime(), app.getTimeSlot().getStartDate(), Date.valueOf(string3.substring(0, 10)), flexiBook);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}

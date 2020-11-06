@@ -261,6 +261,14 @@ public class FlexiBookController {
 				int duration = 0;
 				ComboItem main = combo.getMainService();
 				duration += main.getService().getDuration();
+				for(ComboItem coi: combo.getServices()) {
+					if(coi.isMandatory()) {
+						if(!coi.equals(main)) {
+							duration += coi.getService().getDuration();
+									
+						}
+					}
+				}
 
 				
 				//check if there are optional services
@@ -438,6 +446,8 @@ public class FlexiBookController {
 		
 	}
 	
+
+
 	
 	/**
 	 * @author Shaswata Bhattacharyya
