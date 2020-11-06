@@ -1771,7 +1771,7 @@ public class CucumberStepDefinitions {
 //	    	flexiBook.getBusiness().addVacation(new TimeSlot(Date.valueOf(string2), Time.valueOf(string3 + ":00"), Date.valueOf(string4), Time.valueOf(string5 + ":00"), flexiBook));
 //	    }
 //	}
-//	
+	
 	/**
 	 * @author Aroomoogon Krishna
 	 * implemented only for holiday and vacation situation
@@ -2278,30 +2278,35 @@ public class CucumberStepDefinitions {
 
 	private static Appointment appointment;
 	
-	/**
-	 * @author yasminamatta
-	 * @param string
-	 * @param string2
-	 * @param string3
-	 * @param string4
-	 * @param string5
-	 */
-//
+//	/**
+//	 * @author yasminamatta
+//	 * @param string
+//	 * @param string2
+//	 * @param string3
+//	 * @param string4
+//	 * @param string5
+//	 */
+////
 	@Given("a {string} time slot exists with start time {string} at {string} and end time {string} at {string}")
 	public void a_time_slot_exists_with_start_time_at_and_end_time_at(String string, String string2, String string3,
 			String string4, String string5) {
 
+	
 		Date startDate = Date.valueOf(string2);
 		Date endDate = Date.valueOf(string4);
 		Time startTime = Time.valueOf(string3 + ":00");
 		Time endTime = Time.valueOf(string5 + ":00");
 
 		TimeSlot timeSlot = new TimeSlot(startDate, startTime, endDate, endTime, flexiBook);
-		if (!flexiBook.getBusiness().getVacation().contains(timeSlot)) {
+		if (string.equals("vacation")) {
 			flexiBook.getBusiness().addVacation(timeSlot);
 		}
+		if(string.equals("holiday")) {
+			flexiBook.getBusiness().addHoliday(timeSlot);
+			}
+		}
 
-	}
+	
 
 	/**
 	 * @author yasminamatta
@@ -2457,6 +2462,7 @@ public class CucumberStepDefinitions {
 //	}
 
 	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
+
 	public void attempts_to_update_the_date_to_and_time_to_at(String string, String newDate, String newTime, String string4) {
 		Time oldTime = appointment.getTimeSlot().getStartTime();
 		Date oldDate = appointment.getTimeSlot().getStartDate();
