@@ -154,7 +154,8 @@ public class FlexiBookController {
 	 * The only thing that changes for the appointment is the bookableService. No change in date and time.
 	 * 
 	 */
-	public static void cancelAndBookNewService(String username, String service, String newService, List<String> optionalServices, String startTime, String date, Date todaysDate, FlexiBook flexiBook) throws InvalidInputException {
+	public static Appointment cancelAndBookNewService(String username, String service, String newService, List<String> optionalServices, String startTime, String date, Date todaysDate, FlexiBook flexiBook) throws InvalidInputException {
+		Appointment appointmentReturned = null;
 		Date appointmentDate = Date.valueOf(date);
 		if(todaysDate.before(appointmentDate)) {
 			
@@ -167,14 +168,16 @@ public class FlexiBookController {
 			
 			//successfully cancelled appointment, so attempt to book new appointment
 			try {
-				FlexiBookController.makeAppointment(username, newService, optionalServices, startTime, date, flexiBook, todaysDate);
+				appointmentReturned =FlexiBookController.makeAppointment(username, newService, optionalServices, startTime, date, flexiBook, todaysDate);
+				
 			} catch(RuntimeException e) {
 				//booking new appointment fails so restore original appointment
-				FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
+				appointmentReturned=  FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
 				throw new InvalidInputException(e.getMessage());
 			}
 			
 		}
+		return appointmentReturned;
 	} 
 	
 	
@@ -206,7 +209,7 @@ public class FlexiBookController {
 	 * Appointment state set to "Booked"
 	 * 
 	 */
-	public static void makeAppointment(String username, String mainServiceName, List<String> optionalServiceNames, String startTime, String startDate, FlexiBook flexiBook, Date todaysDate) throws InvalidInputException {
+	public static Appointment makeAppointment(String username, String mainServiceName, List<String> optionalServiceNames, String startTime, String startDate, FlexiBook flexiBook, Date todaysDate) throws InvalidInputException {
 		
 		try {
 			
@@ -273,6 +276,8 @@ public class FlexiBookController {
 			}
 			else {
 				flexiBook.addAppointment(customer, thisService, timeSlot);
+				Appointment appoint = new Appointment(customer,thisService,timeSlot, flexiBook);
+				return appoint;
 				//FlexiBookPersistence.save(flexiBook);
 			}	
 			
