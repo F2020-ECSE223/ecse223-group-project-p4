@@ -2347,7 +2347,7 @@ public class CucumberStepDefinitions {
 			FlexiBookApplication.setSystemTime(string5.substring(11, 16) + ":00");
 
 			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook,FlexiBookApplication.getSystemDate());
-			
+			FlexiBookApplication.setAppointment(appointment);
 			appointmentCntr++;
 
 		} catch (RuntimeException e) {
@@ -2468,11 +2468,13 @@ public class CucumberStepDefinitions {
 		
 		
 		try {
-			Appointment app = appointment;
+			Appointment app = FlexiBookApplication.getAppointment();
 			Time oldTime = app.getTimeSlot().getStartTime();
 			Date oldDate = app.getTimeSlot().getStartDate();
 			
-			FlexiBookController.updateAppointmentTime(app, string, app.getBookableService().getName(), newTime, newDate, oldTime, oldDate, Date.valueOf(string4.substring(0, 10)), flexiBook);
+			FlexiBookController.updateAppointmentTime(app, string, app.getBookableService().getName(), newTime, newDate, oldTime, oldDate,
+					Date.valueOf(string4.substring(0, 10)), flexiBook);
+			//appointment = FlexiBookApplication.getAppointment();
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2509,6 +2511,7 @@ public class CucumberStepDefinitions {
 		try {
 			//Appointment app = appointment;
 			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook, Date.valueOf(string5.substring(0, 10)));
+			FlexiBookApplication.setAppointment(appointment);
 			List <Appointment> listOfApp = flexiBook.getAppointments();
 
 		} catch (InvalidInputException e) {
@@ -2565,8 +2568,8 @@ public class CucumberStepDefinitions {
 		items.add(string2);
 		
 		try {
-			Appointment app = appointment;
-			
+			//Appointment app = appointment;
+			Appointment app = FlexiBookApplication.getAppointment();
 			FlexiBookController.updateAppointmentServices(string, app.getBookableService().getName(), items, null, app.getTimeSlot().getStartTime(), app.getTimeSlot().getStartDate(), Date.valueOf(string3.substring(0, 10)), flexiBook);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
