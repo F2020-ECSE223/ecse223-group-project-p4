@@ -2509,7 +2509,7 @@ public class CucumberStepDefinitions {
 		try {
 			//Appointment app = appointment;
 			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook, Date.valueOf(string5.substring(0, 10)));
-			List <Appointment> listOfApp = flexiBook.getAppointments();
+//			List <Appointment> listOfApp = flexiBook.getAppointments();
 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
