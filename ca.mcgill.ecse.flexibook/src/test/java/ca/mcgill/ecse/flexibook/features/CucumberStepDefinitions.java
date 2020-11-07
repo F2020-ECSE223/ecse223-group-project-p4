@@ -2397,7 +2397,7 @@ public class CucumberStepDefinitions {
 		assertEquals(BookableService.getWithName(string), appointment.getBookableService());
 	}
 
-	// SNEHA
+	
 	/**
 	 * @author Sneha Singh
 	 * @param string
