@@ -2278,6 +2278,32 @@ public class CucumberStepDefinitions {
 		assertTrue(test);
 	}
 
+	@Then("the user should be successfully logged in")
+	public void the_user_should_be_successfully_logged_in() {
+		assertEquals(FlexiBookApplication.getCurrentUser(), true);
+	}
+	@When("the user tries to log in with username {string} and password {string}")
+	public void the_user_tries_to_log_in_with_username_and_password(String string, String string2) {
+
+	}
+	@Then("the user should not be logged in")
+	public void the_user_should_not_be_logged_in() {
+		assertEquals(FlexiBookApplication.getCurrentUser(), null);
+	}
+	@Then("a new account shall be created")
+	public void a_new_account_shall_be_created() {
+		
+	}
+	@Given("the user is logged out")
+	public void the_user_is_logged_out() {
+		FlexiBookApplication.setCurrentUser(null);
+	}
+	@When("the user tries to log out")
+	public void the_user_tries_to_log_out() {
+		// Write code here that turns the phrase above into concrete actions
+		throw new io.cucumber.java.PendingException();
+	}
+
 	//////////////////////////// APPOINTMENT MANAGEMENT/////////////
 
 	private static Appointment appointment;
@@ -2397,7 +2423,7 @@ public class CucumberStepDefinitions {
 		assertEquals(BookableService.getWithName(string), appointment.getBookableService());
 	}
 
-	// SNEHA
+	
 	/**
 	 * @author Sneha Singh
 	 * @param string
@@ -2504,7 +2530,7 @@ public class CucumberStepDefinitions {
 
 	/**
 	 * @author Aroomoogon Krishna
-	 */
+	
 	@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
 	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string, String string2, String string3, String string4, String string5) {
 
@@ -2517,7 +2543,7 @@ public class CucumberStepDefinitions {
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
-	}
+	} */
 
 
 	/**
@@ -2527,32 +2553,18 @@ public class CucumberStepDefinitions {
 	 * @param string3
 	 * @param string4
 	 * @param string5
-	
+	*/
 	@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
-	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string,
-			String string2, String string3, String string4, String string5) {
-		Customer customer = (Customer) FlexiBookApplication.findUser(string);
-		Service service = (Service) findServiceByName(string2);
-		Date date = Date.valueOf(string3);
-		Time time = Time.valueOf(string4 + ":00");
-		FlexiBookApplication.setSystemDate(string5.substring(0, 10));
-		FlexiBookApplication.setSystemTime(string5.substring(11, 16) + ":00");
-		
-		//try {
-			LocalTime localTime = LocalTime.parse(string4 + ":00");
-			LocalTime plusValue = localTime.plusMinutes(service.getDuration());
-	
-			Time endTime = Time.valueOf(plusValue);
-	
-			TimeSlot timeSlot = new TimeSlot(date, time, date, endTime, flexiBook);
-			appointment = new Appointment(customer, service, timeSlot, flexiBook);
-	
-			flexiBook.addAppointment(appointment);
-		//}
-		//catch (InvalidInputException e) {
-		//	error += e.getMessage();
-		//}		
-	} */
+	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string, String string2, String string3, String string4, String string5) {
+
+		try {
+			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook, Date.valueOf(string5.substring(0, 10)));
+			FlexiBookApplication.setAppointment(appointment);
+
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+	} 
 	
 	/**
 	 * @author artus
