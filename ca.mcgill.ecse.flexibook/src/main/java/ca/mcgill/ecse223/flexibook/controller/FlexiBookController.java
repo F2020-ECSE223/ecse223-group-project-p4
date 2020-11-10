@@ -2257,22 +2257,47 @@ public class FlexiBookController {
 		     *
 		     */
 
-		    public static void LogIn(String username, String password) throws InvalidInputException {
-		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-		        new FlexiBookApplication().setCurrentUser(User.getWithUsername(username));
-		        String error = "";
+		    public static void logIn(String username, String password,FlexiBook flexiBook) throws InvalidInputException {
+//		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		        
+//		        String error = "";
 
-		        if(username.equals(null)||password.equals(null)){
-		            throw new InvalidInputException(error.trim());
-		        }
-		        if(username != User.getWithUsername(username).getUsername() || password != User.getWithUsername(username).getPassword()){
-		            throw new InvalidInputException("username/password not found");
-		        }
-		        if(username == flexiBook.getOwner().getUsername() && password == flexiBook.getOwner().getPassword()) {
-		            CreateUser(username,password,flexiBook);
-		        }
+//		        if(username.equals(null)||password.equals(null)){
+//		            throw new InvalidInputException();
+//		        }
+		    	boolean flag = false;
+		    	boolean var = false;
+		    	for (Customer cust : flexiBook.getCustomers()) {
+		    		if(username.equals(cust.getUsername())) {
+		    			flag = true;
+		    		
+		    		if(User.getWithUsername(username).getPassword().equals(password)) {
+		    			var= true;
+		    		}
+		    	}
+		    }
+		    	 if(username.equals("owner") && password.equals("owner")) {
+			            createUser(username,password,flexiBook);
+			            return;
+			        }
+		    	if(!flag ) {
+		    		
+		    		FlexiBookApplication.setCurrentUser(null);
+					
+		    		throw new InvalidInputException("Username/password not found");
+		    	}
+		    	if(!var) {
+		    		FlexiBookApplication.setCurrentUser(null);
+		    		throw new InvalidInputException("Username/password not found");
 
+		    	}
+		    	
+		      //  if(username != User.getWithUsername(username).getUsername() || password != User.getWithUsername(username).getPassword()){
+		            
+		       // }
+		       
 
+		        FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
 
 		    }
 
@@ -2283,17 +2308,17 @@ public class FlexiBookController {
 		     * @throws InvalidInputException
 		     *
 		     */
-		    public static void LogOut(String username) throws InvalidInputException{
-		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-		        new FlexiBookApplication().setCurrentUser(null);
+		    public static void logOut(User user, FlexiBook flexiBook) throws InvalidInputException{
+		       // FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		      
 
-		        if(new FlexiBookApplication().getCurrentUser()==null){
+		        if(user==null){
 
-		            throw new InvalidInputException("the user is already logged out");
+		            throw new InvalidInputException("The user is already logged out");
 
 		        }
 
-
+		        FlexiBookApplication.setCurrentUser(null);
 
 		    }
 
@@ -2310,7 +2335,7 @@ public class FlexiBookController {
 		     *
 		     */
 
-		    public static void ViewAppointmentCalendar(String username, String mainServiceName, List<String> optionalServiceNames, String startTime, String startDate, FlexiBook flexiBook) throws InvalidInputException {
+		    public static void viewAppointmentCalendar(String username, String mainServiceName, List<String> optionalServiceNames, String startTime, String startDate, FlexiBook flexiBook) throws InvalidInputException {
 		        String error = "";
 		        Appointment appointment;
 		        Customer customer = null;
@@ -2341,13 +2366,15 @@ public class FlexiBookController {
 		     * @param usernameO
 		     *
 		     */
-		    private static User CreateUser (String usernameO, String passwordO, FlexiBook flexibook){
-		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		    private static void createUser (String usernameO, String passwordO, FlexiBook flexiBook){
+//		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 
-		            Owner owner = new Owner(usernameO,passwordO,flexibook);
-		            User.getWithUsername(usernameO).setUsername(usernameO);
-		            User.getWithUsername(usernameO).setPassword(passwordO);
-		            return owner;
+		            Owner owner = new Owner(usernameO,passwordO,flexiBook);
+		           
+		            FlexiBookApplication.setCurrentUser(owner);
+//		            User.getWithUsername(usernameO).setUsername(usernameO);
+//		            User.getWithUsername(usernameO).setPassword(passwordO);
+		            
 
 		        }
 
@@ -2555,6 +2582,7 @@ public class FlexiBookController {
 			
 			
 			
-}
 
+
+}
 
