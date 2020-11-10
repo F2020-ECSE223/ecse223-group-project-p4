@@ -296,11 +296,9 @@ public class FlexiBookController {
 				throw new InvalidInputException("There are no available slots for " + mainServiceName + " on " + startDate.toString() + " at " + startTime.toString());
 			}
 			else {
-
 				
-				Appointment appointment = new Appointment(customer,thisService,timeSlot, flexiBook);
+				Appointment appointment = new Appointment(customer, thisService, timeSlot, flexiBook);
 				return appointment;
-				
 
 				//FlexiBookPersistence.save(flexiBook);
 			}	
@@ -368,7 +366,7 @@ public class FlexiBookController {
 			}
 			
 			//if(!((appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) || (appointment.getAppointmentStatus().equals(AppointmentStatus.InProgress)))) {
-			if ((!(appointment.getAppointmentStatus().equals(AppointmentStatus.Booked))) && (!(appointment.getAppointmentStatus().equals(AppointmentStatus.InProgress)))) {
+			if ((!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) || !appointment.getAppointmentStatus().equals(AppointmentStatus.InProgress)) {
 				return "unsuccessful";
 			}
 			
@@ -468,7 +466,7 @@ public class FlexiBookController {
 	 * @return
 	 * @throws InvalidInputException
 	 */
-	public static String updateAppointmentTime(Appointment appoint, String username, String serviceName, String newStartTime, String newDate, Time oldStartTime, Date oldDate, Date todaysDate, FlexiBook flexiBook) throws InvalidInputException {
+	public static String updateAppointmentTime(String username, String serviceName, String newStartTime, String newDate, Time oldStartTime, Date oldDate, Date todaysDate, FlexiBook flexiBook) throws InvalidInputException {
 		
 		try {
 			
@@ -488,16 +486,16 @@ public class FlexiBookController {
 			//ONLY ALLOW TIME SLOT UPDATE IF APPOINTMENT STATE IS BOOKED AND NOT IN-PROGRESS
 			
 			//find the service corresponding to the name
-			BookableService thisService = appoint.getBookableService();
+			BookableService thisService = findServiceByName(serviceName, flexiBook);
 			//get the appointment being updated
-			//List<Appointment> appointmentList = flexiBook.getAppointments();
-//			for (int i = 0; i < appointmentList.size(); i++) {
-//				//Appointment thisAppointment = appointmentList.get(i);
-				if(oldDate.equals(appoint.getTimeSlot().getStartDate()) && oldStartTime.equals(appoint.getTimeSlot().getStartTime()) && serviceName.equals(appoint.getBookableService().getName())) {
-					appointment = appoint;
+			List<Appointment> appointmentList = flexiBook.getAppointments();
+			for (int i = 0; i < appointmentList.size(); i++) {
+				Appointment thisAppointment = appointmentList.get(i);
+				if(oldDate.equals(thisAppointment.getTimeSlot().getStartDate()) && oldStartTime.equals(thisAppointment.getTimeSlot().getStartTime()) && serviceName.equals(thisAppointment.getBookableService().getName())) {
+					appointment = thisAppointment;
 				//	break;
 				}
-			//}
+			}
 			
 			if(!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 				return "unsuccessful";
@@ -524,26 +522,23 @@ public class FlexiBookController {
 				else {			//if bookableService is a ServiceCombo
 					
 					ServiceCombo thisCombo = (ServiceCombo)thisService;
-//					int duration = thisCombo.getMainService().getService().getDuration();	
+					int duration = thisCombo.getMainService().getService().getDuration();	
 //					for (ComboItem coi : thisCombo.getServices()) {
 //						if(coi.isMandatory() && !coi.getService().equals(thisCombo.getMainService().getService())) {
 //							duration += coi.getService().getDuration();
 //						}
 //					}
 					
-					int duration = 0;
 					//check if there are optional services
-					//if (noOptionalServicesExist() == true)  {
 					List<ComboItem> comboItemList = thisCombo.getServices();
 					Service optionalService;
 					
 					for(int i = 0; i < comboItemList.size(); i++) {
 						optionalService = comboItemList.get(i).getService();
 						if (comboItemList.get(i).isMandatory() == true) {
-						duration += optionalService.getDuration();
+							duration += optionalService.getDuration();
 						}
 					}
-					//}
 					
 					newTimeSlot = getTimeSlot(newStartTime, newDate, duration, flexiBook);
 					
@@ -554,11 +549,10 @@ public class FlexiBookController {
 				}
 				else {
 					appointment.modifyAppointmentTime(todaysDate, newTimeSlot);
-					appointment.setTimeSlot(newTimeSlot);
+					//appointment.setTimeSlot(newTimeSlot);
 					//FlexiBookPersistence.save(flexiBook);
 					return "successful";
 				}
-				
 				
 			}
 			return "unsuccessful";
@@ -569,7 +563,7 @@ public class FlexiBookController {
 		
 	}
 
-private static boolean noOptionalServicesExist() {
+	private static boolean noOptionalServicesExist() {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -880,10 +874,6 @@ private static boolean noOptionalServicesExist() {
 
 		}
 			
-		//check time slot not in the past
-		if(!(startDate.after(todaysDate))) {
-			return false;
-		}
 		
 		//if appointment within downtime of another
 		Appointment thisAppointment;
@@ -906,11 +896,11 @@ private static boolean noOptionalServicesExist() {
 			if(timeSlot.getStartDate().equals(thisAppointment.getTimeSlot().getStartDate()) && thisAppointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {	
 				
 				if((startTime >= stime && endTime < etime) || (startTime >= stime && startTime < etime) || (endTime >= stime && endTime <= etime) || (startTime <= stime && endTime >= etime)) {                 //if overlap with another appointment
-					//valid = false;
+					valid = false;
 			
 					if(thisAppointment.getBookableService().getClass().equals(Service.class)) {			//the bookableService is a Service
 						thisService = (Service)thisAppointment.getBookableService();
-						if(startTime >= (stime + (thisService.getDowntimeStart()*60000)) && endTime <= (stime + (thisService.getDowntimeStart() + thisService.getDowntimeDuration())*60000) && thisService.getDowntimeStart() != 0){
+						if(startTime >= (stime + (thisService.getDowntimeStart()*60000)) && endTime <= (stime + (thisService.getDowntimeStart() + thisService.getDowntimeDuration())*60000) && thisService.getDowntimeDuration() != 0){
 							return true;
 						}
 						else {
@@ -2566,4 +2556,5 @@ private static boolean noOptionalServicesExist() {
 			
 			
 }
+
 
