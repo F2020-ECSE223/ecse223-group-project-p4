@@ -2300,7 +2300,6 @@ public class CucumberStepDefinitions {
 		try {
 			FlexiBookController.logIn(string, string2, flexiBook);
 		} catch (InvalidInputException e) {
-
 			error += e.getMessage();
 			errorCntr++;
 		}
@@ -2330,9 +2329,9 @@ public class CucumberStepDefinitions {
 	@When("the user tries to log out")
 	public void the_user_tries_to_log_out() {
 		try {
-			FlexiBookController.logOut(FlexiBookApplication.getCurrentUser(), (flexiBook));
+			FlexiBookController.logOut(FlexiBookApplication.getCurrentUser(), flexiBook);
 		} catch (InvalidInputException e) {
-			error += e.getMessage();
+			error = e.getMessage();
 			errorCntr++;
 		}
 
@@ -2757,9 +2756,10 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Venkata Satyanarayana Chivatam
 	 * @param string
+	 * @throws InvalidInputException 
 	 */
 	@When("the owner attempts to register a no-show for the appointment at {string}")
-	public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) {
+	public void the_owner_attempts_to_register_a_no_show_for_the_appointment_at(String string) throws InvalidInputException {
 		Date cDate = Date.valueOf(string.substring(0, 10));
 		Time cTime = Time.valueOf(string.substring(11, 16) + ":00");
 
@@ -2770,7 +2770,7 @@ public class CucumberStepDefinitions {
 			String t = thisAppointment.getTimeSlot().getStartTime().toString();
 			if (thisAppointment.getTimeSlot().getStartTime().before(cTime)
 					&& thisAppointment.getTimeSlot().getStartDate().equals(cDate)) {
-				FlexiBookController.registerNoShow(string, thisAppointment);
+				FlexiBookController.registerNoShow(appointment.getCustomer().getUsername(), appointment.getTimeSlot().getStartDate(), appointment.getTimeSlot().getStartTime(), string, flexiBook);
 			}
 
 		}

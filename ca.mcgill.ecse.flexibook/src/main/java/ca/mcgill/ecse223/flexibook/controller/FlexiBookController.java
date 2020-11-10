@@ -62,6 +62,7 @@ public class FlexiBookController {
 		
 		try {
 			appointment.startAppointment(SystemDate, SystemTime);
+			FlexiBookPersistence.save(flexiBook);
 		} catch(RuntimeException e){
 			throw new InvalidInputException(e.getMessage());
 		}	
@@ -74,8 +75,20 @@ public class FlexiBookController {
 	 * @param dateTime
 	 * @param appointment
 	 * @param flexiBook
+	 * @throws InvalidInputException 
 	 */
-	public static void registerNoShow(String dateTime, Appointment appointment) {
+	public static void registerNoShow(String username, Date appointmentDate, Time appointmentTime, String dateTime, FlexiBook flexiBook) throws InvalidInputException {
+		Appointment appointment = null;
+		
+		List<Appointment> appointmentList = flexiBook.getAppointments();
+		for (int i = 0; i < appointmentList.size(); i++) {
+			Appointment thisAppointment = appointmentList.get(i);
+			if(thisAppointment.getCustomer().getUsername().equals(username) && appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate()) && appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime())) {
+				appointment = thisAppointment;
+				break;
+			}
+		}
+		
 		String datePart = dateTime.substring(0, 10);
 		String timePart = dateTime.substring(11, 16);
 		Date date = Date.valueOf(datePart);
@@ -87,7 +100,15 @@ public class FlexiBookController {
 		if(appointment.getTimeSlot().getStartDate().after(date) || appointment.getTimeSlot().getStartTime().after(time)) {
 			return;
 		}
-		appointment.noShow(appointment.getCustomer());
+		
+		try {
+			appointment.noShow(appointment.getCustomer());
+			FlexiBookPersistence.save(flexiBook);
+			
+		} catch(RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
+		}
+		
 		
 	}
 	
@@ -125,6 +146,7 @@ public class FlexiBookController {
 				return;
 			}
 			appointment.finishAppointment();
+			FlexiBookPersistence.save(flexiBook);
 			
 		} catch(RuntimeException e){
 			throw new InvalidInputException(e.getMessage());
@@ -179,18 +201,16 @@ public class FlexiBookController {
 			try {
 				
 				appointmentReturned = FlexiBookController.makeAppointment(username, newService, optionalServices, startTime, date, flexiBook, todaysDate);
+				FlexiBookPersistence.save(flexiBook);
 				
 			} catch(InvalidInputException e) {
 				//booking new appointment fails so restore original appointment
 				return FlexiBookController.makeAppointment(username, service, optionalServices, startTime, date, flexiBook, todaysDate);
-				//throw new InvalidInputException(e.getMessage());
 			}
 		}
 			
-			
-			
-		
 		return appointmentReturned;
+		
 	} 
 	
 	
@@ -298,9 +318,9 @@ public class FlexiBookController {
 			else {
 				
 				Appointment appointment = new Appointment(customer, thisService, timeSlot, flexiBook);
+				FlexiBookPersistence.save(flexiBook);
 				return appointment;
-
-				//FlexiBookPersistence.save(flexiBook);
+				
 			}	
 			
 		}
@@ -436,7 +456,7 @@ public class FlexiBookController {
 					
 					appointment.setTimeSlot(newTimeSlot);
 					appointment.modifyOptionalServices(newServices, removedServices);
-					//FlexiBookPersistence.save(flexiBook);
+					FlexiBookPersistence.save(flexiBook);
 					return "successful";
 				}
 			}
@@ -523,11 +543,6 @@ public class FlexiBookController {
 					
 					ServiceCombo thisCombo = (ServiceCombo)thisService;
 					int duration = thisCombo.getMainService().getService().getDuration();	
-//					for (ComboItem coi : thisCombo.getServices()) {
-//						if(coi.isMandatory() && !coi.getService().equals(thisCombo.getMainService().getService())) {
-//							duration += coi.getService().getDuration();
-//						}
-//					}
 					
 					//check if there are optional services
 					List<ComboItem> comboItemList = thisCombo.getServices();
@@ -549,8 +564,7 @@ public class FlexiBookController {
 				}
 				else {
 					appointment.modifyAppointmentTime(todaysDate, newTimeSlot);
-					//appointment.setTimeSlot(newTimeSlot);
-					//FlexiBookPersistence.save(flexiBook);
+					FlexiBookPersistence.save(flexiBook);
 					return "successful";
 				}
 				
@@ -758,9 +772,8 @@ public class FlexiBookController {
 			}
 			
 			if(username.equals(appointment.getCustomer().getUsername())) {
-				//appointment.delete();
 				appointment.cancelAppointment(todaysDate);
-				/////FlexiBookPersistence.save(flexiBook);
+				FlexiBookPersistence.save(flexiBook);
 			}
 			else{
 				throw new InvalidInputException("A customer can only cancel their own appointments");
@@ -922,7 +935,7 @@ public class FlexiBookController {
 						}		
 							
 					}
-			//}
+
 			
 		
 			
@@ -2248,7 +2261,7 @@ public class FlexiBookController {
 
 		  private static Date InvalidFormat;
 
-		    /**
+		  /**
 		     *
 		     * @author Venkata Satyanarayana Chivatam
 		     * @param username
@@ -2351,7 +2364,7 @@ public class FlexiBookController {
 
 		        for(int i =0; i<7; i++) {
 		            TimeSlot ts = flexiBook.getAppointment(i).getTimeSlot();
-
+		            	
 		            }
 		        }
 
