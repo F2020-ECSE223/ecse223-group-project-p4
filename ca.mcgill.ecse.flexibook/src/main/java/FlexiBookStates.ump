@@ -19,6 +19,10 @@ class Appointment {
 	      		rejectUpdateAppointment();
 	      	} -> Booked;
 	
+			modifyAppointmentTime (Date systemDate, TimeSlot newSlot) [overlapWithHoliday(systemDate))]/ {
+	      		rejectUpdateAppointment();
+	      	} -> Booked;
+	      	
 	      	cancelAppointment (Date systemDate) [atleastDayBefore(systemDate)] / {
 	     	 	doCancelAppointment();
 	     	} -> Finished;
