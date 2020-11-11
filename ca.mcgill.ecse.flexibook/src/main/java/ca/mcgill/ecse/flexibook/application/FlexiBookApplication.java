@@ -21,6 +21,10 @@ public class FlexiBookApplication {
 	private static Date currentDate; 
 	private static Appointment currentAppointment; 
 
+	public static void main (String[] args) {
+		
+	}
+	
 	public static FlexiBook getFlexiBook() {
 		if (flexiBook == null) {
 			// load model
