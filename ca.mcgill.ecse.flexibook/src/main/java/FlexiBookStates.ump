@@ -71,7 +71,6 @@ class Appointment {
 	
 
 	private void doCancelAppointment() {
-		FlexiBook flexiBook = this.getFlexiBook();
 		this.delete(); 
 	}
 	

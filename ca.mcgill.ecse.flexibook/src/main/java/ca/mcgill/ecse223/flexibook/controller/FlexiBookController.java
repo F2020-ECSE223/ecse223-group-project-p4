@@ -75,21 +75,39 @@ public class FlexiBookController {
 	 * @param appointment
 	 * @param flexiBook
 	 */
-	public static void registerNoShow(String dateTime, Appointment appointment) {
+	public static void registerNoShow(String username, Date appointmentDate, Time appointmentTime, String dateTime, FlexiBook flexiBook) throws InvalidInputException {
+		Appointment appointment = null;
+		
+		List<Appointment> appointmentList = flexiBook.getAppointments();
+		for (int i = 0; i < appointmentList.size(); i++) {
+			Appointment thisAppointment = appointmentList.get(i);
+			if(thisAppointment.getCustomer().getUsername().equals(username) && appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate()) && appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime())) {
+				appointment = thisAppointment;
+				break;
+			}
+		}
+		
 		String datePart = dateTime.substring(0, 10);
 		String timePart = dateTime.substring(11, 16);
 		Date date = Date.valueOf(datePart);
 		Time time = Time.valueOf(timePart + ":00");
-
-		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
+		
+		if(!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 			return;
 		}
-		if (appointment.getTimeSlot().getStartDate().after(date)
-				|| appointment.getTimeSlot().getStartTime().after(time)) {
+		if(appointment.getTimeSlot().getStartDate().after(date) || appointment.getTimeSlot().getStartTime().after(time)) {
 			return;
 		}
-		appointment.noShow(appointment.getCustomer());
-
+		
+		try {
+			appointment.noShow(appointment.getCustomer());
+			FlexiBookPersistence.save(flexiBook);
+			
+		} catch(RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
+		}
+		
+		
 	}
 
 	/**
