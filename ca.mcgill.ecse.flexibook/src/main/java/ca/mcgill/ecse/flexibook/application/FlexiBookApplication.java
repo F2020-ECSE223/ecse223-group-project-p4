@@ -13,6 +13,7 @@ import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse.flexibook.model.Owner;
 import ca.mcgill.ecse.flexibook.model.User;
 import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
+import ca.mcgill.ecse223.flexibook.view.FlexiBookPage;
 
 public class FlexiBookApplication {
 
@@ -22,8 +23,13 @@ public class FlexiBookApplication {
 	private static Date currentDate; 
 	private static Appointment currentAppointment; 
 
-	public static void main (String[] args) {
-		
+	public static void main(String[] args) {
+		// start UI
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FlexiBookPage().setVisible(true);
+            }
+        });
 	}
 	
 	public static FlexiBook getFlexiBook() {

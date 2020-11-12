@@ -1231,6 +1231,7 @@ public class FlexiBookController {
 				&& (serviceExistsAlready(flexiBook, name) == false)) {
 			service = new Service(name, flexiBook, duration, downtimeDuration, downtimeStart);
 		}
+		
 
 	}
 

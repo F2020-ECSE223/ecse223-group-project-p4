@@ -816,8 +816,8 @@ public class CucumberStepDefinitions {
 	@Given("the Owner with username {string} is logged in")
 
 	public void thereIsAnOwnerLoggedIn(String string) {
-		currentUser = FlexiBookApplication.setCurrentUser(User.getWithUsername(string));
-		assertEquals(string, currentUser.getUsername());
+	FlexiBookApplication.setCurrentUser(User.getWithUsername(string));
+	
 	}
 
 	/**
@@ -843,9 +843,16 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the service {string} shall exist in the system")
 	public void theServiceShallExistInTheSystem(String string) {
-		if (flexiBook.hasBookableServices() == true) {
-			assertEquals(string, Service.getWithName(string).getName());
+		boolean flag = false;
+		for(int i=0; i<flexiBook.getBookableServices().size();i++) {
+			if(flexiBook.getBookableService(i).getName().equals(string)) {
+				flag = true;
+			}
 		}
+		assertTrue(flag);
+//		if (flexiBook.hasBookableServices() == true) {
+//			assertEquals(string, Service.getWithName(string).getName());
+//		}
 	}
 
 	/**
@@ -853,12 +860,18 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the service {string} shall have duration {string}, start of down time {string} and down time duration {string}")
 	public void theServiceShallHave(String string, String string2, String string3, String string4) {
-		if (flexiBook.hasBookableServices() == true) {
-			int i = flexiBook.indexOfBookableService(Service.getWithName(string));
-			assertEquals(Integer.parseInt(string2), ((Service) flexiBook.getBookableService(i)).getDuration());
-			assertEquals(Integer.parseInt(string3), ((Service) flexiBook.getBookableService(i)).getDowntimeStart());
-			assertEquals(Integer.parseInt(string4), ((Service) flexiBook.getBookableService(i)).getDowntimeDuration());
+		//if (flexiBook.hasBookableServices() == true) {
+//			int i = flexiBook.indexOfBookableService(Service.getWithName(string));
+		int index =0;
+		for(int i=0; i<flexiBook.getBookableServices().size(); i++) {
+			if(flexiBook.getBookableService(i).getName().equals(string)) {
+				index =i;
+			}
 		}
+			assertEquals(Integer.parseInt(string2), ((Service) flexiBook.getBookableService(index)).getDuration());
+			assertEquals(Integer.parseInt(string3), ((Service) flexiBook.getBookableService(index)).getDowntimeStart());
+			assertEquals(Integer.parseInt(string4), ((Service) flexiBook.getBookableService(index)).getDowntimeDuration());
+		//}
 	}
 
 	/**
