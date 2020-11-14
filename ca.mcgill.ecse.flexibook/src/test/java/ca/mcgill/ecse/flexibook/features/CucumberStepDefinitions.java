@@ -303,6 +303,7 @@ public class CucumberStepDefinitions {
 	public void schedules_an_appointment_on_for_at(String username, String date, String serviceName, String startTime) {
 
 		try {
+			
 			FlexiBookController.makeAppointment(username, serviceName, null, startTime, date, flexiBook,
 					FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
 			prevAppointmentCntr = appointmentCntr;
@@ -460,6 +461,7 @@ public class CucumberStepDefinitions {
 	}
 
 	/**
+	 * 
 	 * @author Shaswata Bhattacharyya
 	 * @param username
 	 * @param serviceName

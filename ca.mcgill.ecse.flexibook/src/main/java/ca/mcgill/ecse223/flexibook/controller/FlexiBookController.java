@@ -937,9 +937,16 @@ public class FlexiBookController {
 
 		}
 
+		
+		
+		if(Integer.parseInt(startDate.toString().substring(0, 4))<=2019){
+			return false;
+		}
 //		// check time slot not in the past
 //		if(action == "service") {
-		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate) && startTimeApp.before(todaysTime) ){
+		//int intrrr = ;
+		
+		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate) && startTimeApp.before(todaysTime)  ){
 			return false;
 
 		}
