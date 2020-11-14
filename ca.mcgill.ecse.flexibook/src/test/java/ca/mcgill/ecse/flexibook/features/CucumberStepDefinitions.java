@@ -76,9 +76,12 @@ public class CucumberStepDefinitions {
 
 	@Given("a Flexibook system exists")
 	public void a_flexibook_system_exists() {
+
 		
+
+		FlexiBookApplication.getFlexiBook().delete();
+
 		flexiBook = FlexiBookApplication.getFlexiBook();
-		
 		appointmentCntr = 0;
 		prevAppointmentCntr = 0;
 		updateAppointmentSuccess = "";
@@ -155,7 +158,7 @@ public class CucumberStepDefinitions {
 	// */
 	@Given("the following service combos exist in the system:")
 	public void the_following_service_combos_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-		
+
 		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 		for (Map<String, String> columns : rows) {
 			ServiceCombo combo = new ServiceCombo(columns.get("name"), flexiBook);
@@ -182,8 +185,11 @@ public class CucumberStepDefinitions {
 				}
 
 			}
+			
 
 		}
+		
+
 	}
 
 
@@ -1277,7 +1283,6 @@ public class CucumberStepDefinitions {
 //				
 //			}	
 		List<Map<String,String>> list = dataTable.asMaps(String.class, String.class);
-	
 		for (int i = 0; i < list.size(); i++) {
 	
 			String a = list.get(i).get("date");
@@ -1298,19 +1303,42 @@ public class CucumberStepDefinitions {
 				String optServicesString = list.get(i).get("optServices");
 				if(!optServicesString.equals("none")) {
 				String[] optServicesArray = optServicesString.split(",");
-				for(int j=0; j<optServicesArray.length;j++) {
-					ComboItem coi = new ComboItem(false,(Service) findServiceByName(optServicesArray[j]), (ServiceCombo)BookableService.getWithName(list.get(i).get("serviceName") ));
-				appoint.addChosenItem(coi);
+				for( int k=0; k<flexiBook.getBookableServices().size(); k++) {
+					if(list.get(i).get("serviceName").equals(flexiBook.getBookableServices().get(k).getName())) {
+					for(int p=0; p< optServicesArray.length; p++) {
+						for( int y=0; y<(((ServiceCombo)flexiBook.getBookableServices().get(k))).getServices().size(); y++) {
+							if(findServiceByName(optServicesArray[p]).equals(((ServiceCombo)flexiBook.getBookableServices().get(k)).getService(y).getService())) {
+								appoint.addChosenItem(((ServiceCombo)flexiBook.getBookableServices().get(k)).getService(y));
+							}
+						}
+					}
+
+							
+						}
+						
+					
+					}
 				}
 				
 		}
-			}
+			
+		
 		else if( list.get(i).get("selectedComboItems") != null) {
 		String selectedComboItemsString = list.get(i).get("selectedComboItems");
 		String[] selectedComboItemsArray = selectedComboItemsString.split(",");
+		for( int k=0; k<flexiBook.getBookableServices().size(); k++) {
+		if(list.get(i).get("serviceName").equals(flexiBook.getBookableServices().get(k).getName())) {
 		for(int p=0; p< selectedComboItemsArray.length; p++) {
-			ComboItem comboItem = new ComboItem (false, (Service) findServiceByName(selectedComboItemsArray[p]), (ServiceCombo) BookableService.getWithName(list.get(i).get("serviceName")));
-		appoint.addChosenItem(comboItem);
+			for( int y=0; y<(((ServiceCombo)flexiBook.getBookableServices().get(k))).getServices().size(); y++) {
+				if(findServiceByName(selectedComboItemsArray[p]).equals(((ServiceCombo)flexiBook.getBookableServices().get(k)).getService(y).getService())) {
+					appoint.addChosenItem(((ServiceCombo)flexiBook.getBookableServices().get(k)).getService(y));
+				}
+			}
+		}
+
+				
+			}
+			
 		
 		}
 		
@@ -1318,6 +1346,7 @@ public class CucumberStepDefinitions {
 		flexiBook.addAppointment(appoint);
 			
 	}
+		
 		
 
 }		
@@ -2660,6 +2689,8 @@ public class CucumberStepDefinitions {
 		try {
 			FlexiBookController.startAppointment(customerName, appointmentTime, appointmentDate, currentDate,
 					currentTime, flexiBook);
+//			FlexiBookApplication.setSystemDate(string.substring(0, 10));
+//			FlexiBookApplication.setSystemTime(time)
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}

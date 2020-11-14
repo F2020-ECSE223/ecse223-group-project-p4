@@ -252,7 +252,7 @@ public class FlexiBookController {
 
 			// find the available service from the flexibook corresponding to the name
 			BookableService thisService = findServiceByName(mainServiceName, flexiBook);
-
+			
 			// find the customer trying to book an appointment
 			customer = findCustomerByName(username, flexiBook);
 
@@ -265,6 +265,7 @@ public class FlexiBookController {
 			} else if (thisService.getClass().equals(ServiceCombo.class)) { // the bookableService is a ServiceCombo
 
 				ServiceCombo combo = (ServiceCombo) thisService;
+			
 				int duration = 0;
 				ComboItem main = combo.getMainService();
 				duration += main.getService().getDuration();
@@ -276,8 +277,41 @@ public class FlexiBookController {
 						}
 					}
 				}
-
+//				Appointment appoint1 = new Appointment(customer, thisService, timeSlot, flexiBook);
 				// check if there are optional services
+//				if(optionalServiceNames == null) {
+//					for(int z=0; z< ((ServiceCombo)thisService).getServices().size(); z++) {
+//						if(!((ServiceCombo)thisService).getService(z).isMandatory()) {
+//							combo.removeService(((ServiceCombo)thisService).getService(z));
+//						}
+//					}
+//				}
+//					for(int z=0; z <combo.getServices().size(); z++) {
+//						if(combo.getService(z).isMandatory()) {
+//							appoint1.addChosenItem(combo.getService(z));
+//						}
+//					
+//				if (optionalServiceNames != null) {
+//					Service optionalService;
+//					for (int i = 0; i < serviceList.size(); i++) {
+//						if (optionalServiceNames.contains(serviceList.get(i).getName())) {
+//							for(int r=0; r<optionalServiceNames.size(); r++) {
+//						if(combo.getService(z).equals(optionalServiceNames.get(r))){
+//							
+//							appoint1.addChosenItem(combo.getService(z));
+//							}
+//							
+//								
+////						}		
+//							optionalService = (Service) serviceList.get(i);
+//							duration += optionalService.getDuration();
+//						//	ComboItem optionalComboItem = new ComboItem(false, optionalService, combo);
+////						
+//							}
+//							}
+//						}
+//					}
+
 				if (optionalServiceNames != null) {
 					Service optionalService;
 					for (int i = 0; i < serviceList.size(); i++) {
@@ -285,8 +319,8 @@ public class FlexiBookController {
 
 							optionalService = (Service) serviceList.get(i);
 							duration += optionalService.getDuration();
-							ComboItem optionalComboItem = new ComboItem(false, optionalService, combo);
-							combo.addService(optionalComboItem);
+//							ComboItem optionalComboItem = new ComboItem(false, optionalService, combo);
+//							combo.addService(optionalComboItem);
 
 						}
 					}
@@ -294,8 +328,9 @@ public class FlexiBookController {
 				}
 
 				timeSlot = getTimeSlot(startTime, startDate, duration, flexiBook);
-
-			}
+				
+				}
+			
 
 			// check if the appointment is within valid business hours
 			if (checkDateAndTime(timeSlot, null, flexiBook, todaysDate) == false) {
@@ -304,10 +339,41 @@ public class FlexiBookController {
 			} else {
 
 				Appointment appointment = new Appointment(customer, thisService, timeSlot, flexiBook);
+				
+				if (thisService.getClass().equals(ServiceCombo.class)) { 
+				ServiceCombo combo = (ServiceCombo) thisService;
+
+				for(int z=0; z <combo.getServices().size(); z++) {
+					if(combo.getService(z).isMandatory()) {
+						appointment.addChosenItem(combo.getService(z));
+					}
+				
+			if (optionalServiceNames != null) {
+				Service optionalService;
+				for (int i = 0; i < serviceList.size(); i++) {
+					if (optionalServiceNames.contains(serviceList.get(i).getName())) {
+						for(int r=0; r<optionalServiceNames.size(); r++) {
+					if(combo.getService(z).getService().getName().equals(optionalServiceNames.get(r))){
+						
+						appointment.addChosenItem(combo.getService(z));
+						}
+						
+						}	
+					}		
+//						optionalService = (Service) serviceList.get(i);
+//						duration += optionalService.getDuration();
+//						ComboItem optionalComboItem = new ComboItem(false, optionalService, combo);
+						//combo.removeService(coi);
+						}
+						}
+					}
+				}
 				return appointment;
 
 				// FlexiBookPersistence.save(flexiBook);
+			
 			}
+			
 
 		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
@@ -535,12 +601,14 @@ public class FlexiBookController {
 //					}
 
 					// check if there are optional services
-					List<ComboItem> comboItemList = thisCombo.getServices();
+					List<ComboItem> comboItemList = appointment.getChosenItems();
 					Service optionalService;
 
 					for (int i = 0; i < comboItemList.size(); i++) {
 						optionalService = comboItemList.get(i).getService();
-						if (comboItemList.get(i).isMandatory() == true) {
+						
+						
+						if ( !comboItemList.get(i).equals(thisCombo.getMainService())) {
 							duration += optionalService.getDuration();
 						}
 					}
@@ -868,10 +936,14 @@ public class FlexiBookController {
 
 		}
 
-		// check time slot not in the past
-		if (!(startDate.after(todaysDate))) {
+//		// check time slot not in the past
+//		if(action == "service") {
+//		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate)) {
+//			return false;
+//
+//		}
+		if(!(startDate.after(todaysDate))) {
 			return false;
-
 		}
 
 		// if appointment within downtime of another
@@ -915,82 +987,38 @@ public class FlexiBookController {
 						}
 					} else { // the bookableService is a ServiceCombo
 						ServiceCombo servCombo = (ServiceCombo) thisAppointment.getBookableService();
-//						for (int k = 0; k < servCombo.getServices().size(); k++) {
-//							if (servCombo.getServices().get(k).getMandatory()) {
-//								index = k;
-//							}
-////						}
-//						for(int p=0; p< servCombo.getServices().size(); p++) {
-//							if ((startTime >= (stime + (servCombo.getService(p).getService().getDowntimeStart() * 60000))
-//									&& endTime <= (stime
-//											+ (servCombo.getService(p).getService().getDowntimeStart() + servCombo.getService(p).getService().getDowntimeDuration()) * 60000)
-//									&& servCombo.getService(p).getService().getDowntimeDuration() != 0) || (startTime < etime && endTime<= etime)) {
-//								return true;
-//							} else {
-//								return false;
-//							}
-//							
-//						}
-//						if (thisAppointment.hasChosenItems()) {
-							for (int j = 0; j < thisAppointment.getChosenItems().size(); j++) {
-
-								if (servCombo.indexOfService(thisAppointment.getChosenItems().get(j)) < servCombo
-										.indexOfService(servCombo.getMainService())) {
-									thisService = thisAppointment.getChosenItems().get(j).getService();
-
-									if (startTime >= (stime + (thisService.getDowntimeStart() * 60000))
-											&& endTime <= (stime + (thisService.getDowntimeStart()
-													+ thisService.getDowntimeDuration()) * 60000)
-											&& thisService.getDowntimeStart() != 0) {
-										valid = true;
-										break;
-
-									} else {
-										stime += (thisService.getDuration() * 60000);
-									}
-								} else if (servCombo.indexOfService(thisAppointment.getChosenItems().get(j)) > servCombo
-										.indexOfService(servCombo.getMainService()))
-									if (startTime >= (stime
-											+ (servCombo.getMainService().getService().getDowntimeStart() * 60000))
-											&& endTime <= (stime + (servCombo.getMainService().getService()
-													.getDowntimeStart()
-													+ servCombo.getMainService().getService().getDowntimeDuration())
-													* 60000)
-													& servCombo.getMainService().getService().getDowntimeStart() != 0) {
-										valid = true; // appointment during the downtime of a service
-										break;
-
-									}
-
-									else {
-										stime += (servCombo.getMainService().getService().getDuration() * 60000); // appointment
-																													// overlapping
-																													// with
-																													// a
-																													// service
-										if (startTime >= (stime + (thisService.getDowntimeStart() * 60000))
-												&& endTime <= (stime + (thisService.getDowntimeStart()
-														+ thisService.getDowntimeDuration()) * 60000)
-														& thisService.getDowntimeStart() != 0) {
-											valid = true;
-											break;
-										} else {
-											stime += (thisService.getDuration() * 60000);
-										}
-									}
+//						
+						Service main  = servCombo.getMainService().getService();
+						if( startTime >= (stime+ (main.getDowntimeStart()) *60000) && endTime <= (stime + (main.getDowntimeStart() + main.getDowntimeDuration()) * 60000) && main.getDowntimeDuration() !=0 ){
+							valid = true;
+							break;
+						}
+						else {
+							stime += (main.getDuration() * 60000);
+						}
+						
+						for(int j=0; j< thisAppointment.getChosenItems().size();j++) {
+							thisService = thisAppointment.getChosenItems().get(j).getService();
+							
+							if( startTime  >= (stime +( thisService.getDowntimeStart()* 60000)) && endTime <= (stime + (thisService.getDowntimeStart() + thisService.getDowntimeDuration()) * 60000) && thisService.getDowntimeDuration() !=0 ){
+							valid = true;
+							break;
+						}
+							else {
+								stime += (thisService.getDuration() * 60000);
 							}
 
 						}
 					}
 
-				//}
+				}
 
 			}
 		}
 
 		return valid;
 	}
-
+	
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param username
