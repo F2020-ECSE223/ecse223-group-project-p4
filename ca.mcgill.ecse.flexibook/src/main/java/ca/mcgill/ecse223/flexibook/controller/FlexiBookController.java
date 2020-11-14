@@ -75,39 +75,42 @@ public class FlexiBookController {
 	 * @param appointment
 	 * @param flexiBook
 	 */
-	public static void registerNoShow(String username, Date appointmentDate, Time appointmentTime, String dateTime, FlexiBook flexiBook) throws InvalidInputException {
+	public static void registerNoShow(String username, Date appointmentDate, Time appointmentTime, String dateTime,
+			FlexiBook flexiBook) throws InvalidInputException {
 		Appointment appointment = null;
-		
+
 		List<Appointment> appointmentList = flexiBook.getAppointments();
 		for (int i = 0; i < appointmentList.size(); i++) {
 			Appointment thisAppointment = appointmentList.get(i);
-			if(thisAppointment.getCustomer().getUsername().equals(username) && appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate()) && appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime())) {
+			if (thisAppointment.getCustomer().getUsername().equals(username)
+					&& appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate())
+					&& appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime())) {
 				appointment = thisAppointment;
 				break;
 			}
 		}
-		
+
 		String datePart = dateTime.substring(0, 10);
 		String timePart = dateTime.substring(11, 16);
 		Date date = Date.valueOf(datePart);
 		Time time = Time.valueOf(timePart + ":00");
-		
-		if(!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
+
+		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 			return;
 		}
-		if(appointment.getTimeSlot().getStartDate().after(date) || appointment.getTimeSlot().getStartTime().after(time)) {
+		if (appointment.getTimeSlot().getStartDate().after(date)
+				|| appointment.getTimeSlot().getStartTime().after(time)) {
 			return;
 		}
-		
+
 		try {
 			appointment.noShow(appointment.getCustomer());
-			FlexiBookPersistence.save(flexiBook);
-			
-		} catch(RuntimeException e) {
+			//FlexiBookPersistence.save(flexiBook);
+
+		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
-		
-		
+
 	}
 
 	/**
@@ -880,13 +883,14 @@ public class FlexiBookController {
 		int index = 0;
 		for (int i = 0; i < existingAppointments.size(); i++) {
 			thisAppointment = existingAppointments.get(i);
-			
+
 			if (thisAppointment.equals(appointment)) {
 				continue;
 			}
 			stime = thisAppointment.getTimeSlot().getStartTime().getTime(); // in ms
+			
 			etime = thisAppointment.getTimeSlot().getEndTime().getTime();
-
+			long durationTime = etime - stime;
 			if (timeSlot.getStartDate().equals(thisAppointment.getTimeSlot().getStartDate())
 					&& thisAppointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 
@@ -915,60 +919,71 @@ public class FlexiBookController {
 //							if (servCombo.getServices().get(k).getMandatory()) {
 //								index = k;
 //							}
+////						}
+//						for(int p=0; p< servCombo.getServices().size(); p++) {
+//							if ((startTime >= (stime + (servCombo.getService(p).getService().getDowntimeStart() * 60000))
+//									&& endTime <= (stime
+//											+ (servCombo.getService(p).getService().getDowntimeStart() + servCombo.getService(p).getService().getDowntimeDuration()) * 60000)
+//									&& servCombo.getService(p).getService().getDowntimeDuration() != 0) || (startTime < etime && endTime<= etime)) {
+//								return true;
+//							} else {
+//								return false;
+//							}
+//							
 //						}
+//						if (thisAppointment.hasChosenItems()) {
+							for (int j = 0; j < thisAppointment.getChosenItems().size(); j++) {
 
-						for (int j = 0; j < thisAppointment.getChosenItems().size(); j++) {
+								if (servCombo.indexOfService(thisAppointment.getChosenItems().get(j)) < servCombo
+										.indexOfService(servCombo.getMainService())) {
+									thisService = thisAppointment.getChosenItems().get(j).getService();
 
-							if (servCombo.indexOfService(thisAppointment.getChosenItems().get(j)) < servCombo
-									.indexOfService(servCombo.getMainService())) {
-								thisService = thisAppointment.getChosenItems().get(j).getService();
-
-								if (startTime >= (stime + (thisService.getDowntimeStart() * 60000)) && endTime <= (stime
-										+ (thisService.getDowntimeStart() + thisService.getDowntimeDuration()) * 60000)
-										&& thisService.getDowntimeStart() != 0) {
-									valid = true;
-									break;
-
-								} else {
-									stime += (thisService.getDuration() * 60000);
-								}
-							} else if (servCombo.indexOfService(thisAppointment.getChosenItems().get(j)) > servCombo
-									.indexOfService(servCombo.getMainService()))
-								if (startTime >= (stime
-										+ (servCombo.getMainService().getService().getDowntimeStart() * 60000))
-										&& endTime <= (stime
-												+ (servCombo.getMainService().getService().getDowntimeStart()
-														+ servCombo.getMainService().getService().getDowntimeDuration())
-														* 60000)
-												& servCombo.getMainService().getService().getDowntimeStart() != 0) {
-									valid = true; // appointment during the downtime of a service
-									break;
-									
-									
-								}
-
-								else {
-									stime += (servCombo.getMainService().getService().getDuration() *60000); // appointment overlapping with a service
-									if (startTime >= (stime
-											+ (thisService.getDowntimeStart() * 60000))
-											&& endTime <= (stime
-													+ (thisService.getDowntimeStart()
-															+ thisService.getDowntimeDuration())
-															* 60000)
-													& thisService.getDowntimeStart() != 0) {	
+									if (startTime >= (stime + (thisService.getDowntimeStart() * 60000))
+											&& endTime <= (stime + (thisService.getDowntimeStart()
+													+ thisService.getDowntimeDuration()) * 60000)
+											&& thisService.getDowntimeStart() != 0) {
 										valid = true;
 										break;
+
+									} else {
+										stime += (thisService.getDuration() * 60000);
 									}
+								} else if (servCombo.indexOfService(thisAppointment.getChosenItems().get(j)) > servCombo
+										.indexOfService(servCombo.getMainService()))
+									if (startTime >= (stime
+											+ (servCombo.getMainService().getService().getDowntimeStart() * 60000))
+											&& endTime <= (stime + (servCombo.getMainService().getService()
+													.getDowntimeStart()
+													+ servCombo.getMainService().getService().getDowntimeDuration())
+													* 60000)
+													& servCombo.getMainService().getService().getDowntimeStart() != 0) {
+										valid = true; // appointment during the downtime of a service
+										break;
+
+									}
+
 									else {
-										stime += (thisService.getDuration()* 60000);
+										stime += (servCombo.getMainService().getService().getDuration() * 60000); // appointment
+																													// overlapping
+																													// with
+																													// a
+																													// service
+										if (startTime >= (stime + (thisService.getDowntimeStart() * 60000))
+												&& endTime <= (stime + (thisService.getDowntimeStart()
+														+ thisService.getDowntimeDuration()) * 60000)
+														& thisService.getDowntimeStart() != 0) {
+											valid = true;
+											break;
+										} else {
+											stime += (thisService.getDuration() * 60000);
+										}
 									}
-								}
+							}
+
 						}
-
 					}
-					
 
-				}
+				//}
 
 			}
 		}
@@ -1231,7 +1246,6 @@ public class FlexiBookController {
 				&& (serviceExistsAlready(flexiBook, name) == false)) {
 			service = new Service(name, flexiBook, duration, downtimeDuration, downtimeStart);
 		}
-		
 
 	}
 

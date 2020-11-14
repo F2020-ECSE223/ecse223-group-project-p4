@@ -35,7 +35,8 @@ public class FlexiBookApplication {
 	public static FlexiBook getFlexiBook() {
 		if (flexiBook == null) {
 			// load model
-	        flexiBook = FlexiBookPersistence.load();
+	        //flexiBook = FlexiBookPersistence.load();
+		flexiBook = new FlexiBook();
 		}
  		return flexiBook;
 	}

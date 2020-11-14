@@ -2,11 +2,14 @@ package ca.mcgill.ecse223.flexibook.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Window;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 
 public class FlexiBookPage extends JFrame {
 	/**
@@ -43,7 +46,12 @@ public class FlexiBookPage extends JFrame {
 		//pane
 		setUpScrollPane = new JScrollPane(setUpTable);
 		this.add(setUpScrollPane);
-		setUpScrollPane.setPreferredSize(new Dimension(500,500));
+
+		setUpScrollPane.setPreferredSize(new Dimension(50000,50000));
+		setUpScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setTitle("FlexiBook Application");
 	}
 
 }

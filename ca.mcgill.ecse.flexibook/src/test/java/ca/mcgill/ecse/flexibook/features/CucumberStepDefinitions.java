@@ -76,7 +76,9 @@ public class CucumberStepDefinitions {
 
 	@Given("a Flexibook system exists")
 	public void a_flexibook_system_exists() {
+		
 		flexiBook = FlexiBookApplication.getFlexiBook();
+		
 		appointmentCntr = 0;
 		prevAppointmentCntr = 0;
 		updateAppointmentSuccess = "";
@@ -96,6 +98,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("the system's time and date is {string}")
 	public void the_system_s_time_and_date_is(String string) {
+		
 		SystemDateTime = Date.valueOf(string.substring(0, 10));
 		String dateAndTime[] = string.split("\\+");
 		FlexiBookApplication.setSystemDate(dateAndTime[0]);
@@ -108,6 +111,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("an owner account exists in the system")
 	public void an_owner_account_exists_in_the_system() {
+	
 		Owner owner = flexiBook.getOwner();
 		if (owner == null) {
 			owner = new Owner("owner", "admin", flexiBook);
@@ -134,7 +138,7 @@ public class CucumberStepDefinitions {
 
 	@Given("the following customers exist in the system:")
 	public void the_following_customers_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-
+		
 		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 		for (Map<String, String> columns : rows) {
 			flexiBook.addCustomer(new Customer(columns.get("username"), columns.get("password"), flexiBook));
@@ -151,7 +155,7 @@ public class CucumberStepDefinitions {
 	// */
 	@Given("the following service combos exist in the system:")
 	public void the_following_service_combos_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-
+		
 		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 		for (Map<String, String> columns : rows) {
 			ServiceCombo combo = new ServiceCombo(columns.get("name"), flexiBook);
@@ -1286,23 +1290,37 @@ public class CucumberStepDefinitions {
 			
 			Appointment appoint = new Appointment((Customer) Customer.getWithUsername(list.get(i).get("customer")),
 					(BookableService) BookableService.getWithName(list.get(i).get("serviceName")),timeSlot, flexiBook);
-			flexiBook.addAppointment(appoint);
 			
+			
+		
+		if(list.get(i).get("optServices")!= null) {
+		
+				String optServicesString = list.get(i).get("optServices");
+				if(!optServicesString.equals("none")) {
+				String[] optServicesArray = optServicesString.split(",");
+				for(int j=0; j<optServicesArray.length;j++) {
+					ComboItem coi = new ComboItem(false,(Service) findServiceByName(optServicesArray[j]), (ServiceCombo)BookableService.getWithName(list.get(i).get("serviceName") ));
+				appoint.addChosenItem(coi);
+				}
+				
 		}
-//				String optServicesString = list.get(i).get(2);
-//				if(!optServicesString.equals("none")) {
-//				String[] optServicesArray = optServicesString.split(",");
-//				for(int j=0; j<optServicesArray.length;j++) {
-//					ComboItem coi = new ComboItem(false,(Service) findServiceByName(optServicesArray[j]), (ServiceCombo)BookableService.getWithName(list.get(i).get(1) ));
-//				appoint.addChosenItem(coi);
-//				}
-//				flexiBook.addAppointment(appoint);
-//		}
-//			}
+			}
+		else if( list.get(i).get("selectedComboItems") != null) {
+		String selectedComboItemsString = list.get(i).get("selectedComboItems");
+		String[] selectedComboItemsArray = selectedComboItemsString.split(",");
+		for(int p=0; p< selectedComboItemsArray.length; p++) {
+			ComboItem comboItem = new ComboItem (false, (Service) findServiceByName(selectedComboItemsArray[p]), (ServiceCombo) BookableService.getWithName(list.get(i).get("serviceName")));
+		appoint.addChosenItem(comboItem);
+		
+		}
+		
+		}
+		flexiBook.addAppointment(appoint);
 			
 	}
+		
 
-			
+}		
 //			flexiBook.addAppointment((Customer) Customer.getWithUsername(list.get(i).get("customer")),
 //					(BookableService) BookableService.getWithName(list.get(i).get("serviceName")), timeSlot);
 
@@ -2567,6 +2585,8 @@ public class CucumberStepDefinitions {
 			String string2, String string3, String string4, String string5) {
 
 		try {
+			
+			
 			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook,
 					Date.valueOf(string5.substring(0, 10)));
 			FlexiBookApplication.setAppointment(appointment);
@@ -2593,7 +2613,7 @@ public class CucumberStepDefinitions {
 		try {
 
 			// Appointment app = appointment;
-			Appointment app = FlexiBookApplication.getAppointment();
+			Appointment app = appointment;
 			FlexiBookController.updateAppointmentServices(string, app.getBookableService().getName(), items, null,
 					app.getTimeSlot().getStartTime(), app.getTimeSlot().getStartDate(),
 					Date.valueOf(string3.substring(0, 10)), flexiBook);
