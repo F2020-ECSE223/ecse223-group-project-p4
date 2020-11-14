@@ -938,14 +938,12 @@ public class FlexiBookController {
 		}
 
 		
-		
+		// checking if is in 2019
 		if(Integer.parseInt(startDate.toString().substring(0, 4))<=2019){
 			return false;
 		}
 //		// check time slot not in the past
-//		if(action == "service") {
-		//int intrrr = ;
-		
+//				
 		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate) && startTimeApp.before(todaysTime)  ){
 			return false;
 
@@ -953,11 +951,7 @@ public class FlexiBookController {
 		if(!(startDate.after(todaysDate))&& startTimeApp.after(todaysTime)) {
 			return false;
 		}
-//		if(!(startDate.after(todaysDate))) {
-//			return false;
-//		}
-
-		// if appointment within downtime of another
+		
 		Appointment thisAppointment;
 		Service thisService = null;
 		boolean valid = true;
@@ -978,7 +972,7 @@ public class FlexiBookController {
 					&& thisAppointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 
 				if ((startTime >= stime && endTime < etime) || (startTime >= stime && startTime < etime)
-						|| (endTime >= stime && endTime <= etime) || (startTime <= stime && endTime >= etime)) { // if
+						|| (endTime > stime && endTime <= etime) || (startTime <= stime && endTime >= etime)) { // if
 																													// overlap
 																													// with
 																													// another
