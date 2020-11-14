@@ -76,6 +76,7 @@ public class CucumberStepDefinitions {
 
 	@Given("a Flexibook system exists")
 	public void a_flexibook_system_exists() {
+		FlexiBookApplication.getFlexiBook().delete();
 		flexiBook = FlexiBookApplication.getFlexiBook();
 		appointmentCntr = 0;
 		prevAppointmentCntr = 0;
