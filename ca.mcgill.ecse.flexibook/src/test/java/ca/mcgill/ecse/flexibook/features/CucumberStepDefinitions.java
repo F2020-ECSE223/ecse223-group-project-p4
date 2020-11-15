@@ -291,7 +291,6 @@ public class CucumberStepDefinitions {
 				
 		}
 		}
-
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param username
@@ -304,8 +303,7 @@ public class CucumberStepDefinitions {
 
 		try {
 			
-			FlexiBookController.makeAppointment(username, serviceName, null, startTime, date, flexiBook,
-					FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			FlexiBookController.makeAppointment(username, serviceName, null, startTime, date, flexiBook, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr++;
 		} catch (InvalidInputException e) {
@@ -363,9 +361,7 @@ public class CucumberStepDefinitions {
 			String oldTime, String newDate, String newTime) {
 
 		try {
-		flexiBook.getAppointments();
-			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username, serviceName, newTime,
-					newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
+			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -386,7 +382,7 @@ public class CucumberStepDefinitions {
 
 		try {
 
-			FlexiBookController.cancelAppointment(username, time, date, FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime(), flexiBook);
+			FlexiBookController.cancelAppointment(username, time, date, FlexiBookApplication.getSystemDate(), flexiBook);
 
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr--;
@@ -439,8 +435,7 @@ public class CucumberStepDefinitions {
 		List<String> optionalServiceList = Arrays.asList(optionalServices);
 
 		try {
-			FlexiBookController.makeAppointment(username, serviceName, optionalServiceList, time, date, flexiBook,
-					FlexiBookApplication.getSystemDate() ,FlexiBookApplication.getSystemTime());
+			FlexiBookController.makeAppointment(username, serviceName, optionalServiceList, time, date, flexiBook, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr++;
 		} catch (InvalidInputException e) {
@@ -564,7 +559,7 @@ public class CucumberStepDefinitions {
 
 		try {
 			appointment = findAppointment(username1, oldDate, oldTime, serviceName);
-			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username1, serviceName, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), FlexiBookApplication.getSystemDate() , FlexiBookApplication.getSystemTime(), flexiBook);
+			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username1, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime(), flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -586,7 +581,7 @@ public class CucumberStepDefinitions {
 
 		try {
 
-			FlexiBookController.cancelAppointment(username1, time, date, FlexiBookApplication.getSystemDate() ,FlexiBookApplication.getSystemTime(), flexiBook);
+			FlexiBookController.cancelAppointment(username1, time, date, FlexiBookApplication.getSystemDate(), flexiBook);
 
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr--;
@@ -2398,8 +2393,7 @@ public class CucumberStepDefinitions {
 			FlexiBookApplication.setSystemDate(string5.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string5.substring(11, 16) + ":00");
 
-			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook,
-					FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime());
+			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
 			FlexiBookApplication.setAppointment(appointment);
 			appointmentCntr++;
 
@@ -2423,14 +2417,8 @@ public class CucumberStepDefinitions {
 		try {
 			FlexiBookApplication.setSystemDate(string3.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string3.substring(11, 16)+":00" );
-
-			Appointment thisAppointment = FlexiBookController.cancelAndBookNewService(string,
-					appointment.getBookableService().getName(), string2, null,
-					appointment.getTimeSlot().getStartTime().toString().substring(0, 5),
-					appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime(), flexiBook);
-			appointment = thisAppointment;
-
-			appointment = FlexiBookController.cancelAndBookNewService(string, appointment.getBookableService().getName(), string2, null, appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime(), flexiBook);
+			
+			appointment = FlexiBookController.cancelAndBookNewService(string, string2, null, appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
 			
 
 		} catch (InvalidInputException e) {
@@ -2543,7 +2531,7 @@ public class CucumberStepDefinitions {
 			Date oldDate = appointment.getTimeSlot().getStartDate();
 			FlexiBookApplication.setSystemDate(string4.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string4.substring(11, 16) +":00");
-			FlexiBookController.updateAppointmentTime(string, appointment.getBookableService().getName(), newTime, newDate, oldTime, oldDate, FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime(), flexiBook);
+			FlexiBookController.updateAppointmentTime(string, newTime, newDate, oldTime, oldDate, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
 			//appointment = FlexiBookApplication.getAppointment();
 
 		} catch (InvalidInputException e) {
@@ -2560,10 +2548,7 @@ public class CucumberStepDefinitions {
 		try {
 			FlexiBookApplication.setSystemDate((string2.substring(0, 10)));
 			FlexiBookApplication.setSystemTime((string2.substring(11, 16)) + ":00");
-			FlexiBookController.cancelAppointment(string,
-					appointment.getTimeSlot().getStartTime().toString().substring(0, 5),
-					appointment.getTimeSlot().getStartDate().toString(),FlexiBookApplication.getSystemDate() , FlexiBookApplication.getSystemTime(),
-					flexiBook);
+			FlexiBookController.cancelAppointment(string,appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(),FlexiBookApplication.getSystemDate(), flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2626,8 +2611,7 @@ public class CucumberStepDefinitions {
 			
 			FlexiBookApplication.setSystemDate(string5.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string5.substring(11, 16) +":00");
-			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook,
-					FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
 			FlexiBookApplication.setAppointment(appointment);
 
 		} catch (InvalidInputException e) {
@@ -2655,16 +2639,9 @@ public class CucumberStepDefinitions {
 			FlexiBookApplication.setSystemDate(string3.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string3.substring(11, 16)+":00");
 			Appointment app = appointment;
-			FlexiBookController.updateAppointmentServices(string, app.getBookableService().getName(), items, null,
-					app.getTimeSlot().getStartTime(), app.getTimeSlot().getStartDate(),
-					FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
+			FlexiBookController.updateAppointmentServices(string, app.getBookableService().getName(), items, null, app.getTimeSlot().getStartTime(), app.getTimeSlot().getStartDate(),FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
 		} 
-//		catch (InvalidInputException e) {
 
-			
-//			String service = appointment.getBookableService().getName();
-//			FlexiBookController.updateAppointmentServices(string, appointment.getBookableService().getName(), items, null, appointment.getTimeSlot().getStartTime(), appointment.getTimeSlot().getStartDate(), Date.valueOf(string3.substring(0, 10)), flexiBook);
-//		}
 		 catch(InvalidInputException e) {
 		error = e.getMessage();
 		}
