@@ -1,7 +1,5 @@
 package ca.mcgill.ecse.flexibook.features;
 
-import org.junit.Test;
-
 //import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -12,13 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 //import java.io.File;
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.Map;
+
 
 //import java.sql.Date;
 //import java.sql.Time;
@@ -31,22 +28,34 @@ import ca.mcgill.ecse223.flexibook.controller.*;
 import ca.mcgill.ecse.flexibook.application.*;
 
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class CucumberStepDefinitions {
 
-	/// 8888888888888888888888//
+
 
 	private static FlexiBook flexiBook;
 	private String error;
-	private int errorCntr;
 	private Integer appointmentCntr = 0;
 	private Integer prevAppointmentCntr = 0;
 	private String updateAppointmentSuccess = null;
 	private Date SystemDateTime;
 	private boolean exception;
+	private static Business business;
+	private static Owner owner;
+	private static User currentUser;
+	private static Service currService; 
+
+	private static List<Map<String, String>> preservedProperties;
+	private static List<Map<String, String>> existingServices;
+	private static List<ComboItem> combosInService;
+	private static int numCombos = 0;;
+	private static int numServices = 0;
+	private static List<BookableService> allBookableServices = null;
+	int numberOfAccounts=0;
 
 	/**
 	 * @author Shaswata Bhattacharyya
@@ -58,28 +67,31 @@ public class CucumberStepDefinitions {
 		FlexiBookApplication.setCurrentUser(user);
 	}
 
-	//
-	//
-	//
-	// /**
-	// * @author Shaswata Bhattacharyya
-	// */
+	
+	
+	@Before
+	 /**
+	 * @author Shaswata Bhattacharyya
+	 */
 
 	@Given("a Flexibook system exists")
 	public void a_flexibook_system_exists() {
+
+		
+
+		FlexiBookApplication.getFlexiBook().delete();
+
 		flexiBook = FlexiBookApplication.getFlexiBook();
 		appointmentCntr = 0;
 		prevAppointmentCntr = 0;
 		updateAppointmentSuccess = "";
 
 		error = "";
-		errorCntr = 0;
-
 		error = "";
-		errorCntr = 0;
-
+		
 		numServices = 0;
 		numCombos = 0;
+		currentUser = null;
 	}
 
 	//
@@ -89,6 +101,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("the system's time and date is {string}")
 	public void the_system_s_time_and_date_is(String string) {
+		
 		SystemDateTime = Date.valueOf(string.substring(0, 10));
 		String dateAndTime[] = string.split("\\+");
 		FlexiBookApplication.setSystemDate(dateAndTime[0]);
@@ -101,6 +114,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("an owner account exists in the system")
 	public void an_owner_account_exists_in_the_system() {
+	
 		Owner owner = flexiBook.getOwner();
 		if (owner == null) {
 			owner = new Owner("owner", "admin", flexiBook);
@@ -127,7 +141,7 @@ public class CucumberStepDefinitions {
 
 	@Given("the following customers exist in the system:")
 	public void the_following_customers_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-
+		
 		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 		for (Map<String, String> columns : rows) {
 			flexiBook.addCustomer(new Customer(columns.get("username"), columns.get("password"), flexiBook));
@@ -171,30 +185,13 @@ public class CucumberStepDefinitions {
 				}
 
 			}
+			
 
 		}
+		
+
 	}
 
-	/**
-	 * @author Shaswata Bhattacharyya
-	 * @param dataTable
-	 */
-
-	// @Given("the following services exist in the system:")
-	// public void
-	// the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable
-	// dataTable) {
-	//
-	// List<Map<String, String>> rows = dataTable.asMaps(String.class,
-	// String.class);
-	// for(Map<String, String> columns : rows) {
-	// flexiBook.addBookableService(new Service(columns.get("name"), flexiBook,
-	// Integer.parseInt(columns.get("duration")),
-	// Integer.parseInt(columns.get("downtimeDuration")),
-	// Integer.parseInt(columns.get("downtimeStart"))));
-	//
-	// }
-	// }
 
 	/**
 	 * @author Shaswata Bhattacharyya
@@ -310,7 +307,6 @@ public class CucumberStepDefinitions {
 			appointmentCntr++;
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 
 	}
@@ -348,7 +344,7 @@ public class CucumberStepDefinitions {
 
 	}
 
-	///////// UNCOMMENT
+
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param username
@@ -364,32 +360,16 @@ public class CucumberStepDefinitions {
 			String oldTime, String newDate, String newTime) {
 
 		try {
+			
 			Appointment app = appointment;
 			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username,  newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), SystemDateTime, flexiBook);
+
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 
 	}
 
-	// @When("{string} attempts to update their {string} appointment on {string} at
-	// {string} to {string} at {string}")
-	// public void attempts_to_update_their_appointment_on_at_to_at(String username,
-	// String serviceName, String oldDate, String oldTime, String newDate, String
-	// newTime) {
-	//
-	// try {
-	// updateAppointmentSuccess = FlexiBookController.updateAppointment(username,
-	// serviceName, null, null, newTime, newDate, Time.valueOf(oldTime + ":00"),
-	// Date.valueOf(oldDate), SystemDateTime, flexiBook);
-	// } catch (InvalidInputException e) {
-	// error = e.getMessage();
-	// errorCntr++;
-	// }
-	//
-	// }
-	//
 
 	/**
 	 * @author Shaswata Bhattacharyya
@@ -410,7 +390,6 @@ public class CucumberStepDefinitions {
 			appointmentCntr--;
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 
 	}
@@ -464,7 +443,6 @@ public class CucumberStepDefinitions {
 			appointmentCntr++;
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 
 	}
@@ -550,36 +528,11 @@ public class CucumberStepDefinitions {
 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 
 	}
 
-	// @When("{string} attempts to {string} {string} from their {string} appointment
-	// on {string} at {string}")
-	// public void attempts_to_from_their_appointment_on_at(String username, String
-	// action, String optService, String mainService, String date, String time) {
-	// String[] optionalServices = optService.split(",");
-	// List<String> optionalServiceList = Arrays.asList(optionalServices);
-	//
-	// try {
-	// if(action.equals("add")) {
-	// updateAppointmentSuccess = FlexiBookController.updateAppointment(username,
-	// mainService, optionalServiceList, null, null, null, Time.valueOf(time +
-	// ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
-	// }
-	// else if(action.equals("remove")) {
-	// updateAppointmentSuccess = FlexiBookController.updateAppointment(username,
-	// mainService, null, optionalServiceList, null, null, Time.valueOf(time +
-	// ":00"), Date.valueOf(date), SystemDateTime, flexiBook);
-	// }
-	//
-	// } catch (InvalidInputException e) {
-	// error = e.getMessage();
-	// errorCntr++;
-	// }
-	//
-	// }
+	
 
 	/**
 	 * @author Shaswata Bhattacharyya
@@ -587,7 +540,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the system shall report that the update was {string}")
 	public void the_system_shall_report_that_the_update_was(String string) {
-		assertTrue(string.equals(updateAppointmentSuccess));
+		assertEquals(string,updateAppointmentSuccess);
 	}
 
 	////// UNCOMMENT
@@ -611,28 +564,10 @@ public class CucumberStepDefinitions {
 			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username1, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), SystemDateTime, flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 
 	}
 
-	// @When("{string} attempts to update {string}'s {string} appointment on
-	// {string} at {string} to {string} at {string}")
-	// public void attempts_to_update_s_appointment_on_at_to_at(String username1,
-	// String username2, String serviceName, String oldDate, String oldTime, String
-	// newDate, String newTime) {
-	//
-	//
-	// try {
-	// updateAppointmentSuccess = FlexiBookController.updateAppointment(username1,
-	// serviceName, null, null, newTime, newDate, Time.valueOf(oldTime + ":00"),
-	// Date.valueOf(oldDate), SystemDateTime, flexiBook);
-	// } catch (InvalidInputException e) {
-	// error = e.getMessage();
-	// errorCntr++;
-	// }
-	//
-	// }
 
 	/**
 	 * @author Shaswata Bhattacharyya
@@ -654,7 +589,6 @@ public class CucumberStepDefinitions {
 			appointmentCntr--;
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 
 	}
@@ -712,16 +646,12 @@ public class CucumberStepDefinitions {
 		List<Appointment> appointmentList = flexiBook.getAppointments();
 		for (int i = 0; i < appointmentList.size(); i++) {
 			Appointment thisAppointment = appointmentList.get(i);
-			String Username = thisAppointment.getCustomer().getUsername();
+			thisAppointment.getCustomer().getUsername();
 
 			Date d = Date.valueOf(date);
 			Time t = Time.valueOf(time + ":00");
 
 
-//			if (d.equals(thisAppointment.getTimeSlot().getStartDate())
-//					&& t.equals(thisAppointment.getTimeSlot().getStartTime()) && Username.equals(username)) {
-//				theAppointment = thisAppointment;
-//				break;
 
 			if (d.equals(thisAppointment.getTimeSlot().getStartDate()) && t.equals(thisAppointment.getTimeSlot().getStartTime())) {
 					theAppointment = thisAppointment;
@@ -735,52 +665,10 @@ public class CucumberStepDefinitions {
 	}
 	
 
-	/*
-	 * 
-	 * Date aDate = Date.valueOf(date); Time aStartTime = Time.valueOf(time+ ":00");
-	 * // Time aEndTime = Time.valueOf(endTime + ":00");
-	 * 
-	 * Appointment appointment = null; for(Appointment specificAppointment :
-	 * flexiBook.getAppointments()) {
-	 * if(specificAppointment.getCustomer().getUsername().equals(username)) {
-	 * if(specificAppointment.getBookableService().getName().equals(bookableService)
-	 * ) { if(specificAppointment.getTimeSlot().getStartDate().equals(aDate)&&
-	 * specificAppointment.getTimeSlot().getEndDate().equals(aDate)) {
-	 * if(specificAppointment.getTimeSlot().getStartTime().equals(aStartTime)) {
-	 * appointment = specificAppointment; return appointment; } } } } }
-	 * 
-	 * return null;
-	 */
 
 	// *******************SERVICE IMPLEMENTATION*************************
 
-	private static Business business;
-	private static Owner owner;
-	private static User currentUser;
-	// private int errorCntr;
 
-	private static List<Map<String, String>> preservedProperties;
-	private static List<Map<String, String>> customers;
-	private static List<Map<String, String>> existingServices;
-	private static List<Map<String, String>> appointments;
-	private static List<Map<String, String>> serviceCombos;
-	private static List<ComboItem> combosInService;
-	private static int numCombos = 0;
-	private static int numServices = 0;
-	private static List<BookableService> allBookableServices;
-	private static Date startDate;
-	private static Date endDate;
-	private static Time startTime;
-	private static Time endTime;
-	int numberOfAccounts=0;
-
-	// @Given ("a Flexibook system exists")
-	// public void thereIsAFlexiBookSystem() {
-	// flexiBook = FlexiBookApplication.getFlexiBook();
-	// error = "";
-	// //errorCntr = 0;
-	//
-	// }
 
 	// /**
 	// * @author Sneha Singh
@@ -812,8 +700,8 @@ public class CucumberStepDefinitions {
 	@Given("the Owner with username {string} is logged in")
 
 	public void thereIsAnOwnerLoggedIn(String string) {
-		currentUser = FlexiBookApplication.setCurrentUser(User.getWithUsername(string));
-		assertEquals(string, currentUser.getUsername());
+	currentUser = FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
+	assertEquals(string, currentUser.getUsername());
 	}
 
 	/**
@@ -825,6 +713,8 @@ public class CucumberStepDefinitions {
 		try {
 			FlexiBookController.addService(aName, flexiBook, Integer.parseInt(aDuration),
 					Integer.parseInt(aDowntimeDuration), Integer.parseInt(aDowntimeStart));
+			
+			currService = (Service) Service.getWithName(aName);
 		}
 
 		catch (InvalidInputException e) {
@@ -839,9 +729,16 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the service {string} shall exist in the system")
 	public void theServiceShallExistInTheSystem(String string) {
-		if (flexiBook.hasBookableServices() == true) {
-			assertEquals(string, Service.getWithName(string).getName());
+		boolean flag = false;
+		for(int i=0; i<flexiBook.getBookableServices().size();i++) {
+			if(flexiBook.getBookableService(i).getName().equals(string)) {
+				flag = true;
+			}
 		}
+		assertTrue(flag);
+//		if (flexiBook.hasBookableServices() == true) {
+//			assertEquals(string, Service.getWithName(string).getName());
+//		}
 	}
 
 	/**
@@ -849,12 +746,18 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the service {string} shall have duration {string}, start of down time {string} and down time duration {string}")
 	public void theServiceShallHave(String string, String string2, String string3, String string4) {
-		if (flexiBook.hasBookableServices() == true) {
-			int i = flexiBook.indexOfBookableService(Service.getWithName(string));
-			assertEquals(Integer.parseInt(string2), ((Service) flexiBook.getBookableService(i)).getDuration());
-			assertEquals(Integer.parseInt(string3), ((Service) flexiBook.getBookableService(i)).getDowntimeStart());
-			assertEquals(Integer.parseInt(string4), ((Service) flexiBook.getBookableService(i)).getDowntimeDuration());
+		//if (flexiBook.hasBookableServices() == true) {
+//			int i = flexiBook.indexOfBookableService(Service.getWithName(string));
+		int index =0;
+		for(int i=0; i<flexiBook.getBookableServices().size(); i++) {
+			if(flexiBook.getBookableService(i).getName().equals(string)) {
+				index =i;
+			}
 		}
+			assertEquals(Integer.parseInt(string2), ((Service) flexiBook.getBookableService(index)).getDuration());
+			assertEquals(Integer.parseInt(string3), ((Service) flexiBook.getBookableService(index)).getDowntimeStart());
+			assertEquals(Integer.parseInt(string4), ((Service) flexiBook.getBookableService(index)).getDowntimeDuration());
+		//}
 	}
 
 	/**
@@ -862,10 +765,10 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the number of services in the system shall be {string}")
 	public void theNumberOfServicesInTheSystemShallBe(String string) {
-
 		allBookableServices = flexiBook.getBookableServices();
+		
 		for (int i = 0; i < allBookableServices.size(); i++) {
-			if (allBookableServices.get(i) instanceof Service) {
+			if (allBookableServices.get(i).getClass().equals(Service.class)) {
 				numServices++;
 			}
 		}
@@ -900,7 +803,6 @@ public class CucumberStepDefinitions {
 					(Integer.parseInt(existingServices.get(i).get("downtimeDuration"))),
 					(Integer.parseInt(existingServices.get(i).get("downtimeStart")))));
 		}
-
 	}
 
 	/**
@@ -1201,7 +1103,6 @@ public class CucumberStepDefinitions {
 			FlexiBookController.defineServiceCombo(string2, string, flexiBook, string3, string5, string4);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
-			errorCntr++;
 		}
 	}
 
@@ -1344,9 +1245,47 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("the following appointments exist in the system:")
 	public void the_following_appointments_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-		List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
+//		List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
+//		list.get(1).containsKey("optServices");
+//		for (int i = 0; i < list.size(); i++) {
+//
+//			String a = list.get(i).get("date");
+//
+//			Date startDate = Date.valueOf(a);
+//			Time startTime = Time.valueOf(list.get(i).get("startTime") + ":00");
+//			Date endDate = Date.valueOf(list.get(i).get("date"));
+//			Time endTime = Time.valueOf(list.get(i).get("endTime") + ":00");
+//			TimeSlot timeSlot = new TimeSlot(startDate, startTime, endDate, endTime, flexiBook);
+//			
+//			Appointment appoint = new Appointment((Customer) Customer.getWithUsername(list.get(i).get("customer")),
+//					(BookableService) BookableService.getWithName(list.get(i).get("serviceName")),timeSlot, flexiBook);
+//			
+//			list.get(2);
+//			//list.get(2).
+//			if(!list.get(i).get("optServices").equals("none")) {
+//				String optServicesString = list.get(i).get("optServices");
+//				String[] optServicesArray = optServicesString.split(",");
+//				for(int j=0; j<optServicesArray.length;j++) {
+//					ComboItem coi = new ComboItem(false,(Service) findServiceByName(optServicesArray[j]), (ServiceCombo)BookableService.getWithName(list.get(i).get("serviceName") ));
+//				appoint.addChosenItem(coi);
+//				}
+//				flexiBook.addAppointment(appoint);
+//				
+//			}
+//			}
+//			else if(list.get(2).containsKey("selectedComboItems")) {
+//				String optServicesString = list.get(i).get("selectedComboItems");
+//				String[] optServicesArray = optServicesString.split(",");
+//				for(int j=0; j<optServicesArray.length;j++) {
+//					ComboItem coi = new ComboItem(false,(Service) findServiceByName(optServicesArray[j]), (ServiceCombo)BookableService.getWithName(list.get(i).get("serviceName") ));
+//				appoint.addChosenItem(coi);
+//				}
+//				flexiBook.addAppointment(appoint);
+//				
+//			}	
+		List<Map<String,String>> list = dataTable.asMaps(String.class, String.class);
 		for (int i = 0; i < list.size(); i++) {
-
+	
 			String a = list.get(i).get("date");
 
 			Date startDate = Date.valueOf(a);
@@ -1354,11 +1293,68 @@ public class CucumberStepDefinitions {
 			Date endDate = Date.valueOf(list.get(i).get("date"));
 			Time endTime = Time.valueOf(list.get(i).get("endTime") + ":00");
 			TimeSlot timeSlot = new TimeSlot(startDate, startTime, endDate, endTime, flexiBook);
+			
+			Appointment appoint = new Appointment((Customer) Customer.getWithUsername(list.get(i).get("customer")),
+					(BookableService) BookableService.getWithName(list.get(i).get("serviceName")),timeSlot, flexiBook);
+			
+			
+		
+		if(list.get(i).get("optServices")!= null) {
+		
+				String optServicesString = list.get(i).get("optServices");
+				if(!optServicesString.equals("none")) {
+				String[] optServicesArray = optServicesString.split(",");
+				for( int k=0; k<flexiBook.getBookableServices().size(); k++) {
+					if(list.get(i).get("serviceName").equals(flexiBook.getBookableServices().get(k).getName())) {
+					for(int p=0; p< optServicesArray.length; p++) {
+						for( int y=0; y<(((ServiceCombo)flexiBook.getBookableServices().get(k))).getServices().size(); y++) {
+							if(findServiceByName(optServicesArray[p]).equals(((ServiceCombo)flexiBook.getBookableServices().get(k)).getService(y).getService())) {
+								appoint.addChosenItem(((ServiceCombo)flexiBook.getBookableServices().get(k)).getService(y));
+							}
+						}
+					}
 
-			flexiBook.addAppointment((Customer) Customer.getWithUsername(list.get(i).get("customer")),
-					(BookableService) BookableService.getWithName(list.get(i).get("serviceName")), timeSlot);
+							
+						}
+						
+					
+					}
+				}
+				
 		}
+			
+		
+		else if( list.get(i).get("selectedComboItems") != null) {
+		String selectedComboItemsString = list.get(i).get("selectedComboItems");
+		String[] selectedComboItemsArray = selectedComboItemsString.split(",");
+		for( int k=0; k<flexiBook.getBookableServices().size(); k++) {
+		if(list.get(i).get("serviceName").equals(flexiBook.getBookableServices().get(k).getName())) {
+		for(int p=0; p< selectedComboItemsArray.length; p++) {
+			for( int y=0; y<(((ServiceCombo)flexiBook.getBookableServices().get(k))).getServices().size(); y++) {
+				if(findServiceByName(selectedComboItemsArray[p]).equals(((ServiceCombo)flexiBook.getBookableServices().get(k)).getService(y).getService())) {
+					appoint.addChosenItem(((ServiceCombo)flexiBook.getBookableServices().get(k)).getService(y));
+				}
+			}
+		}
+
+				
+			}
+			
+		
+		}
+		
+		}
+		flexiBook.addAppointment(appoint);
+			
 	}
+		
+		
+
+}		
+//			flexiBook.addAppointment((Customer) Customer.getWithUsername(list.get(i).get("customer")),
+//					(BookableService) BookableService.getWithName(list.get(i).get("serviceName")), timeSlot);
+
+	
 
 //		@Given("the following services exist in the system:")
 //		public void the_following_services_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
@@ -1440,7 +1436,6 @@ public class CucumberStepDefinitions {
 			FlexiBookController.updateServiceCombo(string2, string3, string, flexiBook, string4, string6, string5);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
-			errorCntr++;
 		}
 
 	}
@@ -1605,7 +1600,6 @@ public class CucumberStepDefinitions {
 			FlexiBookController.deleteServiceCombo(string, string2, flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
-			errorCntr++;
 		}
 	}
 
@@ -2300,7 +2294,6 @@ public class CucumberStepDefinitions {
 			FlexiBookController.logIn(string, string2, flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
-			errorCntr++;
 		}
 	}
 
@@ -2328,10 +2321,11 @@ public class CucumberStepDefinitions {
 	@When("the user tries to log out")
 	public void the_user_tries_to_log_out() {
 		try {
-			FlexiBookController.logOut(FlexiBookApplication.getCurrentUser(), flexiBook);
+
+			FlexiBookController.logOut();
+
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 
 	}
@@ -2409,7 +2403,6 @@ public class CucumberStepDefinitions {
 		} catch (RuntimeException e) {
 
 			error = e.getMessage();
-			errorCntr++;
 		}
 	}
 
@@ -2431,7 +2424,6 @@ public class CucumberStepDefinitions {
 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 	}
 
@@ -2622,7 +2614,6 @@ public class CucumberStepDefinitions {
 			
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
-			errorCntr++;
 		}
 	}
 
@@ -2635,18 +2626,17 @@ public class CucumberStepDefinitions {
 	 */
 
 	@When("{string} attempts to add the optional service {string} to the service combo in the appointment at {string}")
-	public void attempts_to_add_the_optional_service_to_the_service_combo_in_the_appointment_at(String string,
-			String string2, String string3) {
+	public void attempts_to_add_the_optional_service_to_the_service_combo_in_the_appointment_at(String string, String string2, String string3) {
 		ArrayList<String> items = new ArrayList<String>();
 		items.add(string2);
 
 		try {
 
 			FlexiBookController.updateAppointmentServices(string, appointment.getBookableService().getName(), items, null, appointment.getTimeSlot().getStartTime(), appointment.getTimeSlot().getStartDate(), Date.valueOf(string3.substring(0, 10)), flexiBook);
+
 		} 
 		 catch(InvalidInputException e) {
 			 error = e.getMessage();
-			 errorCntr++;
 		}
 
 	}
@@ -2681,6 +2671,8 @@ public class CucumberStepDefinitions {
 		try {
 			FlexiBookController.startAppointment(customerName, appointmentTime, appointmentDate, currentDate,
 					currentTime, flexiBook);
+//			FlexiBookApplication.setSystemDate(string.substring(0, 10));
+//			FlexiBookApplication.setSystemTime(time)
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2692,15 +2684,12 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the service combo shall have {string} selected services")
 	public void the_service_combo_shall_have_selected_services(String string) {
-		boolean test = false;
 		String[] serviceString = string.split(",");
 		List<String> serviceList = Arrays.asList(serviceString);
 
 		for (ComboItem item : appointment.getChosenItems()) {
 			if (serviceList.contains(item.getService().getName())) {
-				test = true;
 			} else {
-				test = false;
 			}
 		}
 
@@ -2749,8 +2738,8 @@ public class CucumberStepDefinitions {
 		List<Appointment> appointmentList = flexiBook.getAppointments();
 		for (int i = 0; i < appointmentList.size(); i++) {
 			Appointment thisAppointment = appointmentList.get(i);
-			String d = thisAppointment.getTimeSlot().getStartDate().toString();
-			String t = thisAppointment.getTimeSlot().getStartTime().toString();
+			thisAppointment.getTimeSlot().getStartDate().toString();
+			thisAppointment.getTimeSlot().getStartTime().toString();
 			if (thisAppointment.getTimeSlot().getStartTime().before(cTime)
 					&& thisAppointment.getTimeSlot().getStartDate().equals(cDate)) {
 				FlexiBookController.registerNoShow(appointment.getCustomer().getUsername(), appointment.getTimeSlot().getStartDate(), appointment.getTimeSlot().getStartTime(), string, flexiBook);

@@ -60,7 +60,7 @@ Feature: Update appointment
       | 2020-12-28 | 13:00     | unsuccessful | 2020-12-29 | 9:00         | 9:20       |
       | 2020-12-29 | 16:50     | unsuccessful | 2020-12-29 | 9:00         | 9:20       |
       | 2020-12-29 | 9:10      | successful   | 2020-12-29 | 9:10         | 9:30       |
-      | 2020-12-28 | 9:55     | successful   | 2020-12-28 | 9:55        | 10:15      |
+      | 2020-12-28 | 9:55      | successful   | 2020-12-28 | 9:55         | 10:15      |
 
   Scenario Outline: A customer updates his service combo appointment to add or remove combo items
     Given "customer3" is logged in to their account
