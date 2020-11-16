@@ -84,11 +84,15 @@ public class FlexiBookPage extends JFrame{
 		
 		//else if the user is the owner
 		//initOwnerMenu();
-		initOwnerMenu();
+
 	
 	}
 	
 	
+	/**
+	 * @author Shaswata
+	 * @param evt
+	 */
 	private void initOwnerMenu() {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
@@ -161,6 +165,10 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
+	/**
+	 * @author Shaswata
+	 * @param evt
+	 */
 	private void initCustomerMenu() {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
@@ -211,7 +219,10 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
-	
+	/**
+	 * @author Shaswata
+	 * @param evt
+	 */
 	private void initAppointmentBookingPage() {
 		
 		getContentPane().removeAll(); 
@@ -384,6 +395,10 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
+	/**
+	 * @author Shaswata
+	 * @param evt
+	 */
 	private void refreshDataForAppointmentBooking() {
 		
 		if(error != null) {
@@ -420,6 +435,10 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
+	/**
+	 * @author Shaswata
+	 * @param evt
+	 */
 	private void makeAppointmentActionPerformed(ActionEvent evt) {
 	
 		error = null;
@@ -452,6 +471,10 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
+	/**
+	 * @author Shaswata
+	 * @param evt
+	 */
 	private void updateAppointmentActionPerformed(ActionEvent evt) {
 		error = null;
 		success = null;
@@ -505,6 +528,10 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
+	/**
+	 * @author Shaswata
+	 * @param evt
+	 */
 	private void cancelAppointmentActionPerformed(ActionEvent evt) {
 		error = null;
 		success = null;
@@ -534,25 +561,32 @@ public class FlexiBookPage extends JFrame{
 	
 	
 	//menu buttons
+	
+	
 	private void bookAppActionPerformed(ActionEvent evt) {
 		initAppointmentBookingPage();
 	}
+	
 	
 	private void manageAccountActionPerformed(ActionEvent evt) {
 		//initManageAccountPage();
 	}
 	
+	
 	private void businessInfoActionPerformed(ActionEvent evt) {
 		//initBusinessInfoPage();
 	}
+	
 	
 	private void manageServiceActionPerformed(ActionEvent evt) {
 		//initManageServicePage();
 	}
 	
+	
 	private void manageAppActionPerformed(ActionEvent evt) {
 		//initManageAppAcionPerformed();
 	}
+	
 	
 	private void viewCalenderActionPerformed(ActionEvent evt) {
 		//initViewAppCalenderPage();
