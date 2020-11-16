@@ -36,14 +36,7 @@ public class FlexiBookApplication {
 	}
 	
 
-	public static void main(String[] args) {
-		// start UI
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FlexiBookPage().setVisible(true);
-            }
-        });
-	}
+	
 	
 	public static FlexiBook getFlexiBook() {
 		if (flexiBook == null) {

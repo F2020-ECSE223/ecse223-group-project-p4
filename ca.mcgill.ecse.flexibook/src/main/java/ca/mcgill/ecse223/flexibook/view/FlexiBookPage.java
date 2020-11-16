@@ -38,6 +38,13 @@ public class FlexiBookPage extends JFrame{
 	
 	//customer menu
 	private JButton appBookingButton;
+	private JButton manageCustomerAccountButton;
+	
+	//owner menu
+	private JButton businessInfoButton;
+	private JButton manageServiceButton;
+	private JButton manageAppButton;
+	private JButton viewAppCalenderButton;
 	
 	//make appointment
 	private JTextField makeAppTime;
@@ -67,16 +74,17 @@ public class FlexiBookPage extends JFrame{
 	//data
 	ArrayList<String> availableServices = new ArrayList<>();
 	ArrayList<String> existingAppointments = new ArrayList<>();
+	
+	
 
 	public FlexiBookPage() {
 		
 		//if the user logged in is a customer 
-		//then init customer card layout
+		//initCustomerMenu();
 		
 		//else if the user is the owner
-		//then init owner card layout
-		initCustomerMenu();
-		
+		//initOwnerMenu();
+		initOwnerMenu();
 	
 	}
 	
@@ -84,6 +92,71 @@ public class FlexiBookPage extends JFrame{
 	private void initOwnerMenu() {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+		
+		
+		businessInfoButton = new JButton();
+		businessInfoButton.setText("Manage Business Information");
+		manageServiceButton = new JButton();
+		manageServiceButton.setText("Manage Services");
+		manageAppButton = new JButton();
+		manageAppButton.setText("Manage Appointments");
+		viewAppCalenderButton = new JButton();
+		viewAppCalenderButton.setText("View Appointment Calender");
+		
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+			layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoButton)
+						.addComponent(manageServiceButton)
+						.addComponent(manageAppButton)
+						.addComponent(viewAppCalenderButton))
+		
+		);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton});
+						
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+					.addGroup(layout.createSequentialGroup()
+							.addComponent(businessInfoButton)
+							.addComponent(manageServiceButton)
+							.addComponent(manageAppButton)
+							.addComponent(viewAppCalenderButton))
+		);
+							
+							
+		
+		businessInfoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				businessInfoActionPerformed(e);
+			}
+		});
+		
+		manageServiceButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manageServiceActionPerformed(e);
+			}
+		});
+		
+		manageAppButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manageAppActionPerformed(e);
+			}
+		});
+		
+		viewAppCalenderButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewCalenderActionPerformed(e);
+			}
+		});
+		
 		
 	}
 	
@@ -94,8 +167,33 @@ public class FlexiBookPage extends JFrame{
 		
 		appBookingButton = new JButton();
 		appBookingButton.setText("Appoinment booking");
-		appBookingButton.setPreferredSize(new Dimension(40, 40));
-		getContentPane().add(appBookingButton);
+		manageCustomerAccountButton = new JButton();
+		manageCustomerAccountButton.setText("Manage Account");
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+			layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(appBookingButton)
+						.addComponent(manageCustomerAccountButton))
+		
+		);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appBookingButton, manageCustomerAccountButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appBookingButton, manageCustomerAccountButton});
+						
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+					.addGroup(layout.createSequentialGroup()
+							.addComponent(appBookingButton)
+							.addComponent(manageCustomerAccountButton))
+		);
+							
+							
 		
 		appBookingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -103,11 +201,14 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 		
+		manageCustomerAccountButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manageAccountActionPerformed(e);
+			}
+		});
+		
+		
 	}
-	
-	
-	
-	
 	
 	
 	
@@ -432,12 +533,43 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
-	
-	
-	
+	//menu buttons
 	private void bookAppActionPerformed(ActionEvent evt) {
 		initAppointmentBookingPage();
 	}
+	
+	private void manageAccountActionPerformed(ActionEvent evt) {
+		//initManageAccountPage();
+	}
+	
+	private void businessInfoActionPerformed(ActionEvent evt) {
+		//initBusinessInfoPage();
+	}
+	
+	private void manageServiceActionPerformed(ActionEvent evt) {
+		//initManageServicePage();
+	}
+	
+	private void manageAppActionPerformed(ActionEvent evt) {
+		//initManageAppAcionPerformed();
+	}
+	
+	private void viewCalenderActionPerformed(ActionEvent evt) {
+		//initViewAppCalenderPage();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
