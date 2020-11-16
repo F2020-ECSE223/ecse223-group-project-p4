@@ -25,6 +25,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
+import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 
@@ -83,16 +84,18 @@ public class FlexiBookPage extends JFrame{
 	private JButton backToMainPage; 
 	
 	//add service
-	private JTextField serviceName; 
-	private JLabel serviceNameLabel; 
-	private JTextField serviceDuration; 
-	private JLabel serviceDurationLabel; 
-	private JTextField downtimeStart; 
-	private JLabel downtimeStartLabel; 
-	private JTextField downtimeDuration;
-	private JLabel downtimeDurationLabel;
-	private JButton addServiceButton;
-	private JButton addServiceBackButton; 
+	private JTextField serviceName = new JTextField(); 
+	private JLabel serviceNameLabel = new JLabel();
+	private JTextField serviceDuration = new JTextField(); 
+	private JLabel serviceDurationLabel = new JLabel(); 
+	private JTextField downtimeStart = new JTextField();
+	private JLabel downtimeStartLabel = new JLabel();
+	private JTextField downtimeDuration = new JTextField();
+	private JLabel downtimeDurationLabel = new JLabel();
+	private JButton addServiceButton = new JButton();
+	private JButton addServiceBackButton = new JButton();
+	private JLabel errorMessage = new JLabel();
+	private JLabel successMessage = new JLabel();
 
 	
 	//update service 
@@ -660,7 +663,7 @@ public class FlexiBookPage extends JFrame{
 		JButton updateServPageButton = new JButton();
 		updateServPageButton.setText("Update Service");
 		JButton deleteServPageButton = new JButton();
-		deleteServPageButton.setText("Update Service");
+		deleteServPageButton.setText("Delete Service");
 		JButton manageServiceBackButton = new JButton();
 		manageServiceBackButton.setText("Back to Owner Menu");
 		
@@ -730,28 +733,18 @@ public class FlexiBookPage extends JFrame{
 			getContentPane().repaint();
 			//getContentPane().setSize(dim);
 			
-			JLabel errorMessage = new JLabel();
+			
 			
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			
 			//page components
-			JTextField serviceName = new JTextField();
-			JLabel serviceNameLabel = new JLabel();
-			serviceNameLabel.setText("Service Name");
-			JTextField serviceDuration = new JTextField();
-			JLabel serviceDurationLabel = new JLabel();
-			serviceDurationLabel.setText("Service Duration (mins)");
-			JTextField downtimeStart = new JTextField();
-			JLabel downtimeStartLabel = new JLabel();
-			downtimeStartLabel.setText("Downtime Start (mins)");
-			JTextField downtimeDuration = new JTextField();
-			JLabel downtimeDurationLabel = new JLabel();
-			downtimeDurationLabel.setText("Downtime Duration (mins)");
-			JButton addServiceButton = new JButton();
-			addServiceButton.setText("Add Service");
-			JButton addServiceBackButton = new JButton();
-			addServiceBackButton.setText("Back to Service Menu");
 			
+			serviceNameLabel.setText("Service Name");
+			serviceDurationLabel.setText("Service Duration (mins)");
+			downtimeStartLabel.setText("Downtime Start (mins)");
+			downtimeDurationLabel.setText("Downtime Duration (mins)");
+			addServiceBackButton.setText("Back to Service Menu");
+			addServiceButton.setText("Add Service");
 			
 			GroupLayout layout = new GroupLayout(getContentPane());
 			getContentPane().setLayout(layout);
@@ -761,6 +754,7 @@ public class FlexiBookPage extends JFrame{
 			layout.setHorizontalGroup(
 				layout.createSequentialGroup()
 				.addComponent(errorMessage)
+				.addComponent(successMessage)
 					.addGroup(layout.createParallelGroup()
 							.addComponent(serviceNameLabel)
 							.addComponent(serviceDurationLabel)
@@ -786,6 +780,7 @@ public class FlexiBookPage extends JFrame{
 			layout.setVerticalGroup(
 					layout.createSequentialGroup()
 					.addComponent(errorMessage)
+					.addComponent(successMessage)
 					.addGroup(layout.createParallelGroup()
 							.addComponent(serviceNameLabel)
 							.addComponent(serviceName))
@@ -825,7 +820,22 @@ public class FlexiBookPage extends JFrame{
 		
 	
 	private void addServiceButtonPressed (ActionEvent evt) {
-		
+		try {
+			FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+			String name = serviceName.getText();
+			int duration = Integer.parseInt(serviceDuration.getText());
+			int dtDuration = Integer.parseInt(downtimeDuration.getText());
+			int dtStart = Integer.parseInt(downtimeStart.getText());
+			
+			FlexiBookController.addService(name, flexiBook, duration, dtDuration, dtStart);
+			//successMessage.setText("Service " +name+ " successfully added");
+			refreshServicePage();
+			
+			pack();
+		}
+		catch (InvalidInputException e){
+			errorMessage.setText(e.getMessage());
+		}
 	}
 	
 	//Sneha
@@ -839,11 +849,15 @@ public class FlexiBookPage extends JFrame{
 		//addServicePage
 		
 	}
-	
-	private void manageServiceBackButtonActionPerfomed (ActionEvent evt) {
-		//back button actions 
+
+	private void refreshServicePage() {
+		serviceName.setText("");
+		serviceDuration.setText("");
+		downtimeDuration.setText("");
+		downtimeStart.setText("");
+		
+		pack();
 	}
-	
 	
 	
 }
