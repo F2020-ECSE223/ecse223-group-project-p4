@@ -849,7 +849,35 @@ public class FlexiBookPage extends JFrame{
 		//addServicePage
 		
 	}
+	
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 */
+	private void startAppointmentActionPerformed(ActionEvent evt) {
+		
+	}
+	
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 */
+	private void endAppointmentActionPerformed(ActionEvent evt) {
+		
+	}
+	
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 */
+	private void registerNoShowActionPerformed(ActionEvent evt) {
+		
+	}
 
+	
+	
+	
+	
 	private void refreshServicePage() {
 		serviceName.setText("");
 		serviceDuration.setText("");
