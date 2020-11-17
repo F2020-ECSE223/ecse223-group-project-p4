@@ -25,6 +25,7 @@ import java.util.Map;
 import ca.mcgill.ecse.flexibook.model.*;
 import ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek;
 import ca.mcgill.ecse223.flexibook.controller.*;
+import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 import ca.mcgill.ecse.flexibook.application.*;
 
 import io.cucumber.java.After;
@@ -78,8 +79,6 @@ public class CucumberStepDefinitions {
 	@Given("a Flexibook system exists")
 	public void a_flexibook_system_exists() {
 
-		
-
 		FlexiBookApplication.getFlexiBook().delete();
 
 		flexiBook = FlexiBookApplication.getFlexiBook();
@@ -103,11 +102,11 @@ public class CucumberStepDefinitions {
 	@Given("the system's time and date is {string}")
 	public void the_system_s_time_and_date_is(String string) {
 		
-//		systemDate = Date.valueOf(string.substring(0, 10));
-//		systemTime = Time.valueOf(string.sub)
 		String dateAndTime[] = string.split("\\+");
 		FlexiBookApplication.setSystemDate(dateAndTime[0]);
 		FlexiBookApplication.setSystemTime(dateAndTime[1] + ":00");
+		
+		FlexiBookPersistence.save(flexiBook);
 
 	}
 
@@ -122,6 +121,8 @@ public class CucumberStepDefinitions {
 			owner = new Owner("owner", "admin", flexiBook);
 			flexiBook.setOwner(owner);
 		}
+		
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -133,6 +134,8 @@ public class CucumberStepDefinitions {
 		if (business == null) {
 			business = new Business("aName", "anAddress", "aPhoneNo", "enEmail", flexiBook);
 		}
+		
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	//
@@ -149,7 +152,8 @@ public class CucumberStepDefinitions {
 			flexiBook.addCustomer(new Customer(columns.get("username"), columns.get("password"), flexiBook));
 
 		}
-
+		
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	//
@@ -191,7 +195,7 @@ public class CucumberStepDefinitions {
 
 		}
 		
-
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 
@@ -230,7 +234,7 @@ public class CucumberStepDefinitions {
 			flexiBook.getBusiness().addBusinessHour(businessHour);
 
 		}
-
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -248,6 +252,7 @@ public class CucumberStepDefinitions {
 					Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
 			flexiBook.getBusiness().addHoliday(holiday);
 		}
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	
@@ -263,13 +268,14 @@ public class CucumberStepDefinitions {
 
 		try {
 			
-			FlexiBookController.makeAppointment(username, serviceName, null, startTime, date, flexiBook, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			FlexiBookController.makeAppointment(username, serviceName, null, startTime, date, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr++;
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
-
+		
 	}
 
 	/**
@@ -291,7 +297,7 @@ public class CucumberStepDefinitions {
 		assertTrue(Date.valueOf(date).equals(thisAppointment.getTimeSlot().getStartDate()));
 		assertTrue(Time.valueOf(startTime + ":00").equals(thisAppointment.getTimeSlot().getStartTime()));
 		assertTrue(Time.valueOf(endTime + ":00").equals(thisAppointment.getTimeSlot().getEndTime()));
-
+		
 	}
 
 	/**
@@ -321,10 +327,12 @@ public class CucumberStepDefinitions {
 			String oldTime, String newDate, String newTime) {
 
 		try {
-			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
+			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
+		
 
 	}
 
@@ -342,10 +350,10 @@ public class CucumberStepDefinitions {
 
 		try {
 
-			FlexiBookController.cancelAppointment(username, time, date, FlexiBookApplication.getSystemDate(), flexiBook);
-
+			FlexiBookController.cancelAppointment(username, time, date, FlexiBookApplication.getSystemDate());
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr--;
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -395,9 +403,10 @@ public class CucumberStepDefinitions {
 		List<String> optionalServiceList = Arrays.asList(optionalServices);
 
 		try {
-			FlexiBookController.makeAppointment(username, serviceName, optionalServiceList, time, date, flexiBook, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			FlexiBookController.makeAppointment(username, serviceName, optionalServiceList, time, date, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr++;
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -454,6 +463,7 @@ public class CucumberStepDefinitions {
 			thisAppointment.addChosenItem(newItem);
 
 		}
+		//FlexiBookPersistence.save(flexiBook);
 
 	}
 
@@ -476,17 +486,16 @@ public class CucumberStepDefinitions {
 
 		try {
 			if (action.equals("add")) {
-				updateAppointmentSuccess = FlexiBookController.updateAppointmentServices(username, mainService,
-						optionalServiceList, null, Time.valueOf(time + ":00"), Date.valueOf(date), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime(),
-						flexiBook);
+				updateAppointmentSuccess = FlexiBookController.updateAppointmentServices(username, mainService, optionalServiceList, null, Time.valueOf(time + ":00"), Date.valueOf(date), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime());
 			} else if (action.equals("remove")) {
-				updateAppointmentSuccess = FlexiBookController.updateAppointmentServices(username, mainService, null,
-						optionalServiceList, Time.valueOf(time + ":00"), Date.valueOf(date), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime(), flexiBook);
+				updateAppointmentSuccess = FlexiBookController.updateAppointmentServices(username, mainService, null, optionalServiceList, Time.valueOf(time + ":00"), Date.valueOf(date), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime());
 			}
+			FlexiBookPersistence.save(flexiBook);
 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
+		
 
 	}
 
@@ -519,7 +528,8 @@ public class CucumberStepDefinitions {
 
 		try {
 			appointment = findAppointment(username1, oldDate, oldTime, serviceName);
-			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username1, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime(), flexiBook);
+			updateAppointmentSuccess = FlexiBookController.updateAppointmentTime(username1, newTime, newDate, Time.valueOf(oldTime + ":00"), Date.valueOf(oldDate), FlexiBookApplication.getSystemDate(),FlexiBookApplication.getSystemTime());
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -541,10 +551,10 @@ public class CucumberStepDefinitions {
 
 		try {
 
-			FlexiBookController.cancelAppointment(username1, time, date, FlexiBookApplication.getSystemDate(), flexiBook);
-
+			FlexiBookController.cancelAppointment(username1, time, date, FlexiBookApplication.getSystemDate());
 			prevAppointmentCntr = appointmentCntr;
 			appointmentCntr--;
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -633,8 +643,9 @@ public class CucumberStepDefinitions {
 	@Given("the Owner with username {string} is logged in")
 
 	public void thereIsAnOwnerLoggedIn(String string) {
-	currentUser = FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
-	assertEquals(string, currentUser.getUsername());
+		currentUser = FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
+		assertEquals(string, currentUser.getUsername());
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -644,15 +655,12 @@ public class CucumberStepDefinitions {
 	public void aNewServiceAdditionIsInitiated(String user, String aName, String aDuration, String aDowntimeStart,
 			String aDowntimeDuration) {
 		try {
-			FlexiBookController.addService(aName, flexiBook, Integer.parseInt(aDuration),
-					Integer.parseInt(aDowntimeDuration), Integer.parseInt(aDowntimeStart));
-			
+			FlexiBookController.addService(aName, flexiBook, Integer.parseInt(aDuration), Integer.parseInt(aDowntimeDuration), Integer.parseInt(aDowntimeStart));
 			currService = (Service) Service.getWithName(aName);
+			//FlexiBookPersistence.save(flexiBook);
 		}
-
 		catch (InvalidInputException e) {
 			error = e.getMessage();
-
 		}
 
 	}
@@ -669,9 +677,7 @@ public class CucumberStepDefinitions {
 			}
 		}
 		assertTrue(flag);
-//		if (flexiBook.hasBookableServices() == true) {
-//			assertEquals(string, Service.getWithName(string).getName());
-//		}
+
 	}
 
 	/**
@@ -679,8 +685,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the service {string} shall have duration {string}, start of down time {string} and down time duration {string}")
 	public void theServiceShallHave(String string, String string2, String string3, String string4) {
-		//if (flexiBook.hasBookableServices() == true) {
-//			int i = flexiBook.indexOfBookableService(Service.getWithName(string));
+
 		int index =0;
 		for(int i=0; i<flexiBook.getBookableServices().size(); i++) {
 			if(flexiBook.getBookableService(i).getName().equals(string)) {
@@ -690,7 +695,7 @@ public class CucumberStepDefinitions {
 			assertEquals(Integer.parseInt(string2), ((Service) flexiBook.getBookableService(index)).getDuration());
 			assertEquals(Integer.parseInt(string3), ((Service) flexiBook.getBookableService(index)).getDowntimeStart());
 			assertEquals(Integer.parseInt(string4), ((Service) flexiBook.getBookableService(index)).getDowntimeDuration());
-		//}
+		
 	}
 
 	/**
@@ -736,6 +741,7 @@ public class CucumberStepDefinitions {
 					(Integer.parseInt(existingServices.get(i).get("downtimeDuration"))),
 					(Integer.parseInt(existingServices.get(i).get("downtimeStart")))));
 		}
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -751,6 +757,7 @@ public class CucumberStepDefinitions {
 				Integer.parseInt(preservedProperties.get(0).get("downtimeDuration")));
 		assertEquals(((Service) Service.getWithName(string)).getDowntimeStart(),
 				Integer.parseInt(preservedProperties.get(0).get("downtimeStart")));
+		
 	}
 
 	
@@ -762,6 +769,7 @@ public class CucumberStepDefinitions {
 	public void customerWithUsernameIsLoggedIn(String string) {
 		currentUser = FlexiBookApplication.setCurrentUser((User.getWithUsername(string)));
 		assertEquals(string, currentUser.getUsername());
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -775,14 +783,12 @@ public class CucumberStepDefinitions {
 		int downtimeDuration = Integer.parseInt(newDowntimeDuration);
 
 		try {
-			FlexiBookController.updateService(((Service) Service.getWithName(name)), newName, flexiBook, duration,
-					downtimeStart, downtimeDuration);
+			FlexiBookController.updateService(((Service) Service.getWithName(name)), newName, flexiBook, duration, downtimeStart, downtimeDuration);
+			//FlexiBookPersistence.save(flexiBook);
 		}
-
 		catch (InvalidInputException e) {
 			error = e.getMessage();
 
-			// errorCntr++;
 		}
 	}
 
@@ -811,6 +817,7 @@ public class CucumberStepDefinitions {
 
 		try {
 			FlexiBookController.deleteService(string2, flexiBook);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 			// errorCntr++;
@@ -892,6 +899,7 @@ public class CucumberStepDefinitions {
 			String string, String string2, String string3, String string4, String string5) {
 		try {
 			FlexiBookController.defineServiceCombo(string2, string, flexiBook, string3, string5, string4);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
 		}
@@ -951,7 +959,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 */
 	@Given("the following appointments exist in the system:")
 	public void the_following_appointments_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
-		
+
 		List<Map<String,String>> list = dataTable.asMaps(String.class, String.class);
 		for (int i = 0; i < list.size(); i++) {
 	
@@ -1014,6 +1022,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		
 		}
 		flexiBook.addAppointment(appoint);
+		//FlexiBookPersistence.save(flexiBook);
 			
 	}
 		
@@ -1035,7 +1044,12 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	public void initiates_the_update_of_service_combo_to_name_main_service_and_services_and_mandatory_setting(
 			String username, String name, String newName, String mainService, String servicesString, String mandatoryString) {
 		try {
-			FlexiBookController.updateServiceCombo(name, newName, username, flexiBook, mainService, mandatoryString, servicesString);
+
+			FlexiBookController.updateServiceCombo(name, newName, username,flexiBook, mainService, mandatoryString, servicesString);
+
+			
+			//FlexiBookPersistence.save(flexiBook);
+
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
 		}
@@ -1049,8 +1063,10 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@Then("the service combo {string} shall exist in the system")
 	public void the_service_combo_shall_exist_in_the_system(String serviceComboName) {
 		boolean flag = false;
+
 		if (BookableService.getWithName(serviceComboName) != null
 				&& BookableService.getWithName(serviceComboName) instanceof ServiceCombo) {
+
 			flag = true;
 		}
 
@@ -1125,6 +1141,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	public void initiates_the_deletion_of_service_combo(String string, String string2) {
 		try {
 			FlexiBookController.deleteServiceCombo(string, string2, flexiBook);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
 		}
@@ -1162,6 +1179,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			owner.delete();
 		}
 		owner = new Owner(string, string2, flexiBook);
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -1173,6 +1191,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			business = flexiBook.getBusiness();
 			business.delete();
 		}
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -1181,6 +1200,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@Given("the user is logged in to an account with username {string}")
 	public void the_user_is_logged_in_to_an_account_with_username(String string) {
 		FlexiBookApplication.setCurrentUser(User.getWithUsername(string));
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -1192,6 +1212,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		exception = false;
 		try {
 			FlexiBookController.setupBusinessInfo(string, string2, string3, string4);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
 			error = e.getMessage();
@@ -1231,16 +1252,16 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		String telnum = dataTable.cell(1, 2);
 		String email = dataTable.cell(1, 3);
 		business = new Business(name, address, telnum, email, flexiBook);
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
 	 * @author Aroomoogon Krishna
 	 */
 	@Given("the business has a business hour on {string} with start time {string} and end time {string}")
-	public void the_business_has_a_business_hour_on_with_start_time_and_end_time(String string, String string2,
-			String string3) {
-		flexiBook.getBusiness().addBusinessHour(new BusinessHour(FlexiBookController.getDow(string),
-				Time.valueOf(string2 + ":00"), Time.valueOf(string3 + ":00"), flexiBook));
+	public void the_business_has_a_business_hour_on_with_start_time_and_end_time(String string, String string2, String string3) {
+		flexiBook.getBusiness().addBusinessHour(new BusinessHour(FlexiBookController.getDow(string), Time.valueOf(string2 + ":00"), Time.valueOf(string3 + ":00"), flexiBook));
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -1251,8 +1272,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			String string3) {
 		exception = false;
 		try {
-			FlexiBookController.addBusinessHour(string, Time.valueOf(string2 + ":00"), Time.valueOf(string3 + ":00"),
-					flexiBook);
+			FlexiBookController.addBusinessHour(string, Time.valueOf(string2 + ":00"), Time.valueOf(string3 + ":00"), flexiBook);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
 			error = e.getMessage();
@@ -1264,11 +1285,11 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 */
 	@Then("a new business hour shall {string} created")
 	public void a_new_business_hour_shall_created(String string) {
-//				if (!exception) {
-//					assertEquals("be", string);
-//				} else {
-//					assertEquals("not be", string);
-//				}
+		if (!exception) {
+			assertEquals("be", string);
+		} else {
+			assertEquals("not be", string);
+		}
 		return;
 	}
 
@@ -1279,14 +1300,14 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	public void the_user_tries_to_access_the_business_information() {
 		Business b = flexiBook.getBusiness();
 		error = b.getName() + b.getAddress() + b.getPhoneNumber() + b.getEmail();
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
 	 * @author Aroomoogon Krishna
 	 */
 	@Then("the {string} and {string} and {string} and {string} shall be provided to the user")
-	public void the_and_and_and_shall_be_provided_to_the_user(String string, String string2, String string3,
-			String string4) {
+	public void the_and_and_and_shall_be_provided_to_the_user(String string, String string2, String string3, String string4) {
 		String info = string + string2 + string3 + string4;
 		assertEquals(error, info);
 	}
@@ -1322,6 +1343,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 				FlexiBookController.addVacationSlot(Date.valueOf(string2), Time.valueOf(string3 + ":00"),
 						Date.valueOf(string4), Time.valueOf(string5 + ":00"), flexiBook);
 			}
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
 			error = e.getMessage();
@@ -1352,6 +1374,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		exception = false;
 		try {
 			FlexiBookController.updateBusinessInfo(string, string2, string3, string4);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
 			error = e.getMessage();
@@ -1381,8 +1404,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			String string2, String string3, String string4, String string5) {
 		exception = false;
 		try {
-			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), string3,
-					Time.valueOf(string4 + ":00"), Time.valueOf(string5 + ":00"), flexiBook);
+			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), string3, Time.valueOf(string4 + ":00"), Time.valueOf(string5 + ":00"), flexiBook);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
 			error = e.getMessage();
@@ -1394,6 +1417,11 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 */
 	@Then("the business hour shall {string} be updated")
 	public void the_business_hour_shall_be_updated(String string) {
+		if (!exception) {
+			assertEquals("be", string);
+		} else {
+			assertEquals("not be", string);
+		}
 		return;
 	}
 
@@ -1405,6 +1433,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		exception = false;
 		try {
 			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), null, null, null, flexiBook);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
 			error = e.getMessage();
@@ -1453,6 +1482,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			} else {
 				throw new InvalidInputException("Invalid type");
 			}
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
 			error = e.getMessage();
@@ -1498,6 +1528,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			} else {
 				throw new InvalidInputException("Invalid type");
 			}
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
 			error = e.getMessage();
@@ -1540,6 +1571,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			customer = customerList.get(i);
 			assertTrue(customer.getUsername() != string);
 		}
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -1556,6 +1588,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
 		}
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -1629,21 +1662,10 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		} else {
 			flexiBook.addCustomer(string, "ownerPass");
 		}
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
-	/**
-	 * @author artus
-	 * @param string1
-	 * @param string2
-	 */
-
-	// @Given("an owner account exists in the system with username {string} and
-	// password {string}")
-	// public void anOwnerAccountExistsInTheSystemWithUsernameAndPassword(String
-	// string1, String string2) {
-	// flexiBook = FlexiBookApplication.getFlexiBook();
-	// flexiBook.setOwner(new Owner("owner", "ownerPass", flexiBook));
-	// }
+	
 
 	/**
 	 * @author artus
@@ -1651,39 +1673,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 */
 	@Given("the account with username {string} has pending appointments")
 	public void theAccountWithUsernameHasPendingAppointments(String string) {
+		
 	}
-	/**
-	 * @author artus
-	 * @param string
-	 */
-	// @Given("the user is logged in to an account with username {string}")
-	// public void theUserIsLoggedInToAnAccountWithUsername(String string) {
-	//
-	// FlexiBook flexibook = FlexiBookApplication.getFlexiBook();
-	// User user;
-	// List<Customer> customerList = flexiBook.getCustomers();
-	// User customer = null;
-	//
-	// if (string.equals("owner")) {
-	//
-	// Owner newOwner = FlexiBookApplication.getFlexiBook().getOwner();
-	// user = newOwner;
-	// FlexiBookApplication.setCurrentUser(user);
-	//
-	// }
-	//
-	// else {
-	//
-	// for(int i = 0; i < customerList.size(); i++) {
-	// customer = customerList.get(i);
-	// if (customer.getUsername().equals(string)) {
-	// user = customer;
-	// FlexiBookApplication.setCurrentUser(user);
-	// }
-	// }
-	// }
-	//
-	// }
 
 	/**
 	 * @author artus
@@ -1694,6 +1685,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 
 		try {
 			FlexiBookController.deleteCustomerAccount(string);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1787,6 +1779,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			oldUname = FlexiBookApplication.getCurrentUser().getUsername();
 
 			FlexiBookController.accountUpdate(oldUname, string, string2);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1819,6 +1812,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		numberOfAccounts =flexiBook.getCustomers().size();
 		try {
 			FlexiBookController.logIn(string, string2, flexiBook);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
 		}
@@ -1834,7 +1828,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		assertEquals(FlexiBookApplication.getCurrentUser(), null);
 	}
 
-//TODO:
+
 	@Then("a new account shall be created")
 	public void a_new_account_shall_be_created() {
 		assertEquals(flexiBook.getCustomers().size()+1,  numberOfAccounts+1);
@@ -1843,6 +1837,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@Given("the user is logged out")
 	public void the_user_is_logged_out() {
 		FlexiBookApplication.setCurrentUser(null);
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	@When("the user tries to log out")
@@ -1850,6 +1845,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		try {
 
 			FlexiBookController.logOut();
+			//FlexiBookPersistence.save(flexiBook);
 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
@@ -1861,15 +1857,15 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 
 	private static Appointment appointment;
 
-//	/**
-//	 * @author yasminamatta
-//	 * @param string
-//	 * @param string2
-//	 * @param string3
-//	 * @param string4
-//	 * @param string5
-//	 */
-////
+	/**
+	 * @author yasminamatta
+	 * @param string
+	 * @param string2
+	 * @param string3
+	 * @param string4
+	 * @param string5
+	 */
+
 	@Given("a {string} time slot exists with start time {string} at {string} and end time {string} at {string}")
 	public void a_time_slot_exists_with_start_time_at_and_end_time_at(String timeSlotName, String startDateString, String startTimeString,
 			String endDateString, String endTimeString) {
@@ -1886,6 +1882,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		if (timeSlotName.equals("holiday")) {
 			flexiBook.getBusiness().addHoliday(timeSlot);
 		}
+		//FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -1902,6 +1899,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 				}
 			}
 		}
+		//FlexiBookPersistence.save(flexiBook);
 
 	}
 
@@ -1922,10 +1920,12 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			FlexiBookApplication.setSystemDate(currentDateTime.substring(0, 10));
 			FlexiBookApplication.setSystemTime(currentDateTime.substring(11, 16) + ":00");
 
-			appointment = FlexiBookController.makeAppointment(username, name, null, time, date, flexiBook, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
-			FlexiBookApplication.setAppointment(appointment);
-			appointmentCntr++;
 
+			appointment = FlexiBookController.makeAppointment(username, name, null, time, date, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+
+			
+			appointmentCntr++;
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (RuntimeException e) {
 
 			error = e.getMessage();
@@ -1947,8 +1947,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			FlexiBookApplication.setSystemDate(currentDateTime.substring(0, 10));
 			FlexiBookApplication.setSystemTime(currentDateTime.substring(11, 16)+":00" );
 			
-			appointment = FlexiBookController.cancelAndBookNewService(username, newService, null, appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
-			
+
+			appointment = FlexiBookController.cancelAndBookNewService(username, newService, null, appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(), FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			FlexiBookPersistence.save(flexiBook);
 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
@@ -2015,43 +2016,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		assertEquals(flexiBook.numberOfAppointments(), int1);
 	}
 
-	/**
-	 * @author Aroomoogon Krishna
-	 */
-
-//	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
-//	public void attempts_to_update_the_date_to_and_time_to_at(String string, String string2, String string3,
-//			String string4) {
-//		String dateAndtime[] = string4.split("+");
-//		Time oldTime = Time.valueOf(dateAndtime[1] + ":00");
-//		Date oldDate = Date.valueOf(dateAndtime[0]);
-//		Appointment toDelete = findAppointment(string, oldDate, oldTime);
-//		String serviceName = toDelete.getBookableService().getName();
-//		
-//		try {
-//			FlexiBookController.updateAppointmentTime(string, serviceName, string3, string2, oldTime, oldDate, FlexiBookApplication.getSystemDate(), flexiBook);
-//		} catch (InvalidInputException e) {
-//			
-//			
-//			error += e.getMessage();
-//		}
-//	}
-
+	
 	@When("{string} attempts to update the date to {string} and time to {string} at {string}")
-
-
-//	public void attempts_to_update_the_date_to_and_time_to_at(String string, String newDate, String newTime,
-//			String string4) {
-//
-//		try {
-//			Appointment app = FlexiBookApplication.getAppointment();
-//			Time oldTime = app.getTimeSlot().getStartTime();
-//			Date oldDate = app.getTimeSlot().getStartDate();
-//
-//			FlexiBookController.updateAppointmentTime(app, string, app.getBookableService().getName(), newTime, newDate,
-//					oldTime, oldDate, Date.valueOf(string4.substring(0, 10)), flexiBook);
-			// appointment = FlexiBookApplication.getAppointment();
-
 	public void attempts_to_update_the_date_to_and_time_to_at(String string, String newDate, String newTime, String string4) {
 		
 		try {
@@ -2060,9 +2026,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			Date oldDate = appointment.getTimeSlot().getStartDate();
 			FlexiBookApplication.setSystemDate(string4.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string4.substring(11, 16) +":00");
-			FlexiBookController.updateAppointmentTime(string, newTime, newDate, oldTime, oldDate, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
-			//appointment = FlexiBookApplication.getAppointment();
-
+			FlexiBookController.updateAppointmentTime(string, newTime, newDate, oldTime, oldDate, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2077,7 +2043,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		try {
 			FlexiBookApplication.setSystemDate((string2.substring(0, 10)));
 			FlexiBookApplication.setSystemTime((string2.substring(11, 16)) + ":00");
-			FlexiBookController.cancelAppointment(string,appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(),FlexiBookApplication.getSystemDate(), flexiBook);
+			FlexiBookController.cancelAppointment(string,appointment.getTimeSlot().getStartTime().toString().substring(0, 5), appointment.getTimeSlot().getStartDate().toString(),FlexiBookApplication.getSystemDate());
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2091,38 +2058,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		assertEquals(int1, flexiBook.numberOfAppointments());
 	}
 
-	/**
-	 * @author Aroomoogon Krishna
-<<<<<<< HEAD
-	 * 
-	 *         @When("{string} makes a {string} appointment without choosing
-	 *         optional services for the date {string} and time {string} at
-	 *         {string}") public void
-	 *         makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String
-	 *         string, String string2, String string3, String string4, String
-	 *         string5) {
-	 * 
-	 *         try { //Appointment app = appointment; appointment =
-	 *         FlexiBookController.makeAppointment(string, string2, null, string4,
-	 *         string3, flexiBook, Date.valueOf(string5.substring(0, 10)));
-	 *         FlexiBookApplication.setAppointment(appointment); List <Appointment>
-	 *         listOfApp = flexiBook.getAppointments();
-	 * 
-	 *         } catch (InvalidInputException e) { error = e.getMessage(); } }
-	 */
-
 	
-//	@When("{string} makes a {string} appointment without choosing optional services for the date {string} and time {string} at {string}")
-//	public void makes_a_appointment_without_choosing_optional_services_for_the_date_and_time_at(String string, String string2, String string3, String string4, String string5) {
-//		try {
-//			//Appointment app = appointment;
-//			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook, Date.valueOf(string5.substring(0, 10)));
-//			FlexiBookApplication.setAppointment(appointment);
-//			List <Appointment> listOfApp = flexiBook.getAppointments();
-//		} catch (InvalidInputException e) {
-//			error = e.getMessage();
-//		}
-//	} 
 
 	/**
 	 * @author artus
@@ -2140,9 +2076,10 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			
 			FlexiBookApplication.setSystemDate(string5.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string5.substring(11, 16) +":00");
-			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, flexiBook, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			appointment = FlexiBookController.makeAppointment(string, string2, null, string4, string3, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
 			FlexiBookApplication.setAppointment(appointment);
-
+			FlexiBookPersistence.save(flexiBook);
+			
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2168,11 +2105,11 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			FlexiBookApplication.setSystemDate(string3.substring(0, 10));
 			FlexiBookApplication.setSystemTime(string3.substring(11, 16)+":00");
 			Appointment app = appointment;
-			FlexiBookController.updateAppointmentServices(string, app.getBookableService().getName(), items, null, app.getTimeSlot().getStartTime(), app.getTimeSlot().getStartDate(),FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(), flexiBook);
-		} 
-
-		 catch(InvalidInputException e) {
-		error = e.getMessage();
+			FlexiBookController.updateAppointmentServices(string, app.getBookableService().getName(), items, null, app.getTimeSlot().getStartTime(), app.getTimeSlot().getStartDate(),FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			
+			//FlexiBookPersistence.save(flexiBook);
+		} catch(InvalidInputException e) {
+			 error = e.getMessage();
 		}
 
 	}
@@ -2205,10 +2142,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		Time currentTime = Time.valueOf(string.substring(11, 16) + ":00");
 
 		try {
-			FlexiBookController.startAppointment(customerName, appointmentTime, appointmentDate, currentDate,
-					currentTime, flexiBook);
-//			FlexiBookApplication.setSystemDate(string.substring(0, 10));
-//			FlexiBookApplication.setSystemTime(time)
+			FlexiBookController.startAppointment(customerName, appointmentTime, appointmentDate, currentDate, currentTime);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2245,9 +2180,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		Time currentTime = Time.valueOf(string.substring(11, 16) + ":00");
 
 		try {
-			FlexiBookController.endAppointment(customerName, appointmentTime, appointmentDate, currentDate, currentTime,
-					flexiBook);
+			FlexiBookController.endAppointment(customerName, appointmentTime, appointmentDate, currentDate, currentTime);
 			appointment.finishAppointment();
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2278,10 +2213,11 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			thisAppointment.getTimeSlot().getStartTime().toString();
 			if (thisAppointment.getTimeSlot().getStartTime().before(cTime)
 					&& thisAppointment.getTimeSlot().getStartDate().equals(cDate)) {
-				FlexiBookController.registerNoShow(appointment.getCustomer().getUsername(), appointment.getTimeSlot().getStartDate(), appointment.getTimeSlot().getStartTime(), string, flexiBook);
+				FlexiBookController.registerNoShow(appointment.getCustomer().getUsername(), appointment.getTimeSlot().getStartDate(), appointment.getTimeSlot().getStartTime(), string);
 			}
 
 		}
+		FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -2297,8 +2233,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		FlexiBookApplication.setSystemTime(string.substring(11, 16) + ":00");
 
 		try {
-			FlexiBookController.endAppointment(customerName, appointmentTime, appointmentDate, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime(),
-					flexiBook);
+			FlexiBookController.endAppointment(customerName, appointmentTime, appointmentDate, FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2307,6 +2243,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@After
 	public void tearDown() {
 		flexiBook.delete();
+		FlexiBookPersistence.save(flexiBook);
 	}
 
 }
