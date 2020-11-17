@@ -1712,11 +1712,11 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("a new business hour shall {string} created")
 	public void a_new_business_hour_shall_created(String string) {
-//				if (!exception) {
-//					assertEquals("be", string);
-//				} else {
-//					assertEquals("not be", string);
-//				}
+		if (!exception) {
+			assertEquals("be", string);
+		} else {
+			assertEquals("not be", string);
+		}
 		return;
 	}
 
@@ -1844,6 +1844,11 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the business hour shall {string} be updated")
 	public void the_business_hour_shall_be_updated(String string) {
+		if (!exception) {
+			assertEquals("be", string);
+		} else {
+			assertEquals("not be", string);
+		}
 		return;
 	}
 
