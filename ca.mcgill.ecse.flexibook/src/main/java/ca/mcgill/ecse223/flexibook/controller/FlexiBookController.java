@@ -1290,7 +1290,8 @@ public class FlexiBookController {
 	/**
 	 * AddService Feature Implementation
 	 * 
-	 * @author Sneha Singh {@summary} Adds service with specified parameters to
+	 * @author Sneha Singh 
+	 * {@summary} Adds service with specified parameters to
 	 *         FlexiBook if all criteria is satisfied
 	 * @param name
 	 * @param flexiBook
