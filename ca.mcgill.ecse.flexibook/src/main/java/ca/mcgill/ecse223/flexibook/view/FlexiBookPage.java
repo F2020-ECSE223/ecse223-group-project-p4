@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Group;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -44,7 +45,7 @@ public class FlexiBookPage extends JFrame{
 	//JPanel panel = new JPanel();
 	
 	// message
-	private JLabel message;
+	private JLabel message = new JLabel();
 	
 	//customer menu
 	private JButton appBookingButton;
@@ -120,7 +121,6 @@ public class FlexiBookPage extends JFrame{
 	private JCheckBox updateServiceDowntimeStartCheckBox; 
 	private JCheckBox updateServiceDowntimeDurationCheckBox; 
 	private JCheckBox updateServiceDurationCheckBox;
-	
 	
 	
 	//delete service 
@@ -641,17 +641,11 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
-	//***************************************************************************************************************************/
-	
-	
-	
-	//******************************************************************************************************************/
 	
 	private void manageAppActionPerformed(ActionEvent evt) {
 		//initManageAppAcionPerformed();
 	}
 	
-
 
 	
 	private void viewCalenderActionPerformed(ActionEvent evt) {
@@ -674,7 +668,7 @@ public class FlexiBookPage extends JFrame{
 		JButton deleteServPageButton = new JButton();
 		deleteServPageButton.setText("Delete Service");
 		JButton manageServiceBackButton = new JButton();
-		manageServiceBackButton.setText("Back to Owner Menu");
+		manageServiceBackButton.setText("Back");
 		
 		
 		
@@ -687,8 +681,8 @@ public class FlexiBookPage extends JFrame{
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup()
 						.addComponent(addServPageButton)
-						.addComponent(deleteServPageButton)
 						.addComponent(updateServPageButton)
+						.addComponent(deleteServPageButton)
 						.addComponent(manageServiceBackButton))
 		
 		);
@@ -700,8 +694,8 @@ public class FlexiBookPage extends JFrame{
 				layout.createParallelGroup()
 					.addGroup(layout.createSequentialGroup()
 							.addComponent(addServPageButton)
-							.addComponent(deleteServPageButton)
 							.addComponent(updateServPageButton)
+							.addComponent(deleteServPageButton)
 							.addComponent(manageServiceBackButton))
 		);
 							
@@ -714,13 +708,13 @@ public class FlexiBookPage extends JFrame{
 
 		});
 		
-		deleteServPageButton.addActionListener(new ActionListener() {
+		updateServPageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateServiceActionPerformed(e);
 			}
 		});
 		
-		updateServPageButton.addActionListener(new ActionListener() {
+		deleteServPageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteServiceActionPerformed(e);
 			}
@@ -737,13 +731,11 @@ public class FlexiBookPage extends JFrame{
 	
 	//Sneha 
 	private void addServiceActionPerformed(ActionEvent evt) {
-			//initManageServicePage();
+		
 			getContentPane().removeAll(); 
 			getContentPane().repaint();
 			//getContentPane().setSize(dim);
-			
-			
-			
+
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			
 			//page components
@@ -752,7 +744,7 @@ public class FlexiBookPage extends JFrame{
 			serviceDurationLabel.setText("Service Duration (mins)");
 			downtimeStartLabel.setText("Downtime Start (mins)");
 			downtimeDurationLabel.setText("Downtime Duration (mins)");
-			addServiceBackButton.setText("Back to Service Menu");
+			addServiceBackButton.setText("Back");
 			addServiceButton.setText("Add Service");
 			
 			GroupLayout layout = new GroupLayout(getContentPane());
@@ -762,9 +754,9 @@ public class FlexiBookPage extends JFrame{
 			
 			layout.setHorizontalGroup(
 				layout.createSequentialGroup()
-				.addComponent(errorMessage)
-				.addComponent(successMessage)
+				
 					.addGroup(layout.createParallelGroup()
+							.addComponent(message)
 							.addComponent(serviceNameLabel)
 							.addComponent(serviceDurationLabel)
 							.addComponent(downtimeStartLabel)
@@ -788,8 +780,7 @@ public class FlexiBookPage extends JFrame{
 							
 			layout.setVerticalGroup(
 					layout.createSequentialGroup()
-					.addComponent(errorMessage)
-					.addComponent(successMessage)
+					.addComponent(message)
 					.addGroup(layout.createParallelGroup()
 							.addComponent(serviceNameLabel)
 							.addComponent(serviceName))
@@ -829,6 +820,9 @@ public class FlexiBookPage extends JFrame{
 		
 	
 	private void addServiceButtonPressed (ActionEvent evt) {
+		error = null;
+		success = null;
+		
 		try {
 			FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 			String name = serviceName.getText();
@@ -837,29 +831,161 @@ public class FlexiBookPage extends JFrame{
 			int dtStart = Integer.parseInt(downtimeStart.getText());
 			
 			FlexiBookController.addService(name, flexiBook, duration, dtDuration, dtStart);
-			//successMessage.setText("Service " +name+ " successfully added");
+			success = "Service " +name+ " successfully added";
 			refreshServicePage();
 			
 			pack();
 		}
 		catch (InvalidInputException e){
-			errorMessage.setText(e.getMessage());
+			error = e.getMessage();
 		}
 	}
 	
 	//Sneha
 	private void updateServiceActionPerformed (ActionEvent evt) {
-		//addServicePage
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+		//getContentPane().setSize(dim);
+			
+	
 		
+		
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		//page components
+		JComboBox<String> updateExistingService = new JComboBox<String>(); 
+		JLabel updateExistingServiceLabel = new JLabel(); 
+		JButton updateServiceButton = new JButton();
+		JButton updateServiceBackButton = new JButton();
+		JTextField newServiceName = new JTextField();
+		JLabel newServiceNameLabel = new JLabel(); 
+		JTextField newServiceDuration = new JTextField();
+		JLabel newServiceDurationLabel = new JLabel();  
+		JTextField newDowntimeStart = new JTextField();
+		JLabel newDowntimeStartLabel = new JLabel(); 
+		JTextField newDowntimeDuration = new JTextField();
+		JLabel newDowntimeDurationLabel = new JLabel(); 
+		JCheckBox updateServiceNameCheckBox = new JCheckBox();
+		JCheckBox updateServiceDowntimeStartCheckBox = new JCheckBox(); 
+		JCheckBox updateServiceDowntimeDurationCheckBox = new JCheckBox();
+		JCheckBox updateServiceDurationCheckBox = new JCheckBox();
+	
+		
+		newServiceNameLabel.setText("New name:");
+		newServiceDurationLabel.setText("New duration (mins):");
+		newDowntimeStartLabel.setText("New downtime start (mins):");
+		newDowntimeDurationLabel.setText("New downtime duration (mins):");
+		updateExistingServiceLabel.setText("Choose service to update:");
+		updateServiceButton.setText("Update Service");
+		updateServiceBackButton.setText("Back");
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		JSeparator horizontalLine = new JSeparator();
+		
+		layout.setHorizontalGroup(
+			layout.createSequentialGroup()
+			.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateExistingServiceLabel)
+						.addComponent(newServiceNameLabel)
+						.addComponent(newServiceDurationLabel)
+						.addComponent(newDowntimeStartLabel)
+						.addComponent(newDowntimeDurationLabel)
+						.addComponent(updateServiceBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateServiceNameCheckBox)
+						.addComponent(updateServiceDurationCheckBox)
+						.addComponent(updateServiceDowntimeStartCheckBox)
+						.addComponent(updateServiceDowntimeDurationCheckBox))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateExistingService)
+						.addComponent(newServiceName)
+						.addComponent(newServiceDuration)
+						.addComponent(newDowntimeStart)
+						.addComponent(newDowntimeDuration)
+						.addComponent(updateServiceButton))
+		);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateServiceNameCheckBox, updateServiceDurationCheckBox, updateServiceDowntimeStartCheckBox, updateServiceDowntimeDurationCheckBox});
+
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateExistingServiceLabel, newServiceNameLabel, newServiceDurationLabel, newDowntimeStartLabel, newDowntimeDurationLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {newServiceName, newServiceDuration, newDowntimeStart, newDowntimeDuration});
+		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
+						
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateExistingServiceLabel)
+						.addComponent(updateExistingService))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newServiceNameLabel)
+						.addComponent(updateServiceNameCheckBox)
+						.addComponent(newServiceName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newServiceDurationLabel)
+						.addComponent(updateServiceDurationCheckBox)
+						.addComponent(newServiceDuration))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newDowntimeStartLabel)
+						.addComponent(updateServiceDowntimeStartCheckBox)
+						.addComponent(newDowntimeStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newDowntimeDurationLabel)
+						.addComponent(updateServiceDowntimeDurationCheckBox)
+						.addComponent(newDowntimeDuration))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateServiceBackButton)
+						.addComponent(updateServiceButton))
+				);
+					
+						
+		
+		updateServiceButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateServiceButtonPressed(e);
+			}
+
+		});
+	
+		updateServiceBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manageServiceActionPerformed(e);
+			}
+		});
+
+		
+		//resize page to fit all components 
+		pack();
 	}
+	
+	private void updateServiceButtonPressed (ActionEvent evt) {
+		//TODO: implement
+	}
+
 	
 	//Sneha 
 	private void deleteServiceActionPerformed (ActionEvent evt) {
 		//addServicePage
 		
 	}
-
+	
+	//Sneha
 	private void refreshServicePage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+		
 		serviceName.setText("");
 		serviceDuration.setText("");
 		downtimeDuration.setText("");
