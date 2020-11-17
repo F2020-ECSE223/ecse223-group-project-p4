@@ -4,14 +4,20 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
+
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,8 +26,11 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
+import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 
@@ -32,6 +41,7 @@ public class FlexiBookPage extends JFrame{
 	private String success;
 	
 	// UI elements
+	//JPanel panel = new JPanel();
 	
 	// message
 	private JLabel message;
@@ -71,6 +81,55 @@ public class FlexiBookPage extends JFrame{
 	private JLabel cancelAppDateLabel;
 	private JButton cancelAppButton;
 	
+	
+	//init manage service page
+	private JButton addServPageButton;
+	private JButton updateServPageButton; 
+	private JButton deleteServPageButton; 
+	private JButton backToMainPage; 
+	
+	//add service
+	private JTextField serviceName = new JTextField(); 
+	private JLabel serviceNameLabel = new JLabel();
+	private JTextField serviceDuration = new JTextField(); 
+	private JLabel serviceDurationLabel = new JLabel(); 
+	private JTextField downtimeStart = new JTextField();
+	private JLabel downtimeStartLabel = new JLabel();
+	private JTextField downtimeDuration = new JTextField();
+	private JLabel downtimeDurationLabel = new JLabel();
+	private JButton addServiceButton = new JButton();
+	private JButton addServiceBackButton = new JButton();
+	private JLabel errorMessage = new JLabel();
+	private JLabel successMessage = new JLabel();
+
+	
+	//update service 
+	private JComboBox<String> updateExistingService;
+	private JLabel updateExistingServiceLabel;
+	private JButton updateServiceButton;
+	private JButton updateServiceBackButton; 
+	private JTextField newServiceName; 
+	private JLabel newServiceNameLabel; 
+	private JTextField newServiceDuration; 
+	private JLabel newServiceDurationLabel; 
+	private JTextField newDowntimeStart; 
+	private JLabel unewDowntimeStartLabel; 
+	private JTextField newDowntimeDuration;
+	private JLabel newDowntimeDurationLabel;
+	private JCheckBox updateServiceNameCheckBox; 
+	private JCheckBox updateServiceDowntimeStartCheckBox; 
+	private JCheckBox updateServiceDowntimeDurationCheckBox; 
+	private JCheckBox updateServiceDurationCheckBox;
+	
+	
+	
+	//delete service 
+	private JComboBox<String> deleteExistingService;
+	private JLabel deleteExistingServiceLabel; 
+	private JButton deleteServiceButton;
+	private JButton deleteServiceBackButton; 
+	
+	
 	//data
 	ArrayList<String> availableServices = new ArrayList<>();
 	ArrayList<String> existingAppointments = new ArrayList<>();
@@ -83,11 +142,11 @@ public class FlexiBookPage extends JFrame{
 		//initCustomerMenu();
 		
 		//else if the user is the owner
-		//initOwnerMenu();
-
-	
+		initOwnerMenu();
+		//refreshData();
+		
+		//manageServiceActionPerformed();
 	}
-	
 	
 	/**
 	 * @author Shaswata
@@ -161,6 +220,7 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 		
+		pack();
 		
 	}
 	
@@ -388,7 +448,6 @@ public class FlexiBookPage extends JFrame{
 							
 		);
 		
-		
 
 
 		
@@ -457,8 +516,9 @@ public class FlexiBookPage extends JFrame{
 			String startTime = makeAppTime.getText();
 			String startDate = makeAppDate.getText();
 			Date todaysDate = FlexiBookApplication.getSystemDate();
+			Time currentTime = FlexiBookApplication.getSystemTime();
 			
-			FlexiBookController.makeAppointment(username, mainServiceName, null, startTime, startDate, todaysDate);
+			FlexiBookController.makeAppointment(username, mainServiceName, null, startTime, startDate, todaysDate, currentTime);
 			success = "Appointment booked for " + mainServiceName + " on " + startDate + " at " + startTime; 
 			
 		}catch(InvalidInputException e) {
@@ -487,28 +547,31 @@ public class FlexiBookPage extends JFrame{
 			}
 			
 			String username = FlexiBookApplication.getCurrentUser().getUsername();
-			String startTime = existingAppointments.get(selectedAppointment).substring(11, 16);
-			String startDate = existingAppointments.get(selectedAppointment).substring(0, 10);
+			Time startTime = Time.valueOf(existingAppointments.get(selectedAppointment).substring(11, 19));
+			String sTime = existingAppointments.get(selectedAppointment).substring(11, 16);
+			Date startDate = Date.valueOf(existingAppointments.get(selectedAppointment).substring(0, 10));
+			String sDate = existingAppointments.get(selectedAppointment).substring(0, 10);
 			String newStartTime = updateAppNewTime.getText();
 			String newStartDate = updateAppNewDate.getText();
 			Date todaysDate = FlexiBookApplication.getSystemDate();
+			Time currentTime = FlexiBookApplication.getSystemTime();
 			int selectedService = updateAppServiceList.getSelectedIndex();
 			
 			if(selectedService != -1) {		//new service is selected
 				
 				String newService = availableServices.get(selectedService);
 				if(!newStartDate.equals("") && !newStartTime.equals("")) {		// updating to a new time slot
-					FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime, startDate, todaysDate, flexiBook);
-					FlexiBookController.cancelAndBookNewService(username,  newService, null, newStartTime, newStartDate, todaysDate, flexiBook);
+					FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime, startDate, todaysDate, currentTime);
+					FlexiBookController.cancelAndBookNewService(username,  newService, null, newStartTime, newStartDate, todaysDate, currentTime);
 					success = "Appointment updated to  " + newStartDate + " at " + startTime + " for service " + newService; 
 				}else {		// not updating to a new time slot
-					FlexiBookController.cancelAndBookNewService(username, newService, null, startTime, startDate, todaysDate, flexiBook);
+					FlexiBookController.cancelAndBookNewService(username, newService, null, sTime, sDate, todaysDate, currentTime);
 					success = "Appointment updated to new service " + newService; 
 				}
 				
 			}
 			else if((selectedService == -1) && !newStartDate.equals("") && !newStartTime.equals("")){			// new service not selected, new date and time selected
-				FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime, startDate, todaysDate, flexiBook);
+				FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime, startDate, todaysDate, currentTime);
 				success = "Appointment updated to " + newStartDate + " at " + startTime; 
 			}
 			else {		// nothing selected
@@ -548,7 +611,7 @@ public class FlexiBookPage extends JFrame{
 			String startDate = existingAppointments.get(selectedAppointment).substring(0, 10);
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			
-			FlexiBookController.cancelAppointment(username, startTime, startDate, todaysDate, null);
+			FlexiBookController.cancelAppointment(username, startTime, startDate, todaysDate);
 			success = "Appointment on " + startDate + " at " + startTime + " is cancelled."; 
 			
 		}catch(InvalidInputException e) {
@@ -578,24 +641,232 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
-	private void manageServiceActionPerformed(ActionEvent evt) {
-		//initManageServicePage();
-	}
+	//***************************************************************************************************************************/
 	
+	
+	
+	//******************************************************************************************************************/
 	
 	private void manageAppActionPerformed(ActionEvent evt) {
 		//initManageAppAcionPerformed();
 	}
 	
+
+
 	
 	private void viewCalenderActionPerformed(ActionEvent evt) {
 		//initViewAppCalenderPage();
 	}
 	
 	
+	//Sneha
+	private void manageServiceActionPerformed (ActionEvent evt) {
+		//addServicePage
+
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+		
+		
+		JButton addServPageButton = new JButton();
+		addServPageButton.setText("Add Service");
+		JButton updateServPageButton = new JButton();
+		updateServPageButton.setText("Update Service");
+		JButton deleteServPageButton = new JButton();
+		deleteServPageButton.setText("Delete Service");
+		JButton manageServiceBackButton = new JButton();
+		manageServiceBackButton.setText("Back to Owner Menu");
+		
+		
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+			layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addServPageButton)
+						.addComponent(deleteServPageButton)
+						.addComponent(updateServPageButton)
+						.addComponent(manageServiceBackButton))
+		
+		);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
+						
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+					.addGroup(layout.createSequentialGroup()
+							.addComponent(addServPageButton)
+							.addComponent(deleteServPageButton)
+							.addComponent(updateServPageButton)
+							.addComponent(manageServiceBackButton))
+		);
+							
+							
+		
+		addServPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addServiceActionPerformed(e);
+			}
+
+		});
+		
+		deleteServPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateServiceActionPerformed(e);
+			}
+		});
+		
+		updateServPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteServiceActionPerformed(e);
+			}
+		});
+		
+		manageServiceBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initOwnerMenu();
+			}
+		});
+		
+		pack();
+	}
 	
+	//Sneha 
+	private void addServiceActionPerformed(ActionEvent evt) {
+			//initManageServicePage();
+			getContentPane().removeAll(); 
+			getContentPane().repaint();
+			//getContentPane().setSize(dim);
+			
+			
+			
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			
+			//page components
+			
+			serviceNameLabel.setText("Service Name");
+			serviceDurationLabel.setText("Service Duration (mins)");
+			downtimeStartLabel.setText("Downtime Start (mins)");
+			downtimeDurationLabel.setText("Downtime Duration (mins)");
+			addServiceBackButton.setText("Back to Service Menu");
+			addServiceButton.setText("Add Service");
+			
+			GroupLayout layout = new GroupLayout(getContentPane());
+			getContentPane().setLayout(layout);
+			layout.setAutoCreateGaps(true);
+			layout.setAutoCreateContainerGaps(true);
+			
+			layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addComponent(errorMessage)
+				.addComponent(successMessage)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(serviceNameLabel)
+							.addComponent(serviceDurationLabel)
+							.addComponent(downtimeStartLabel)
+							.addComponent(downtimeDurationLabel)
+							.addComponent(addServiceBackButton))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(serviceName)
+							.addComponent(serviceDuration)
+							.addComponent(downtimeStart)
+							.addComponent(downtimeDuration)
+							.addComponent(addServiceButton))
+			);
+			
+//			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {serviceNameLabel, serviceName});
+//			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {serviceDurationLabel, serviceDuration});
+//			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {downtimeStartLabel, downtimeStart});
+//			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {downtimeDurationLabel, downtimeDuration});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceNameLabel, serviceDurationLabel, downtimeStartLabel, downtimeDurationLabel});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceName, serviceDuration, downtimeStart, downtimeDuration});
+			//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
+							
+			layout.setVerticalGroup(
+					layout.createSequentialGroup()
+					.addComponent(errorMessage)
+					.addComponent(successMessage)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(serviceNameLabel)
+							.addComponent(serviceName))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(serviceDurationLabel)
+							.addComponent(serviceDuration))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(downtimeStartLabel)
+							.addComponent(downtimeStart))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(downtimeDurationLabel)
+							.addComponent(downtimeDuration))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(addServiceBackButton)
+							.addComponent(addServiceButton))
+					);
+						
+							
+			
+			addServiceButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					addServiceButtonPressed(e);
+				}
+
+			});
+		
+			addServiceBackButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					manageServiceActionPerformed(e);
+				}
+			});
+
+			
+			//resize page to fit all components 
+			pack();
+		}
+		
 	
+	private void addServiceButtonPressed (ActionEvent evt) {
+		try {
+			FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+			String name = serviceName.getText();
+			int duration = Integer.parseInt(serviceDuration.getText());
+			int dtDuration = Integer.parseInt(downtimeDuration.getText());
+			int dtStart = Integer.parseInt(downtimeStart.getText());
+			
+			FlexiBookController.addService(name, flexiBook, duration, dtDuration, dtStart);
+			//successMessage.setText("Service " +name+ " successfully added");
+			refreshServicePage();
+			
+			pack();
+		}
+		catch (InvalidInputException e){
+			errorMessage.setText(e.getMessage());
+		}
+	}
 	
+	//Sneha
+	private void updateServiceActionPerformed (ActionEvent evt) {
+		//addServicePage
+		
+	}
+	
+	//Sneha 
+	private void deleteServiceActionPerformed (ActionEvent evt) {
+		//addServicePage
+		
+	}
+
+	private void refreshServicePage() {
+		serviceName.setText("");
+		serviceDuration.setText("");
+		downtimeDuration.setText("");
+		downtimeStart.setText("");
+		
+		pack();
+	}
 	
 	
 }
