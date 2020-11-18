@@ -637,7 +637,143 @@ public class FlexiBookPage extends JFrame{
 	
 	
 	private void businessInfoActionPerformed(ActionEvent evt) {
-		//initBusinessInfoPage();
+		initBusinessInfoPage();
+	}
+	
+	private void initBusinessInfoPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+		
+		JButton setupBusinessInfoButton = new JButton();
+		setupBusinessInfoButton.setText("Setup Business Info");
+		JButton updateBusinessInfoButton = new JButton();
+		updateBusinessInfoButton.setText("Update Business Info");
+		JButton businessInfoBackButton = new JButton();
+		businessInfoBackButton.setText("Back");
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+			layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(setupBusinessInfoButton)
+						.addComponent(updateBusinessInfoButton)
+						.addComponent(businessInfoBackButton))
+		);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton});
+						
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+					.addGroup(layout.createSequentialGroup()
+							.addComponent(setupBusinessInfoButton)
+							.addComponent(updateBusinessInfoButton)
+							.addComponent(businessInfoBackButton))
+		);
+		
+		setupBusinessInfoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setupBusinessInfoActionPerformed(e);
+			}
+
+		});
+		
+		updateBusinessInfoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//updateBusinessInfoActionPerformed(e);
+			}
+
+		});
+		
+		businessInfoBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initOwnerMenu();
+			}
+
+		});
+		
+		pack();
+	}
+	
+	private void setupBusinessInfoActionPerformed(ActionEvent evt) {
+		initSetupBusinessInfoPage();
+	}
+	
+	private void initSetupBusinessInfoPage() {
+		
+		getContentPane().removeAll();
+		getContentPane().repaint();
+		
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		JLabel businessNameLabel = new JLabel();
+		JLabel businessAddressLabel = new JLabel();
+		JLabel businessEmailLabel = new JLabel();
+		JLabel businessPhoneLabel = new JLabel();
+		
+		JButton businessInfoBackButton = new JButton();
+		JButton businessInfoSetInfoButton = new JButton();
+		
+		JTextField businessName = new JTextField();
+		JTextField businessAddress = new JTextField();
+		JTextField businessEmail = new JTextField();
+		JTextField businessPhone = new JTextField();
+		
+		businessNameLabel.setText("Business Name");
+		businessAddressLabel.setText("Business Address");
+		businessEmailLabel.setText("Business Email");
+		businessPhoneLabel.setText("Business Phone Number");
+		businessInfoBackButton.setText("Back");
+		businessInfoSetInfoButton.setText("Set Business Info");
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+			layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessNameLabel)
+						.addComponent(businessAddressLabel)
+						.addComponent(businessEmailLabel)
+						.addComponent(businessPhoneLabel)
+						.addComponent(businessInfoBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessName)
+						.addComponent(businessAddress)
+						.addComponent(businessEmail)
+						.addComponent(businessPhone)
+						.addComponent(businessInfoSetInfoButton))
+		);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel, businessInfoBackButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone, businessInfoSetInfoButton});
+						
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup()
+							.addComponent(businessNameLabel)
+							.addComponent(businessName))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(businessAddressLabel)
+							.addComponent(businessAddress))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(businessEmailLabel)
+							.addComponent(businessEmail))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(businessPhoneLabel)
+							.addComponent(businessPhone))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(businessInfoBackButton)
+							.addComponent(businessInfoSetInfoButton))
+		);
+		
+		pack();
 	}
 	
 	
