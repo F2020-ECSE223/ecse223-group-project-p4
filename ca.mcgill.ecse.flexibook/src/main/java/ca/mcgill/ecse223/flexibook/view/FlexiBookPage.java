@@ -134,6 +134,12 @@ public class FlexiBookPage extends JFrame{
 	ArrayList<String> availableServices = new ArrayList<>();
 	ArrayList<String> existingAppointments = new ArrayList<>();
 	
+	//setupBusinessInfo
+	
+	private JTextField businessName = new JTextField();
+	private JTextField businessAddress = new JTextField();
+	private JTextField businessEmail = new JTextField();
+	private JTextField businessPhone = new JTextField();
 	
 
 	public FlexiBookPage() {
@@ -717,11 +723,7 @@ public class FlexiBookPage extends JFrame{
 		
 		JButton businessInfoBackButton = new JButton();
 		JButton businessInfoSetInfoButton = new JButton();
-		
-		JTextField businessName = new JTextField();
-		JTextField businessAddress = new JTextField();
-		JTextField businessEmail = new JTextField();
-		JTextField businessPhone = new JTextField();
+
 		
 		businessNameLabel.setText("Business Name");
 		businessAddressLabel.setText("Business Address");
@@ -752,7 +754,7 @@ public class FlexiBookPage extends JFrame{
 		);
 		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel, businessInfoBackButton});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone, businessInfoSetInfoButton});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone, businessInfoSetInfoButton});
 						
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
@@ -773,7 +775,32 @@ public class FlexiBookPage extends JFrame{
 							.addComponent(businessInfoSetInfoButton))
 		);
 		
+		businessInfoBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initBusinessInfoPage();
+			}
+		});
+		
+		businessInfoSetInfoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setInfoButtonPressed(e);
+			}
+		});
+		
 		pack();
+	}
+	
+	private void setInfoButtonPressed(ActionEvent evt) {
+		error = null;
+		try {
+			String name = businessName.getText();
+			String address = businessAddress.getText();
+			String phoneNumber = businessPhone.getText();
+			String email = businessEmail.getText();
+			FlexiBookController.setupBusinessInfo(name, address, phoneNumber, email);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
 	}
 	
 	
