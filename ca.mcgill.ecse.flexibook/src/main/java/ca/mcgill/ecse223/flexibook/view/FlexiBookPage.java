@@ -770,10 +770,7 @@ public class FlexiBookPage extends JFrame{
 							.addComponent(addServiceButton))
 			);
 			
-//			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {serviceNameLabel, serviceName});
-//			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {serviceDurationLabel, serviceDuration});
-//			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {downtimeStartLabel, downtimeStart});
-//			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {downtimeDurationLabel, downtimeDuration});
+
 			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceNameLabel, serviceDurationLabel, downtimeStartLabel, downtimeDurationLabel});
 			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceName, serviceDuration, downtimeStart, downtimeDuration});
 			//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
@@ -883,8 +880,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		
-		JSeparator horizontalLine = new JSeparator();
+
 		
 		layout.setHorizontalGroup(
 			layout.createSequentialGroup()
@@ -969,8 +965,78 @@ public class FlexiBookPage extends JFrame{
 	
 	//Sneha 
 	private void deleteServiceActionPerformed (ActionEvent evt) {
-		//addServicePage
+	
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+	
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
+		//page components
+		JComboBox<String> deleteExistingService = new JComboBox<String>();
+		JLabel deleteExistingServiceLabel = new JLabel();
+		JButton deleteServiceButton = new JButton();
+		JButton deleteServiceBackButton = new JButton();
+		
+		deleteExistingServiceLabel.setText("Choose service to delete:");
+		deleteServiceButton.setText("Delete Service");
+		deleteServiceBackButton.setText("Back");
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		
+		layout.setHorizontalGroup(
+			layout.createSequentialGroup()
+			.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(deleteExistingServiceLabel)
+						.addComponent(deleteServiceBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(deleteExistingService)
+						.addComponent(deleteServiceButton))
+		);
+			
+			
+		//layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateServiceNameCheckBox, updateServiceDurationCheckBox, updateServiceDowntimeStartCheckBox, updateServiceDowntimeDurationCheckBox});
+
+						
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(deleteExistingServiceLabel)
+						.addComponent(deleteExistingService))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(deleteServiceBackButton)
+						.addComponent(deleteServiceButton))
+			
+				);
+					
+						
+		
+		deleteServiceButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteServiceButtonPressed(e);
+			}
+
+		});
+	
+		deleteServiceBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manageServiceActionPerformed(e);
+			}
+		});
+
+		
+		//resize page to fit all components 
+		pack();
+	}
+	
+	
+	private void deleteServiceButtonPressed (ActionEvent evt) {
+		//TODO: implement
 	}
 	
 	//Sneha
