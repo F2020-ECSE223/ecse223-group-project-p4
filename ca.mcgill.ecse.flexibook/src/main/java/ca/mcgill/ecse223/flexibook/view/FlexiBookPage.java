@@ -740,6 +740,7 @@ public class FlexiBookPage extends JFrame{
 		layout.setHorizontalGroup(
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
 						.addComponent(businessNameLabel)
 						.addComponent(businessAddressLabel)
 						.addComponent(businessEmailLabel)
@@ -758,6 +759,7 @@ public class FlexiBookPage extends JFrame{
 						
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
+					.addComponent(message)
 					.addGroup(layout.createParallelGroup()
 							.addComponent(businessNameLabel)
 							.addComponent(businessName))
@@ -792,15 +794,39 @@ public class FlexiBookPage extends JFrame{
 	
 	private void setInfoButtonPressed(ActionEvent evt) {
 		error = null;
+		success = null;
 		try {
 			String name = businessName.getText();
 			String address = businessAddress.getText();
 			String phoneNumber = businessPhone.getText();
 			String email = businessEmail.getText();
 			FlexiBookController.setupBusinessInfo(name, address, phoneNumber, email);
+			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
+		
+		refreshSetupBusinessInfoPage();
+	}
+	
+	private void refreshSetupBusinessInfoPage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+		
+		businessName.setText("");
+		businessAddress.setText("");
+		businessPhone.setText("");
+		businessEmail.setText("");
+		
+		pack();
 	}
 	
 	
