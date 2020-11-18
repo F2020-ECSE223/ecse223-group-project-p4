@@ -684,17 +684,17 @@ public class CucumberStepDefinitions {
 	 * @author Sneha Singh
 	 */
 	@Then("the service {string} shall have duration {string}, start of down time {string} and down time duration {string}")
-	public void theServiceShallHave(String string, String string2, String string3, String string4) {
+	public void theServiceShallHave(String name, String duration, String downtimeStart, String downtimeDuration) {
 
 		int index =0;
 		for(int i=0; i<flexiBook.getBookableServices().size(); i++) {
-			if(flexiBook.getBookableService(i).getName().equals(string)) {
+			if(flexiBook.getBookableService(i).getName().equals(name)) {
 				index =i;
 			}
 		}
-			assertEquals(Integer.parseInt(string2), ((Service) flexiBook.getBookableService(index)).getDuration());
-			assertEquals(Integer.parseInt(string3), ((Service) flexiBook.getBookableService(index)).getDowntimeStart());
-			assertEquals(Integer.parseInt(string4), ((Service) flexiBook.getBookableService(index)).getDowntimeDuration());
+			assertEquals(Integer.parseInt(duration), ((Service) flexiBook.getBookableService(index)).getDuration());
+			assertEquals(Integer.parseInt(downtimeStart), ((Service) flexiBook.getBookableService(index)).getDowntimeStart());
+			assertEquals(Integer.parseInt(downtimeDuration), ((Service) flexiBook.getBookableService(index)).getDowntimeDuration());
 		
 	}
 
@@ -796,15 +796,15 @@ public class CucumberStepDefinitions {
 	 * @author Sneha Singh
 	 */
 	@Then("the service {string} shall be updated to name {string}, duration {string}, start of down time {string} and down time duration {string}")
-	public void theServiceShallBeUpdatedTo(String string, String string2, String string3, String string4,
-			String string5) {
+	public void theServiceShallBeUpdatedTo(String name, String newName, String newDuration, String newDowntimeStart,
+			String newDowntimeDuration) {
 		if (flexiBook.hasBookableServices() == true) {
 
-			int i = flexiBook.indexOfBookableService(Service.getWithName(string2));
-			assertEquals(string2, flexiBook.getBookableService(i).getName());
-			assertEquals(Integer.parseInt(string3), ((Service) flexiBook.getBookableService(i)).getDuration());
-			assertEquals(Integer.parseInt(string4), ((Service) flexiBook.getBookableService(i)).getDowntimeStart());
-			assertEquals(Integer.parseInt(string5), ((Service) flexiBook.getBookableService(i)).getDowntimeDuration());
+			int i = flexiBook.indexOfBookableService(Service.getWithName(newName));
+			assertEquals(newName, flexiBook.getBookableService(i).getName());
+			assertEquals(Integer.parseInt(newDuration), ((Service) flexiBook.getBookableService(i)).getDuration());
+			assertEquals(Integer.parseInt(newDowntimeStart), ((Service) flexiBook.getBookableService(i)).getDowntimeStart());
+			assertEquals(Integer.parseInt(newDowntimeDuration), ((Service) flexiBook.getBookableService(i)).getDowntimeDuration());
 		}
 	}
 
@@ -813,10 +813,10 @@ public class CucumberStepDefinitions {
 	 * @author Sneha Singh
 	 */
 	@When("{string} initiates the deletion of service {string}")
-	public void serviceDeletionIsInitiated(String string, String string2) {
+	public void serviceDeletionIsInitiated(String user, String service) {
 
 		try {
-			FlexiBookController.deleteService(string2, flexiBook);
+			FlexiBookController.deleteService(service, flexiBook);
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
@@ -828,9 +828,9 @@ public class CucumberStepDefinitions {
 	 * @author Sneha Singh
 	 */
 	@Then("the number of appointments in the system with service {string} shall be {string}")
-	public void numberOfAppointmentsOfServiceShouldBe(String string, String string2) {
-		if (Service.getWithName(string) != null) {
-			assertEquals(Integer.parseInt(string2), Service.getWithName(string).getAppointments().size());
+	public void numberOfAppointmentsOfServiceShouldBe(String name, String numAppointments) {
+		if (Service.getWithName(name) != null) {
+			assertEquals(Integer.parseInt(numAppointments), Service.getWithName(name).getAppointments().size());
 		}
 	}
 
@@ -838,8 +838,8 @@ public class CucumberStepDefinitions {
 	 * @author Sneha Singh
 	 */
 	@Then("the number of appointments in the system shall be {string}")
-	public void numberOfAppointmentsInSystemShallBe(String string) {
-		assertEquals(Integer.parseInt(string), flexiBook.getAppointments().size());
+	public void numberOfAppointmentsInSystemShallBe(String numAppts) {
+		assertEquals(Integer.parseInt(numAppts), flexiBook.getAppointments().size());
 	}
 
 	/**
@@ -855,11 +855,11 @@ public class CucumberStepDefinitions {
 	 * @author Sneha Singh
 	 */
 	@Then("the service combos {string} shall not contain service {string}")
-	public void theServiceCombosShallNotContainTheService(String string, String string2) {
-		combosInService = ((ServiceCombo) ServiceCombo.getWithName(string)).getServices();
+	public void theServiceCombosShallNotContainTheService(String combo, String service) {
+		combosInService = ((ServiceCombo) ServiceCombo.getWithName(combo)).getServices();
 
 		for (int i = 0; i < combosInService.size(); i++) {
-			assertNotEquals(combosInService.get(i).getService(), (Service.getWithName(string2)));
+			assertNotEquals(combosInService.get(i).getService(), (Service.getWithName(service)));
 		}
 	}
 
@@ -880,7 +880,7 @@ public class CucumberStepDefinitions {
 	}
 
 	// **********************************END SERVICE
-	// IMPLEMENTATION*******************8
+	// IMPLEMENTATION*******************
 
 	// **********************************SERVICE COMBO
 	// IMPLEMENTATION********************
@@ -1970,8 +1970,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 * @param string
 	 */
 	@Then("the service in the appointment shall be {string}")
-	public void the_service_in_the_appointment_shall_be(String string) {
-		assertEquals(BookableService.getWithName(string), appointment.getBookableService());
+	public void the_service_in_the_appointment_shall_be(String service) {
+		assertEquals(BookableService.getWithName(service), appointment.getBookableService());
 	}
 
 	/**
@@ -1981,11 +1981,11 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 * @param string3
 	 */
 	@Then("the appointment shall be for the date {string} with start time {string} and end time {string}")
-	public void the_appointment_shall_be_for_the_date_with_start_time_and_end_time(String string, String string2,
-			String string3) {
-		assertEquals(Date.valueOf(string), appointment.getTimeSlot().getStartDate());
-		assertEquals(Time.valueOf(string2 + ":00"), appointment.getTimeSlot().getStartTime());
-		assertEquals(Time.valueOf(string3 + ":00"), appointment.getTimeSlot().getEndTime());
+	public void the_appointment_shall_be_for_the_date_with_start_time_and_end_time(String date, String startTime,
+			String endTime) {
+		assertEquals(Date.valueOf(date), appointment.getTimeSlot().getStartDate());
+		assertEquals(Time.valueOf(startTime + ":00"), appointment.getTimeSlot().getStartTime());
+		assertEquals(Time.valueOf(endTime + ":00"), appointment.getTimeSlot().getEndTime());
 	}
 
 	/**
@@ -1993,9 +1993,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 * @param string
 	 */
 	@Then("the username associated with the appointment shall be {string}")
-	public void the_username_associated_with_the_appointment_shall_be(String string) {
-		assertEquals(string, appointment.getCustomer().getUsername());
-		// throw new io.cucumber.java.PendingException();
+	public void the_username_associated_with_the_appointment_shall_be(String username) {
+		assertEquals(username, appointment.getCustomer().getUsername());
 	}
 
 	/**
@@ -2004,8 +2003,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 * @param int1
 	 */
 	@Then("the user {string} shall have {int} no-show records")
-	public void the_user_shall_have_no_show_records(String string, Integer int1) {
-		assertEquals(int1, ((Customer) Customer.getWithUsername(string)).getNoShows());
+	public void the_user_shall_have_no_show_records(String user, Integer int1) {
+		assertEquals(int1, ((Customer) Customer.getWithUsername(user)).getNoShows());
 	}
 
 	/**

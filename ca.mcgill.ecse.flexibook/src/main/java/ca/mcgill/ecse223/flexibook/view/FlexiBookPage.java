@@ -923,12 +923,9 @@ public class FlexiBookPage extends JFrame{
 		
 			getContentPane().removeAll(); 
 			getContentPane().repaint();
-			//getContentPane().setSize(dim);
 
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-			
-			//page components
-			
+	
 			serviceNameLabel.setText("Service Name");
 			serviceDurationLabel.setText("Service Duration (mins)");
 			downtimeStartLabel.setText("Downtime Start (mins)");
