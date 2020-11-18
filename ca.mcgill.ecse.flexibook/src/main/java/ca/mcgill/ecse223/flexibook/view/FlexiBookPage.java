@@ -1013,7 +1013,7 @@ public class FlexiBookPage extends JFrame{
 			int dtDuration = Integer.parseInt(downtimeDuration.getText());
 			int dtStart = Integer.parseInt(downtimeStart.getText());
 			
-			FlexiBookController.addService(name, flexiBook, duration, dtDuration, dtStart);
+			FlexiBookController.addService(name, duration, dtDuration, dtStart);
 			success = "Service " +name+ " successfully added";
 			refreshServicePage();
 			

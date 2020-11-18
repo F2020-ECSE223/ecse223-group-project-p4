@@ -919,6 +919,22 @@ public class FlexiBookController {
 
 	public static Service service;
 	private static List<Appointment> appointments;
+	public static List<Service> existingServices; 
+	
+	
+	public static List<Service> getExistingServices() {
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		List<BookableService> allServices = flexiBook.getBookableServices();
+		
+		for (int i = 0; i < allServices.size(); i++) {
+			if (allServices.get(i).getClass().equals(Service.class)) {
+				existingServices.add((Service) allServices.get(i));
+			}
+		}
+		
+		FlexiBookPersistence.save(flexiBook);
+		return existingServices;
+	}
 
 	/**
 	 * Helper Method: Add/Update/Delete Service Feature
@@ -1049,7 +1065,7 @@ public class FlexiBookController {
 	 * @return boolean true if all timings make sense
 	 * @throws InvalidInputException
 	 */
-	public static boolean timingsMakeSense(int downtimeStart, int downtimeDuration, int duration)
+	private static boolean timingsMakeSense(int downtimeStart, int downtimeDuration, int duration)
 			throws InvalidInputException {
 		boolean timingsMakeSense = true;
 
@@ -1098,14 +1114,16 @@ public class FlexiBookController {
 	 * @return boolean false if service doesn't exist
 	 * @throws InvalidInputException
 	 */
-	private static boolean serviceExistsAlready(FlexiBook aFlexiBook, String name) throws InvalidInputException {
+	private static boolean serviceExistsAlready(String name) throws InvalidInputException {
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		boolean serviceExists = false;
-
-		if (aFlexiBook.getBookableServices().contains(Service.getWithName(name))) {
+	
+		
+		if (flexiBook.getBookableServices().contains(Service.getWithName(name))) {
 			serviceExists = true;
 			throw new InvalidInputException("Service " + name + " already exists");
 		}
-
+		FlexiBookPersistence.save(flexiBook);
 		return serviceExists;
 	}
 
@@ -1125,14 +1143,17 @@ public class FlexiBookController {
 	 * @param downtimeStart
 	 * @throws InvalidInputException
 	 */
-	public static void addService(String name, FlexiBook flexiBook, int duration, int downtimeDuration,
+	public static void addService(String name, int duration, int downtimeDuration,
 			int downtimeStart) throws InvalidInputException {
 
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true)
 				&& (timingsMakeSense(downtimeStart, downtimeDuration, duration) == true)
-				&& (serviceExistsAlready(flexiBook, name) == false)) {
+				&& (serviceExistsAlready(name) == false)) {
 			service = new Service(name, flexiBook, duration, downtimeDuration, downtimeStart);
 		}
+		
+		FlexiBookPersistence.save(flexiBook);
 
 	}
 
@@ -1150,8 +1171,10 @@ public class FlexiBookController {
 	 * @return
 	 * @throws InvalidInputException
 	 */
-	private static boolean updatingCorrectService(Service serviceToUpdate, String newName, FlexiBook flexiBook)
+	private static boolean updatingCorrectService(Service serviceToUpdate, String newName)
 			throws InvalidInputException {
+		
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		boolean updatingCorrService = false;
 
 		if (flexiBook.getBookableServices().contains(serviceToUpdate)) {
@@ -1164,7 +1187,8 @@ public class FlexiBookController {
 				&& flexiBook.getBookableServices().contains(Service.getWithName(newName))) {
 			throw new InvalidInputException("Service " + newName + " already exists");
 		}
-
+		
+		FlexiBookPersistence.save(flexiBook);
 		return updatingCorrService;
 	}
 
@@ -1181,16 +1205,19 @@ public class FlexiBookController {
 	 * @param newDowntimeDuration
 	 * @throws InvalidInputException
 	 */
-	public static void updateService(Service serviceToUpdate, String newName, FlexiBook flexiBook, int newDuration,
+	public static void updateService(Service serviceToUpdate, String newName, int newDuration,
 			int newDowntimeStart, int newDowntimeDuration) throws InvalidInputException {
+		
 		if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true)
 				&& (timingsMakeSense(newDowntimeStart, newDowntimeDuration, newDuration) == true)
-				&& (updatingCorrectService(serviceToUpdate, newName, flexiBook) == true)) {
+				&& (updatingCorrectService(serviceToUpdate, newName) == true)) {
 			serviceToUpdate.setName(newName);
 			serviceToUpdate.setDuration(newDuration);
 			serviceToUpdate.setDowntimeDuration(newDowntimeDuration);
 			serviceToUpdate.setDowntimeStart(newDowntimeStart);
 		}
+		
+		
 	}
 
 	// *******************************DELETE
@@ -1230,8 +1257,10 @@ public class FlexiBookController {
 	 * @param name
 	 * @param flexiBook
 	 */
-	private static void removeServiceFromCombos(String name, FlexiBook flexiBook) {
+	private static void removeServiceFromCombos(String name) {
 
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		
 		List<BookableService> allServices = flexiBook.getBookableServices();
 		ArrayList<ServiceCombo> serviceCombos = new ArrayList<ServiceCombo>();
 
@@ -1252,6 +1281,8 @@ public class FlexiBookController {
 				}
 			}
 		}
+		
+		FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -1263,14 +1294,17 @@ public class FlexiBookController {
 	 * @param flexiBook
 	 * @throws InvalidInputException
 	 */
-	public static void deleteService(String name, FlexiBook flexiBook) throws InvalidInputException {
+	public static void deleteService(String name) throws InvalidInputException {
+		//FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Service serviceToDelete = (Service) Service.getWithName(name);
 
 		if (checkOwner(FlexiBookApplication.getCurrentUser()) == true && noFutureApptsExist(name)) {
 
-			removeServiceFromCombos(name, flexiBook);
+			removeServiceFromCombos(name);
 			serviceToDelete.delete();
 		}
+		
+		
 	}
 
 	/**

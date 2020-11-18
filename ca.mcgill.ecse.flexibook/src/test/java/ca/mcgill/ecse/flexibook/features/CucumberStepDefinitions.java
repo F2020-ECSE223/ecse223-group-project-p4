@@ -655,7 +655,7 @@ public class CucumberStepDefinitions {
 	public void aNewServiceAdditionIsInitiated(String user, String aName, String aDuration, String aDowntimeStart,
 			String aDowntimeDuration) {
 		try {
-			FlexiBookController.addService(aName, flexiBook, Integer.parseInt(aDuration), Integer.parseInt(aDowntimeDuration), Integer.parseInt(aDowntimeStart));
+			FlexiBookController.addService(aName, Integer.parseInt(aDuration), Integer.parseInt(aDowntimeDuration), Integer.parseInt(aDowntimeStart));
 			currService = (Service) Service.getWithName(aName);
 			//FlexiBookPersistence.save(flexiBook);
 		}
@@ -783,7 +783,7 @@ public class CucumberStepDefinitions {
 		int downtimeDuration = Integer.parseInt(newDowntimeDuration);
 
 		try {
-			FlexiBookController.updateService(((Service) Service.getWithName(name)), newName, flexiBook, duration, downtimeStart, downtimeDuration);
+			FlexiBookController.updateService(((Service) Service.getWithName(name)), newName, duration, downtimeStart, downtimeDuration);
 			//FlexiBookPersistence.save(flexiBook);
 		}
 		catch (InvalidInputException e) {
@@ -816,7 +816,7 @@ public class CucumberStepDefinitions {
 	public void serviceDeletionIsInitiated(String user, String service) {
 
 		try {
-			FlexiBookController.deleteService(service, flexiBook);
+			FlexiBookController.deleteService(service);
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
