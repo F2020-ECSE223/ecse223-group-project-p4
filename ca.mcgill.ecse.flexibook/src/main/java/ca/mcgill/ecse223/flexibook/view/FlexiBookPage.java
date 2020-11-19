@@ -12,7 +12,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
-
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.GroupLayout;
@@ -35,6 +35,8 @@ import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
+import ca.mcgill.ecse223.flexibook.controller.TOService;
+import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 
 public class FlexiBookPage extends JFrame{
 	
@@ -123,12 +125,16 @@ public class FlexiBookPage extends JFrame{
 	private JCheckBox updateServiceDowntimeDurationCheckBox; 
 	private JCheckBox updateServiceDurationCheckBox;
 	
+	private HashMap<Integer, TOService> existingServices;
+	
 	
 	//delete service 
 	private JComboBox<String> deleteExistingService;
 	private JLabel deleteExistingServiceLabel; 
 	private JButton deleteServiceButton;
 	private JButton deleteServiceBackButton; 
+	
+
 	
 	
 	//appointment data
@@ -941,108 +947,156 @@ public class FlexiBookPage extends JFrame{
 	
 	//Sneha 
 	private void addServiceActionPerformed(ActionEvent evt) {
-		
-			getContentPane().removeAll(); 
-			getContentPane().repaint();
 
-			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	
-			serviceNameLabel.setText("Service Name");
-			serviceDurationLabel.setText("Service Duration (mins)");
-			downtimeStartLabel.setText("Downtime Start (mins)");
-			downtimeDurationLabel.setText("Downtime Duration (mins)");
-			addServiceBackButton.setText("Back");
-			addServiceButton.setText("Add Service");
-			
-			GroupLayout layout = new GroupLayout(getContentPane());
-			getContentPane().setLayout(layout);
-			layout.setAutoCreateGaps(true);
-			layout.setAutoCreateContainerGaps(true);
-			
-			layout.setHorizontalGroup(
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		serviceNameLabel.setText("Service Name");
+		serviceDurationLabel.setText("Service Duration (mins)");
+		downtimeStartLabel.setText("Downtime Start (mins)");
+		downtimeDurationLabel.setText("Downtime Duration (mins)");
+		addServiceBackButton.setText("Back");
+		addServiceButton.setText("Add Service");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
-				
-					.addGroup(layout.createParallelGroup()
-							.addComponent(message)
-							.addComponent(serviceNameLabel)
-							.addComponent(serviceDurationLabel)
-							.addComponent(downtimeStartLabel)
-							.addComponent(downtimeDurationLabel)
-							.addComponent(addServiceBackButton))
-					.addGroup(layout.createParallelGroup()
-							.addComponent(serviceName)
-							.addComponent(serviceDuration)
-							.addComponent(downtimeStart)
-							.addComponent(downtimeDuration)
-							.addComponent(addServiceButton))
-			);
-			
 
-			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceNameLabel, serviceDurationLabel, downtimeStartLabel, downtimeDurationLabel});
-			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceName, serviceDuration, downtimeStart, downtimeDuration});
-			//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
-							
-			layout.setVerticalGroup(
-					layout.createSequentialGroup()
-					.addComponent(message)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(serviceNameLabel)
-							.addComponent(serviceName))
-					.addGroup(layout.createParallelGroup()
-							.addComponent(serviceDurationLabel)
-							.addComponent(serviceDuration))
-					.addGroup(layout.createParallelGroup()
-							.addComponent(downtimeStartLabel)
-							.addComponent(downtimeStart))
-					.addGroup(layout.createParallelGroup()
-							.addComponent(downtimeDurationLabel)
-							.addComponent(downtimeDuration))
-					.addGroup(layout.createParallelGroup()
-							.addComponent(addServiceBackButton)
-							.addComponent(addServiceButton))
-					);
-						
-							
-			
-			addServiceButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					addServiceButtonPressed(e);
-				}
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(serviceNameLabel)
+						.addComponent(serviceDurationLabel)
+						.addComponent(downtimeStartLabel)
+						.addComponent(downtimeDurationLabel)
+						.addComponent(addServiceBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(serviceName)
+						.addComponent(serviceDuration)
+						.addComponent(downtimeStart)
+						.addComponent(downtimeDuration)
+						.addComponent(addServiceButton))
+				);
 
-			});
+
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceNameLabel, serviceDurationLabel, downtimeStartLabel, downtimeDurationLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceName, serviceDuration, downtimeStart, downtimeDuration});
+		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(serviceNameLabel)
+						.addComponent(serviceName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(serviceDurationLabel)
+						.addComponent(serviceDuration))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(downtimeStartLabel)
+						.addComponent(downtimeStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(downtimeDurationLabel)
+						.addComponent(downtimeDuration))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addServiceBackButton)
+						.addComponent(addServiceButton))
+				);
+
+
+
+		addServiceButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addServiceButtonPressed(e);
+			}
+
+		});
+
+		addServiceBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manageServiceActionPerformed(e);
+			}
+		});
+
+
+		//resize page to fit all components 
+		pack();
+	}
+
+
+	private void addServiceButtonPressed (ActionEvent evt) {
+		//error = null;
+		success = null;
+
+		error = "";
+		String name = null;
+		int duration = 0 ;
+		int dtDuration = 0; 
+		int dtStart = 0;
+		name = serviceName.getText();
+
+		if (serviceName.getText().length() == 0) {
+			error = "Please enter a name.";
+		}
 		
-			addServiceBackButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					manageServiceActionPerformed(e);
-				}
-			});
+		//duration validation check
+		if (error == null || error.length() == 0) {
+			try {
+				duration = Integer.parseInt(serviceDuration.getText());
+			}
+			catch (NumberFormatException e) {
+				error = "Please enter a valid service duration.";
+			}
+		}
+		
+		//downtime start validation check
+		if (error == null || error.length() == 0) {
+			try {
 
-			
-			//resize page to fit all components 
-			pack();
+				dtStart = Integer.parseInt(downtimeStart.getText());
+			}
+			catch (NumberFormatException e) {
+				error = "Please enter a valid downtime start.";
+			}
+		}
+		
+		//downtime duration validation check
+		if (error == null || error.length() == 0) {
+			try {
+
+				dtDuration = Integer.parseInt(downtimeDuration.getText());
+
+			}
+			catch (NumberFormatException e) {
+				error = "Please enter a valid downtime duration.";
+			}
 		}
 		
 	
-	private void addServiceButtonPressed (ActionEvent evt) {
-		error = null;
-		success = null;
 		
-		try {
-			FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-			String name = serviceName.getText();
-			int duration = Integer.parseInt(serviceDuration.getText());
-			int dtDuration = Integer.parseInt(downtimeDuration.getText());
-			int dtStart = Integer.parseInt(downtimeStart.getText());
-			
-			FlexiBookController.addService(name, duration, dtDuration, dtStart);
-			success = "Service " +name+ " successfully added";
-			refreshServicePage();
-			
-			pack();
+		if (error == null || error.length() == 0) {
+
+			try {
+				//call controller 
+				FlexiBookController.addService(name, duration, dtDuration, dtStart);
+				//success = "Service " +name+ " successfully added";
+			}
+
+			catch (InvalidInputException ie){
+				error = ie.getMessage();
+				
+			}
 		}
-		catch (InvalidInputException e){
-			error = e.getMessage();
-		}
+
+		refreshServicePage();
+
+		//FlexiBookPersistence.save(flexiBook);
+		pack();
 	}
 	
 	//Sneha
@@ -1290,10 +1344,26 @@ public class FlexiBookPage extends JFrame{
 
 		}
 		
-		serviceName.setText("");
-		serviceDuration.setText("");
-		downtimeDuration.setText("");
-		downtimeStart.setText("");
+		if (error.length() == 0 || error == null) {
+			//message.setText(error);
+
+			serviceName.setText("");
+			serviceDuration.setText("");
+			downtimeDuration.setText("");
+			downtimeStart.setText("");
+
+		}
+//		existingServices = new HashMap<Integer, TOService>();
+//		//updateExistingService.removeAllItems();
+//		int index = 0; 
+//		
+//		for (TOService service: FlexiBookController.getExistingServices()) {
+//			existingServices.put(index, service);
+//			updateExistingService.addItem("Service:" + service.getServiceName() + " | Duration: " + service.getServiceDur());
+//			index++;
+//		}
+//		updateExistingService.setSelectedIndex(-1);
+//			
 		
 		pack();
 	}
