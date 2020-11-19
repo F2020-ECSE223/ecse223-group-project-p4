@@ -240,12 +240,12 @@ public class FlexiBookController {
 	}
 	
 	
-	public static ArrayList<String> getCustomerAppointmentDates(String username){
+	public static ArrayList<TOAppointment> getCustomerAppointments(String username){
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		
 		Customer customer = findCustomerByName(username, flexiBook);
 		String DateTime;
-		ArrayList<String> dateTimeList = new ArrayList<>();
+		ArrayList<TOAppointment> dateTimeList = new ArrayList<>();
 		for(Appointment appointment : customer.getAppointments()) {
 			String date = appointment.getTimeSlot().getStartDate().toString();
 			String time = appointment.getTimeSlot().getStartTime().toString();

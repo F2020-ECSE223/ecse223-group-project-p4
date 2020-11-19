@@ -487,7 +487,7 @@ public class FlexiBookPage extends JFrame{
 		updateAppServiceList.setSelectedIndex(-1);
 		
 		
-		existingAppointments = FlexiBookController.getCustomerAppointmentDates(FlexiBookApplication.getCurrentUser().getUsername());
+		existingAppointments = FlexiBookController.getCustomerAppointments(FlexiBookApplication.getCurrentUser().getUsername());
 		updateAppDateList.removeAllItems();
 		cancelAppDateList.removeAllItems();
 		for(String dateTime : existingAppointments) {

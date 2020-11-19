@@ -19,13 +19,9 @@ class Appointment {
 	      		rejectUpdateAppointment();
 	      	} -> Booked;
 	
-			modifyAppointmentTime (Date systemDate, TimeSlot newSlot) [overlapWithHoliday(systemDate))]/ {
-	      		rejectUpdateAppointment();
-	      	} -> Booked;
-	      	
 	      	cancelAppointment (Date systemDate) [atleastDayBefore(systemDate)] / {
 	     	 	doCancelAppointment();
-	     	} -> Finished;
+	     	} -> Final;
 	      
 	      	cancelAppointment (Date systemDate) [!atleastDayBefore(systemDate)] / {
 	      		rejectCancelAppointment();
@@ -42,14 +38,14 @@ class Appointment {
 	      	noShow(Customer customer) / {
 	      		addNoShow(customer);
 	      		removeAppointment();
-	      	} -> Finished;
+	      	} -> Final;
 	    }
 	    
 	    InProgress {
 	    
 	    	finishAppointment() / {
 	    		removeAppointment();
-	    	}->Finished;
+	    	}->Final;
 	    		
 	    	modifyOptionalServices(List<ComboItem> newServices, List<ComboItem> removedServices) /{
 	      		changeOptServices(newServices, removedServices);
@@ -57,8 +53,6 @@ class Appointment {
 	       
 	    }
 	    
-	    Finished {
-	    }
 	  }
 
 
@@ -71,6 +65,7 @@ class Appointment {
 	
 
 	private void doCancelAppointment() {
+		FlexiBook flexiBook = this.getFlexiBook();
 		this.delete(); 
 	}
 	
