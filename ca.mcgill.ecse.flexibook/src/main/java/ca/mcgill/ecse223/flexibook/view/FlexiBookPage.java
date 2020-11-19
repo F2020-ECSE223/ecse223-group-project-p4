@@ -692,7 +692,7 @@ public class FlexiBookPage extends JFrame{
 		
 		updateBusinessInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//updateBusinessInfoActionPerformed(e);
+				updateBusinessInfoActionPerformed(e);
 			}
 
 		});
@@ -711,6 +711,10 @@ public class FlexiBookPage extends JFrame{
 		initSetupBusinessInfoPage();
 	}
 	
+	private void updateBusinessInfoActionPerformed(ActionEvent evt) {
+		initUpdateBusinessInfoPage();
+	}
+	
 	private void initSetupBusinessInfoPage() {
 		
 		getContentPane().removeAll();
@@ -725,6 +729,9 @@ public class FlexiBookPage extends JFrame{
 		
 		JButton businessInfoBackButton = new JButton();
 		JButton businessInfoSetInfoButton = new JButton();
+		JButton businessInfoAddBusinessHourButton = new JButton();
+		JButton businessInfoAddVacationButton = new JButton();
+		JButton businessInfoAddHolidayButton = new JButton();
 
 		
 		businessNameLabel.setText("Business Name");
@@ -733,6 +740,9 @@ public class FlexiBookPage extends JFrame{
 		businessPhoneLabel.setText("Business Phone Number");
 		businessInfoBackButton.setText("Back");
 		businessInfoSetInfoButton.setText("Set Business Info");
+		businessInfoAddBusinessHourButton.setText("Add Business Hour");
+		businessInfoAddVacationButton.setText("Add Vacation slot");
+		businessInfoAddHolidayButton.setText("Add Holiday Slot");
 		
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -747,18 +757,22 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(businessAddressLabel)
 						.addComponent(businessEmailLabel)
 						.addComponent(businessPhoneLabel)
-						.addComponent(businessInfoBackButton))
+						.addComponent(businessInfoBackButton)
+						.addComponent(businessInfoSetInfoButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessName)
 						.addComponent(businessAddress)
 						.addComponent(businessEmail)
 						.addComponent(businessPhone)
+						.addComponent(businessInfoBackButton)
 						.addComponent(businessInfoSetInfoButton))
 		);
 		
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel, businessInfoBackButton});
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone, businessInfoSetInfoButton});
-						
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, businessInfoBackButton);
+		
+		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 					.addComponent(message)
@@ -775,8 +789,9 @@ public class FlexiBookPage extends JFrame{
 							.addComponent(businessPhoneLabel)
 							.addComponent(businessPhone))
 					.addGroup(layout.createParallelGroup()
-							.addComponent(businessInfoBackButton)
 							.addComponent(businessInfoSetInfoButton))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(businessInfoBackButton))
 		);
 		
 		businessInfoBackButton.addActionListener(new ActionListener() {
@@ -792,6 +807,10 @@ public class FlexiBookPage extends JFrame{
 		});
 		
 		pack();
+	}
+	
+	private void initUpdateBusinessInfoPage() {
+		//TODO
 	}
 	
 	private void setInfoButtonPressed(ActionEvent evt) {
