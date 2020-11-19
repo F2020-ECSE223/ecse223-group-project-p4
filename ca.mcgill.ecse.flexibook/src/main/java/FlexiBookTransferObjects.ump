@@ -1,0 +1,8 @@
+namespace ca.mcgill.ecse223.flexibook.controller;
+
+class TOAppointment{
+	customerName;
+	service;
+	startTime;
+	startDate;
+}

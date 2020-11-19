@@ -34,6 +34,7 @@ import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
+import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
 
 public class FlexiBookPage extends JFrame{
 	
@@ -130,12 +131,12 @@ public class FlexiBookPage extends JFrame{
 	private JButton deleteServiceBackButton; 
 	
 	
-	//data
+	//appointment data
 	ArrayList<String> availableServices = new ArrayList<>();
-	ArrayList<String> existingAppointments = new ArrayList<>();
+	ArrayList<TOAppointment> existingAppointments = new ArrayList<>();
+	
 	
 	//setupBusinessInfo
-	
 	private JTextField businessName = new JTextField();
 	private JTextField businessAddress = new JTextField();
 	private JTextField businessEmail = new JTextField();
@@ -490,7 +491,8 @@ public class FlexiBookPage extends JFrame{
 		existingAppointments = FlexiBookController.getCustomerAppointments(FlexiBookApplication.getCurrentUser().getUsername());
 		updateAppDateList.removeAllItems();
 		cancelAppDateList.removeAllItems();
-		for(String dateTime : existingAppointments) {
+		for(TOAppointment appointment : existingAppointments) {
+			String dateTime = appointment.getStartDate() + " " + appointment.getStartTime();
 			updateAppDateList.addItem(dateTime);
 			cancelAppDateList.addItem(dateTime);
 		}
@@ -553,10 +555,10 @@ public class FlexiBookPage extends JFrame{
 			}
 			
 			String username = FlexiBookApplication.getCurrentUser().getUsername();
-			Time startTime = Time.valueOf(existingAppointments.get(selectedAppointment).substring(11, 19));
-			String sTime = existingAppointments.get(selectedAppointment).substring(11, 16);
-			Date startDate = Date.valueOf(existingAppointments.get(selectedAppointment).substring(0, 10));
-			String sDate = existingAppointments.get(selectedAppointment).substring(0, 10);
+			Time startTime = Time.valueOf(existingAppointments.get(selectedAppointment).getStartTime());
+			String sTime = existingAppointments.get(selectedAppointment).getStartTime().substring(0,5);
+			Date startDate = Date.valueOf(existingAppointments.get(selectedAppointment).getStartDate());
+			String sDate = existingAppointments.get(selectedAppointment).getStartDate();
 			String newStartTime = updateAppNewTime.getText();
 			String newStartDate = updateAppNewDate.getText();
 			Date todaysDate = FlexiBookApplication.getSystemDate();
@@ -613,8 +615,8 @@ public class FlexiBookPage extends JFrame{
 			}
 			
 			String username = FlexiBookApplication.getCurrentUser().getUsername();
-			String startTime = existingAppointments.get(selectedAppointment).substring(11, 16);
-			String startDate = existingAppointments.get(selectedAppointment).substring(0, 10);
+			String startTime = existingAppointments.get(selectedAppointment).getStartTime().substring(0, 5);
+			String startDate = existingAppointments.get(selectedAppointment).getStartDate();
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			
 			FlexiBookController.cancelAppointment(username, startTime, startDate, todaysDate);

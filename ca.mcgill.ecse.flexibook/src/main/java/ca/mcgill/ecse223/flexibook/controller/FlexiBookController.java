@@ -240,19 +240,21 @@ public class FlexiBookController {
 	}
 	
 	
+	
 	public static ArrayList<TOAppointment> getCustomerAppointments(String username){
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-		
 		Customer customer = findCustomerByName(username, flexiBook);
-		String DateTime;
-		ArrayList<TOAppointment> dateTimeList = new ArrayList<>();
+		ArrayList<TOAppointment> appointmentList = new ArrayList<>();
+		
 		for(Appointment appointment : customer.getAppointments()) {
 			String date = appointment.getTimeSlot().getStartDate().toString();
 			String time = appointment.getTimeSlot().getStartTime().toString();
-			DateTime = date + " " + time;
-			dateTimeList.add(DateTime);
+			String service = appointment.getBookableService().getName();
+			TOAppointment thisAppointment = new TOAppointment(username, service, time, date);
+			appointmentList.add(thisAppointment);
 		}
-		return dateTimeList;
+		
+		return appointmentList;
 	}
 
 		
