@@ -23,12 +23,15 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-
+import javax.swing.table.TableCellRenderer;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
@@ -57,6 +60,11 @@ public class FlexiBookPage extends JFrame{
 	private JButton manageServiceButton;
 	private JButton manageAppButton;
 	private JButton viewAppCalenderButton;
+	
+	//appointment overview
+	private JTable overviewTable;
+	private JScrollPane overviewScrollPane;
+	private JLabel appOverviewLabel;
 	
 	//make appointment
 	private JTextField makeAppTime;
@@ -149,10 +157,12 @@ public class FlexiBookPage extends JFrame{
 		//initCustomerMenu();
 		
 		//else if the user is the owner
-		initOwnerMenu();
+		//initOwnerMenu();
 		//refreshData();
 		
 		//manageServiceActionPerformed();
+		
+		initAppointmentBookingPage();
 	}
 	
 	/**
@@ -294,6 +304,7 @@ public class FlexiBookPage extends JFrame{
 		
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+		refreshDataForAppointmentBooking();
 		
 		// elements for error message
 		message = new JLabel();
@@ -354,14 +365,31 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 		
-	
 		
-
+		//overview table
+		 /*
+        String[][] rowData = new String[existingAppointments.size()][3];
+        for(int i = 0; i < existingAppointments.size(); i++) {
+        	TOAppointment thisAppointment = existingAppointments.get(i);
+        	rowData[i][0] = thisAppointment.getService();
+        	rowData[i][1] = thisAppointment.getStartDate();
+        	rowData[i][2] = thisAppointment.getStartTime();
+        }
+         */
+		appOverviewLabel = new JLabel();
+		appOverviewLabel.setText("Your Appointments");
+		String[][] rowData = {{"A", "B", "C"}, {"D", "E", "F"}};
+        String[] columnNames = { "Service", "Date", "Start Time" };
+        overviewTable = new JTable(rowData, columnNames);
+        JScrollPane appointmentTable = new JScrollPane(overviewTable);
+        
+		
 		
 		// horizontal line elements
 		JSeparator horizontalLineTop = new JSeparator();
 		JSeparator horizontalLineMiddle = new JSeparator();
 		JSeparator horizontalLineBottom = new JSeparator();
+		JSeparator horizontalLineTable = new JSeparator();
 		
 		// layout
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -380,6 +408,9 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(horizontalLineTop)
 						.addComponent(horizontalLineMiddle)
 						.addComponent(horizontalLineBottom)
+						.addComponent(horizontalLineTable)
+						.addComponent(appOverviewLabel)
+						.addComponent(appointmentTable, 200, 200, 800)
 						.addGroup(layout.createSequentialGroup()
 								.addGroup(layout.createParallelGroup()
 										.addComponent(makeAppTimeLabel)
@@ -407,7 +438,6 @@ public class FlexiBookPage extends JFrame{
 										.addComponent(makeAppServiceList, 200, 200, 400)
 										.addComponent(updateAppServiceList, 200, 200, 400))
 								)
-						
 						)
 		);
 		
@@ -451,11 +481,12 @@ public class FlexiBookPage extends JFrame{
 								.addComponent(cancelAppDateLabel)
 								.addComponent(cancelAppDateList))
 						.addComponent(cancelAppButton)
+						.addComponent(horizontalLineTable)
+						.addComponent(appOverviewLabel)
+						.addComponent(appointmentTable)
 						)
 							
 		);
-		
-
 
 		
 	}
@@ -478,26 +509,38 @@ public class FlexiBookPage extends JFrame{
 		
 		// get the available services
 		availableServices = FlexiBookController.getServiceList();
-		makeAppServiceList.removeAllItems();
-		updateAppServiceList.removeAllItems();
+		if(makeAppServiceList != null) {
+			makeAppServiceList.removeAllItems();
+		}
+		if(updateAppServiceList != null) {
+			updateAppServiceList.removeAllItems();
+		}
+		
 		for (String thisService : availableServices) {
 			makeAppServiceList.addItem(thisService);
 			updateAppServiceList.addItem(thisService);
 		};
-		makeAppServiceList.setSelectedIndex(-1);
-		updateAppServiceList.setSelectedIndex(-1);
 		
-		
-		existingAppointments = FlexiBookController.getCustomerAppointments(FlexiBookApplication.getCurrentUser().getUsername());
-		updateAppDateList.removeAllItems();
-		cancelAppDateList.removeAllItems();
-		for(TOAppointment appointment : existingAppointments) {
-			String dateTime = appointment.getStartDate() + " " + appointment.getStartTime();
-			updateAppDateList.addItem(dateTime);
-			cancelAppDateList.addItem(dateTime);
+		if(makeAppServiceList != null) {
+			makeAppServiceList.setSelectedIndex(-1);
 		}
-		updateAppDateList.setSelectedIndex(-1);
-		cancelAppDateList.setSelectedIndex(-1);
+		if(updateAppServiceList != null) {
+			updateAppServiceList.setSelectedIndex(-1);
+		}
+		
+		if(FlexiBookApplication.getCurrentUser() != null) {
+			existingAppointments = FlexiBookController.getCustomerAppointments(FlexiBookApplication.getCurrentUser().getUsername());
+			updateAppDateList.removeAllItems();
+			cancelAppDateList.removeAllItems();
+			for(TOAppointment appointment : existingAppointments) {
+				String dateTime = appointment.getStartDate() + " " + appointment.getStartTime();
+				updateAppDateList.addItem(dateTime);
+				cancelAppDateList.addItem(dateTime);
+			}
+			updateAppDateList.setSelectedIndex(-1);
+			cancelAppDateList.setSelectedIndex(-1);
+		}
+		
 		
 	}
 	
