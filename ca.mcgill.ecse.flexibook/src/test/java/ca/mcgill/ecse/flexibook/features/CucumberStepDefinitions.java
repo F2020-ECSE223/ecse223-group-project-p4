@@ -783,7 +783,7 @@ public class CucumberStepDefinitions {
 		int downtimeDuration = Integer.parseInt(newDowntimeDuration);
 
 		try {
-			FlexiBookController.updateService(((Service) Service.getWithName(name)), newName, duration, downtimeStart, downtimeDuration);
+			FlexiBookController.updateService(name, newName, duration, downtimeStart, downtimeDuration);
 			//FlexiBookPersistence.save(flexiBook);
 		}
 		catch (InvalidInputException e) {

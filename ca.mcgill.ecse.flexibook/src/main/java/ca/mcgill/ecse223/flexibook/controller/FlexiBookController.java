@@ -921,16 +921,26 @@ public class FlexiBookController {
 
 	public static Service service;
 	private static List<Appointment> appointments;
-	public static List<Service> existingServices; 
 	
+	public static List<TOService> existingServices; 
 	
-	public static List<Service> getExistingServices() {
+	public static List<TOService> getExistingServices() {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		List<BookableService> allServices = flexiBook.getBookableServices();
+		String serviceName;
+		int duration;
+		int downtimeStart;
+		int downtimeDuration;
 		
 		for (int i = 0; i < allServices.size(); i++) {
 			if (allServices.get(i).getClass().equals(Service.class)) {
-				existingServices.add((Service) allServices.get(i));
+				//existingServices.add((Service) allServices.get(i));
+				serviceName = allServices.get(i).getName();
+				duration = ((Service) allServices.get(i)).getDuration();
+				downtimeStart = ((Service) allServices.get(i)).getDowntimeStart();
+				downtimeDuration = ((Service) allServices.get(i)).getDowntimeDuration();
+				
+				existingServices.add(new TOService(serviceName, duration, downtimeStart, downtimeDuration));
 			}
 		}
 		
@@ -1128,6 +1138,30 @@ public class FlexiBookController {
 		FlexiBookPersistence.save(flexiBook);
 		return serviceExists;
 	}
+	
+//	private static boolean stringValidation(String name, String duration, String downtimeDuration,
+//			String downtimeStart) throws InvalidInputException {
+//		
+//		boolean valid = true; 
+//		
+//		if (name == null || name.length() == 0) {
+//			throw new InvalidInputException("Please enter a name."); 
+//		}
+//		
+//		if (duration == null || duration.length() == 0) {
+//			throw new InvalidInputException("Please enter a duration."); 
+//		}
+//		
+//		if (downtimeDuration == null || downtimeDuration.length() == 0) {
+//			throw new InvalidInputException("Please enter a downtime duration."); 
+//		}
+//		
+//		if (downtimeStart == null || downtimeStart.length() == 0) {
+//			throw new InvalidInputException("Please enter a downtime start time."); 
+//		}
+//		return valid; 
+//		
+//	}
 
 	// ****************************ADD
 	// SERVICE**********************************************
@@ -1147,16 +1181,22 @@ public class FlexiBookController {
 	 */
 	public static void addService(String name, int duration, int downtimeDuration,
 			int downtimeStart) throws InvalidInputException {
-
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		
+
+		try { 
 		if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true)
 				&& (timingsMakeSense(downtimeStart, downtimeDuration, duration) == true)
 				&& (serviceExistsAlready(name) == false)) {
 			service = new Service(name, flexiBook, duration, downtimeDuration, downtimeStart);
 		}
-		
 		FlexiBookPersistence.save(flexiBook);
-
+		
+		}
+		catch (InvalidInputException e) {
+			String error = e.getMessage();
+			throw new InvalidInputException(error);
+		}
 	}
 
 	// **************************UPDATE
@@ -1207,9 +1247,10 @@ public class FlexiBookController {
 	 * @param newDowntimeDuration
 	 * @throws InvalidInputException
 	 */
-	public static void updateService(Service serviceToUpdate, String newName, int newDuration,
+	public static void updateService(String name, String newName, int newDuration,
 			int newDowntimeStart, int newDowntimeDuration) throws InvalidInputException {
-		
+		Service serviceToUpdate = (Service) Service.getWithName(name);
+				
 		if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true)
 				&& (timingsMakeSense(newDowntimeStart, newDowntimeDuration, newDuration) == true)
 				&& (updatingCorrectService(serviceToUpdate, newName) == true)) {
@@ -1220,6 +1261,7 @@ public class FlexiBookController {
 		}
 		
 		
+	
 	}
 
 	// *******************************DELETE
