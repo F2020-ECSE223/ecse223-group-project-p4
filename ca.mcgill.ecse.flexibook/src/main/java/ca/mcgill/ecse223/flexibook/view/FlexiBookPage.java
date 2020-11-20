@@ -66,8 +66,8 @@ public class FlexiBookPage extends JFrame{
 	
 	//appointment overview
 	private JTable overviewTable;
-	private JScrollPane overviewScrollPane;
 	private JLabel appOverviewLabel;
+	private JButton makeAppBackButton;
 	
 	//make appointment
 	private JTextField makeAppTime;
@@ -165,15 +165,14 @@ public class FlexiBookPage extends JFrame{
 	public FlexiBookPage() {
 		
 		//if the user logged in is a customer 
-		//initCustomerMenu();
+		initCustomerMenu();
 		
 		//else if the user is the owner
 		//initOwnerMenu();
-		//refreshData();
 		
 		//manageServiceActionPerformed();
 		
-		initAppointmentBookingPage();
+		//initAppointmentBookingPage();
 	}
 	
 	/**
@@ -257,6 +256,7 @@ public class FlexiBookPage extends JFrame{
 				managedAppointmentStatus(e);
 			}
 		});	
+		
 
 			
 		pack();
@@ -314,7 +314,7 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 		
-		
+		pack();
 	}
 	
 	
@@ -330,6 +330,8 @@ public class FlexiBookPage extends JFrame{
 		
 		// elements for error message
 		message = new JLabel();
+		makeAppBackButton = new JButton();
+		makeAppBackButton.setText("Back");
 		
 		//elements for make appointment
 		makeAppTime = new JTextField();
@@ -387,6 +389,12 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 		
+		makeAppBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initCustomerMenu();
+			}
+		});
+		
 		
 		//overview table
 		 /*
@@ -412,16 +420,14 @@ public class FlexiBookPage extends JFrame{
 		JSeparator horizontalLineMiddle = new JSeparator();
 		JSeparator horizontalLineBottom = new JSeparator();
 		JSeparator horizontalLineTable = new JSeparator();
+		JSeparator horizontalLineLast = new JSeparator();
+		
 		
 		// layout
 		GroupLayout layout = new GroupLayout(getContentPane());
-		
-		
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		
-		
 		
 		layout.setHorizontalGroup(
 			layout.createSequentialGroup()
@@ -431,6 +437,8 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(horizontalLineMiddle)
 						.addComponent(horizontalLineBottom)
 						.addComponent(horizontalLineTable)
+						.addComponent(horizontalLineLast)
+						.addComponent(makeAppBackButton, 200, 200, 400)
 						.addComponent(appOverviewLabel)
 						.addComponent(appointmentTable, 200, 200, 800)
 						.addGroup(layout.createSequentialGroup()
@@ -472,7 +480,6 @@ public class FlexiBookPage extends JFrame{
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {cancelAppDateLabel, cancelAppDateList});
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelAppDateLabel, cancelAppDateList});
 		
-		
 		layout.setVerticalGroup(
 			layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
@@ -506,9 +513,13 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(horizontalLineTable)
 						.addComponent(appOverviewLabel)
 						.addComponent(appointmentTable)
+						.addComponent(horizontalLineLast)
+						.addComponent(makeAppBackButton)
 						)
 							
 		);
+		
+		pack();
 
 		
 	}
@@ -696,9 +707,8 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
+	
 	//menu buttons
-	
-	
 	private void bookAppActionPerformed(ActionEvent evt) {
 		initAppointmentBookingPage();
 	}
