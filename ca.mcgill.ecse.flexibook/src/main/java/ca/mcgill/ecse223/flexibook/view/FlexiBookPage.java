@@ -59,6 +59,7 @@ public class FlexiBookPage extends JFrame{
 	private JButton manageServiceButton;
 	private JButton manageAppButton;
 	private JButton viewAppCalenderButton;
+	private JButton manageAppointmentStatusButton;
 	
 	//make appointment
 	private JTextField makeAppTime;
@@ -134,7 +135,11 @@ public class FlexiBookPage extends JFrame{
 	private JButton deleteServiceButton;
 	private JButton deleteServiceBackButton; 
 	
-
+	//appointment status page
+	private JButton startAppointmentButton;
+	private JButton endAppointmentButton;
+	private JButton noShowButton;
+	private JComboBox<String> appointmentToggleList;
 	
 	
 	//appointment data
@@ -178,6 +183,8 @@ public class FlexiBookPage extends JFrame{
 		manageAppButton.setText("Manage Appointments");
 		viewAppCalenderButton = new JButton();
 		viewAppCalenderButton.setText("View Appointment Calender");
+		manageAppointmentStatusButton = new JButton();
+		manageAppointmentStatusButton.setText("Manage Appointment Status");
 		
 		
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -191,12 +198,13 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(businessInfoButton)
 						.addComponent(manageServiceButton)
 						.addComponent(manageAppButton)
-						.addComponent(viewAppCalenderButton))
+						.addComponent(viewAppCalenderButton)
+						.addComponent(manageAppointmentStatusButton))
 		
 		);
 		
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton, manageAppointmentStatusButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton, manageAppointmentStatusButton});
 						
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
@@ -204,7 +212,8 @@ public class FlexiBookPage extends JFrame{
 							.addComponent(businessInfoButton)
 							.addComponent(manageServiceButton)
 							.addComponent(manageAppButton)
-							.addComponent(viewAppCalenderButton))
+							.addComponent(viewAppCalenderButton)
+							.addComponent(manageAppointmentStatusButton))
 		);
 							
 							
@@ -233,6 +242,13 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 		
+		manageAppointmentStatusButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				managedAppointmentStatus(e);
+			}
+		});	
+
+			
 		pack();
 		
 	}
@@ -1308,6 +1324,13 @@ public class FlexiBookPage extends JFrame{
 	private void startAppointmentActionPerformed(ActionEvent evt) {
 		
 	}
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 */
+	private void startAppointmentButtonPressed(ActionEvent evt) {
+		
+	}
 	
 	/**
 	 * @author yasminamatta
@@ -1321,12 +1344,36 @@ public class FlexiBookPage extends JFrame{
 	 * @author yasminamatta
 	 * @param evt
 	 */
+	private void endAppointmentButtonPressed(ActionEvent evt) {
+		
+	}
+	
+	
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 */
 	private void registerNoShowActionPerformed(ActionEvent evt) {
+		
+	}
+	
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 */
+	private void registerNoShowButtonPressed(ActionEvent evt) {
 		
 	}
 
 	
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 */
+	private void managedAppointmentStatus(ActionEvent evt) {
 	
+		
+	}
 	
 	
 
