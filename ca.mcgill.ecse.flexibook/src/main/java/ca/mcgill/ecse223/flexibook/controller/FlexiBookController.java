@@ -2239,14 +2239,9 @@ public class FlexiBookController {
 	 *
 	 */
 
-	public static void logIn(String username, String password, FlexiBook flexiBook) throws InvalidInputException {
-//		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+	public static void logIn(String username, String password) throws InvalidInputException {
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 
-//		        String error = "";
-
-//		        if(username.equals(null)||password.equals(null)){
-//		            throw new InvalidInputException();
-//		        }
 		boolean flag = false;
 		boolean var = false;
 		for (Customer cust : flexiBook.getCustomers()) {
@@ -2276,6 +2271,7 @@ public class FlexiBookController {
 
 
 		FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+		FlexiBookPersistence.save(flexiBook);
 
 	}
 
@@ -2287,7 +2283,7 @@ public class FlexiBookController {
 	 *
 	 */
 	public static void logOut() throws InvalidInputException {
-		// FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 
 		if (FlexiBookApplication.getCurrentUser() == null) {
 
@@ -2296,7 +2292,8 @@ public class FlexiBookController {
 		}
 
 		FlexiBookApplication.setCurrentUser(null);
-
+		FlexiBookPersistence.save(flexiBook);
+		
 	}
 
 	/**

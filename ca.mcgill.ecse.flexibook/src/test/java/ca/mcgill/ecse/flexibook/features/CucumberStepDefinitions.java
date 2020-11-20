@@ -1811,8 +1811,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	public void the_user_tries_to_log_in_with_username_and_password(String string, String string2) {
 		numberOfAccounts =flexiBook.getCustomers().size();
 		try {
-			FlexiBookController.logIn(string, string2, flexiBook);
-			//FlexiBookPersistence.save(flexiBook);
+			FlexiBookController.logIn(string, string2);
+			FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
 		}
@@ -1820,7 +1820,11 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 
 	@Then("the user shall be successfully logged in")
 	public void the_user_shall_be_successfully_logged_in() {
-		assertEquals(FlexiBookApplication.getCurrentUser().getClass().equals(Owner.class), true);
+		boolean loggedIn = false;
+		if(FlexiBookApplication.getCurrentUser().getClass().equals(Owner.class)  || FlexiBookApplication.getCurrentUser().getClass().equals(Customer.class)) {
+			loggedIn = true;
+		}
+		assertEquals(true, loggedIn);
 	}
 
 	@Then("the user should not be logged in")
@@ -1837,7 +1841,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@Given("the user is logged out")
 	public void the_user_is_logged_out() {
 		FlexiBookApplication.setCurrentUser(null);
-		//FlexiBookPersistence.save(flexiBook);
+		FlexiBookPersistence.save(flexiBook);
 	}
 
 	@When("the user tries to log out")
@@ -1845,7 +1849,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		try {
 
 			FlexiBookController.logOut();
-			//FlexiBookPersistence.save(flexiBook);
+			FlexiBookPersistence.save(flexiBook);
 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
