@@ -5,10 +5,7 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.*;
@@ -2308,28 +2305,141 @@ public class FlexiBookController {
 	 * @throws InvalidInputException
 	 *
 	 */
-
-	public static void viewAppointmentCalendar(String username, String mainServiceName,
-			List<String> optionalServiceNames, String startTime, String startDate, FlexiBook flexiBook)
-			throws InvalidInputException {
-		String error = "";
-		Appointment appointment;
-		Customer customer = null;
-		TimeSlot timeSlot = null;
-		List<BookableService> serviceList = flexiBook.getBookableServices();
-
-		if (!dateValidation(startDate)) {
-			throw new InvalidInputException("Invalid date");
+	public static Map<String, List<TOTimeSlot>> viewDailyTimeSlotAvailable(String startDate) throws InvalidInputException {
+		if(dateValidation(startDate)==false){
+			throw new InvalidInputException(startDate + " is not a valid date");
 		}
+		Map<String, List<TOTimeSlot>> timeslotDailyView = new HashMap<String, List<TOTimeSlot>>();
+		List<TOTimeSlot> getTimeslotsAvailable = getAvailableTimeSlots(startDate);
+		timeslotDailyView.put(startDate, getTimeslotsAvailable);
 
-		List<TimeSlot> timeSlotList = flexiBook.getTimeSlots();
-		List<Appointment> appointmentList = flexiBook.getAppointments();
+		return timeslotDailyView;
 
-		for (int i = 0; i < 7; i++) {
-			TimeSlot ts = flexiBook.getAppointment(i).getTimeSlot();
-
-		}
 	}
+
+	public static Map<String, List<TOTimeSlot>> viewDailyTimeSlotUnavailable(String startDate) throws InvalidInputException {
+
+		if(dateValidation(startDate)==false){
+			throw new InvalidInputException(startDate + " is not a valid date");
+		}
+		Map<String, List<TOTimeSlot>> timeslotDailyView = new HashMap<String, List<TOTimeSlot>>();
+		List<TOTimeSlot> getTimeslotsUnavailable = getUnavailableTimeSlots(startDate);
+		timeslotDailyView.put(startDate, getTimeslotsUnavailable);
+
+
+		return timeslotDailyView;
+
+
+	}
+
+
+
+	public static Map<String, List<TOTimeSlot>> viewWeeklyTimeSlotAvailable(String startDate) throws InvalidInputException {
+		if(!dateValidation(startDate)){
+			throw new InvalidInputException(startDate + " is not a valid date");
+		}
+		Map<String, List<TOTimeSlot>> timeslotWeeklyView = new HashMap<String, List<TOTimeSlot>>();
+		List<TOTimeSlot> getTimeslotsAvailable = getAvailableTimeSlots(startDate);
+		timeslotWeeklyView.put(startDate, getTimeslotsAvailable);
+		for(int i = 1; i<7; i++){
+			Calendar c = Calendar.getInstance();
+
+
+		}
+
+		return timeslotWeeklyView;
+
+	}
+
+
+
+	public static List<TOBusinessHour> getBusinesshrs() {
+		ArrayList<TOBusinessHour> businesshrs = new ArrayList<TOBusinessHour>();
+		for (BusinessHour businesshr : FlexiBookApplication.getFlexiBook().getBusiness().getBusinessHours()) {
+			TOBusinessHour toBusinessHour = new TOBusinessHour(businesshr.getStartTime(), businesshr.getEndTime());
+			businesshrs.add(toBusinessHour);
+		}
+		return businesshrs;
+
+	}
+
+
+	public static List<TOTimeSlot> getUnavailableTimeSlots(String UATSdate) throws InvalidInputException {
+		if(dateValidation(UATSdate)==false){
+			throw new InvalidInputException(UATSdate + " is not a valid date");
+		}
+		Date givenUATS = Date.valueOf(UATSdate);
+		givenUATS = cleanDate(givenUATS);
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		ArrayList<TOTimeSlot> unavailableTimeSlots = new ArrayList<>();
+		for(TimeSlot unavailableTimeSlot : FlexiBookApplication.getFlexiBook().getTimeSlots()){
+			for(int i = 0; i < appointments.size(); i++){
+				if(flexiBook.getAppointment(i).getTimeSlot().getStartDate().equals(givenUATS) && flexiBook.getAppointment(i).getTimeSlot().getEndDate().equals(givenUATS)) {
+					if (!checkDateAndTime(unavailableTimeSlot, flexiBook.getAppointment(i), flexiBook, flexiBook.getAppointment(i).getTimeSlot().getStartDate(), flexiBook.getAppointment(i).getTimeSlot().getStartTime())) {
+						TOTimeSlot toTimeSlotUnavailable = new TOTimeSlot(givenUATS, flexiBook.getAppointment(i).getTimeSlot().getStartTime(), givenUATS, flexiBook.getAppointment(i).getTimeSlot().getEndTime());
+						unavailableTimeSlots.add(toTimeSlotUnavailable);
+					}
+				}
+				if(flexiBook.getAppointment(i).getBookableService() instanceof Service){
+					String downtimeStartString = Integer.toString(((Service) flexiBook.getAppointment(i).getBookableService()).getDowntimeStart());
+					TimeSlot downtimeSlot = getTimeSlot(downtimeStartString, UATSdate, ((Service) flexiBook.getAppointment(i).getBookableService()).getDowntimeDuration(), flexiBook );
+					TOTimeSlot toTimeSlotDowntime = new TOTimeSlot(givenUATS, downtimeSlot.getStartTime(), givenUATS, downtimeSlot.getEndTime() );
+					unavailableTimeSlots.remove(toTimeSlotDowntime);
+				}
+
+			}
+
+		}
+		return unavailableTimeSlots;
+
+
+	}
+
+
+
+	public static List<TOTimeSlot> getAvailableTimeSlots(String ATSdate) throws InvalidInputException {
+		if(!dateValidation(ATSdate)){
+			throw new InvalidInputException(ATSdate + " is not a valid date");
+		}
+		Date givenDate = Date.valueOf(ATSdate);
+		givenDate = cleanDate(givenDate);
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		ArrayList<TOTimeSlot> availableTimeSlots = new ArrayList<>();
+		for(TimeSlot availableTimeSlot : FlexiBookApplication.getFlexiBook().getTimeSlots()){
+			for(int i = 0; i < appointments.size(); i++){
+				if(flexiBook.getAppointment(i).getTimeSlot().getStartDate().equals(givenDate) && flexiBook.getAppointment(i).getTimeSlot().getEndDate().equals(givenDate)) {
+					if (checkDateAndTime(availableTimeSlot, flexiBook.getAppointment(i), flexiBook, flexiBook.getAppointment(i).getTimeSlot().getStartDate(), flexiBook.getAppointment(i).getTimeSlot().getStartTime())) {
+						TOTimeSlot toTimeSlotUnavailable = new TOTimeSlot(givenDate, flexiBook.getAppointment(i).getTimeSlot().getStartTime(), givenDate, flexiBook.getAppointment(i).getTimeSlot().getEndTime());
+						availableTimeSlots.add(toTimeSlotUnavailable);
+					}
+				}
+				if(flexiBook.getAppointment(i).getBookableService() instanceof Service){
+					String downtimeStartString = Integer.toString(((Service) flexiBook.getAppointment(i).getBookableService()).getDowntimeStart());
+					TimeSlot downtimeSlot = getTimeSlot(downtimeStartString, ATSdate, ((Service) flexiBook.getAppointment(i).getBookableService()).getDowntimeDuration(), flexiBook );
+					TOTimeSlot toTimeSlotDowntime = new TOTimeSlot(givenDate, downtimeSlot.getStartTime(), givenDate, downtimeSlot.getEndTime() );
+					availableTimeSlots.add(toTimeSlotDowntime);
+				}
+
+			}
+
+		}
+		return availableTimeSlots;
+
+
+	}
+
+
+
+	private static Date cleanDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(date.getTime());
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		java.util.Date tempCleanedDate = cal.getTime();
+		java.sql.Date cleanedDate = new java.sql.Date(tempCleanedDate.getTime());
+		return cleanedDate;}
 
 	/**
 	 *
@@ -2353,32 +2463,23 @@ public class FlexiBookController {
 	/**
 	 *
 	 * @author Venkata Satyanarayana Chivatam
-	 * @param date
+	 * @param Adate
 	 * @return boolean
 	 * @throws InvalidInputException
 	 */
-	private static boolean dateValidation(String date) {
-		boolean status = false;
-		if (checkDate(date)) {
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			dateFormat.setLenient(false);
-			try {
-				dateFormat.parse(date);
-				status = true;
-			} catch (Exception e) {
-				status = false;
-			}
-		}
-		return status;
-	}
+	public static boolean dateValidation(String Adate) throws InvalidInputException {
 
-	static boolean checkDate(String date) {
-		String pattern = "(0?[1-9]|1[0-2])\\/-([0-9]{4})\\/-(0?[1-9]|[12][0-9]|3[01])";
-		boolean flag = false;
-		if (date.matches(pattern)) {
-			flag = true;
+		String[] arr = Adate.split("-");
+		int year = Integer.parseInt(arr[0]);
+		int month = Integer.parseInt(arr[1]);
+		int day = Integer.parseInt(arr[2]);
+		String ss = Adate + " is not a valid date";
+		if (month == 2 && day > 28) {
+			return false;
+		} else if (month > 12 || day > 31) {
+			return false;
 		}
-		return flag;
+		return true;
 	}
 
 ////////////////////////CUSTOMER ACCOUNT////////////////////

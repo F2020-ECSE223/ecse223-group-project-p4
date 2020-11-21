@@ -53,6 +53,8 @@ public class CucumberStepDefinitions {
 
 	private static List<Map<String, String>> preservedProperties;
 	private static List<Map<String, String>> existingServices;
+	private static List<Map<String, String>> unavailableTS;
+	private static List<Map<String, String>> availableTS;
 	private static List<ComboItem> combosInService;
 	private static int numCombos = 0;;
 	private static int numServices = 0;
@@ -2242,6 +2244,95 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			error = e.getMessage();
 		}
 	}
+
+	@When("{string} requests the appointment calendar for the week starting on {string}")
+	public void requests_the_appointment_calendar_for_the_week_starting_on(String string, String string2) {
+		try{
+			Date date = Date.valueOf(string2);
+			for(int i = 1; i<8; i++){
+				date = new Date(date.getTime() + i*MILLIS_IN_A_DAY);
+
+				FlexiBookController.viewDailyTimeSlotAvailable(String.valueOf(date));
+				FlexiBookController.viewDailyTimeSlotUnavailable(String.valueOf(date));
+			}
+
+		}catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+	}
+	private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+
+	@Then("the following slots shall be unavailable:")
+	public void the_following_slots_shall_be_unavailable(String string, io.cucumber.datatable.DataTable dataTable) throws InvalidInputException {
+		/*TOTimeSlot unavailableTS;
+
+		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+		for (Map<String, String> columns : rows) {
+			unavailableTS = new TOTimeSlot(Date.valueOf(columns.get("startDate")),
+					Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
+					Time.valueOf(columns.get("endTime") + ":00"));
+			flexiBook.getBusiness().getBusinessHours().remove(unavailableTS);
+		}*/
+
+		/*unavailableTS = dataTable.asMaps(String.class, String.class);
+		assertEquals(FlexiBookController.getUnavailableTimeSlots(string));
+		assertEquals(((Service) Service.getWithName(string)).getDuration(),
+				Integer.parseInt(preservedProperties.get(0).get("duration")));
+		assertEquals(((Service) Service.getWithName(string)).getDowntimeDuration(),
+				Integer.parseInt(preservedProperties.get(0).get("downtimeDuration")));
+		assertEquals(((Service) Service.getWithName(string)).getDowntimeStart(),
+				Integer.parseInt(preservedProperties.get(0).get("downtimeStart")));*/
+
+		unavailableTS = dataTable.asMaps(String.class, String.class);
+		try {
+			List<TOTimeSlot> uats = FlexiBookController.getUnavailableTimeSlots(string);
+			assertEquals(uats, unavailableTS);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		}
+
+
+
+
+
+
+	@Then("the following slots shall be available:")
+	public void the_following_slots_shall_be_available(String string, io.cucumber.datatable.DataTable dataTable) {
+		/*TOTimeSlot availableTS;
+
+		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+		for (Map<String, String> columns : rows) {
+			availableTS = new TOTimeSlot(Date.valueOf(columns.get("startDate")),
+					Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
+					Time.valueOf(columns.get("endTime") + ":00"));
+			flexiBook.getBusiness().getBusinessHours().remove(availableTS);
+		}*/
+		availableTS = dataTable.asMaps(String.class, String.class);
+		try {
+			List<TOTimeSlot> uats = FlexiBookController.getAvailableTimeSlots(string);
+			assertEquals(uats, availableTS);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+	}
+
+
+
+	@When("{string} requests the appointment calendar for the day of {string}")
+	public void requests_the_appointment_calendar_for_the_day_of(String string, String string2) {
+		try{
+				FlexiBookController.viewDailyTimeSlotAvailable(string2);
+				FlexiBookController.viewDailyTimeSlotUnavailable(string2);
+		}catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+	}
+
+
 
 	@After
 	public void tearDown() {
