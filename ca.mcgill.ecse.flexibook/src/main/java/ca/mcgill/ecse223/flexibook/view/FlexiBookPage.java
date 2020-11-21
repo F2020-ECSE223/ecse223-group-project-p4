@@ -1544,64 +1544,18 @@ public class FlexiBookPage extends JFrame{
 		pack();
 	}
 
-
-	/**
-	 * @author yasminamatta
-	 * @param evt
-	 */
-	private void startAppointmentActionPerformed(ActionEvent evt) {
-
-	}
-	/**
-	 * @author yasminamatta
-	 * @param evt
-	 */
-	private void startAppointmentButtonPressed(ActionEvent evt) {
-
-	}
-
-	/**
-	 * @author yasminamatta
-	 * @param evt
-	 */
-	private void endAppointmentActionPerformed(ActionEvent evt) {
-
-	}
-
-	/**
-	 * @author yasminamatta
-	 * @param evt
-	 */
-	private void endAppointmentButtonPressed(ActionEvent evt) {
-
-	}
-
-
-	/**
-	 * @author yasminamatta
-	 * @param evt
-	 */
-	private void registerNoShowActionPerformed(ActionEvent evt) {
-
-	}
-
-	/**
-	 * @author yasminamatta
-	 * @param evt
-	 */
-	private void registerNoShowButtonPressed(ActionEvent evt) {
-
-	}
-
-
 	/**
 	 * @author yasminamatta
 	 * @param evt
 	 */
 	private void managedAppointmentStatus(ActionEvent evt) {
-
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+		error="";
+		success ="";
+		
+		
+		
 		
 		
 		startAppointmentButton = new JButton();
@@ -1614,7 +1568,7 @@ public class FlexiBookPage extends JFrame{
 		backToMenuButton.setText("Back");
 		appointmentList = new JComboBox<String>(new String[0]); 
 		appointmentListLabel = new JLabel();
-		appointmentListLabel.setText("List of appointments");
+		appointmentListLabel.setText("Choose an appointment: ");
 		
 		
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -1625,22 +1579,23 @@ public class FlexiBookPage extends JFrame{
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup()
-							.addComponent(appointmentListLabel)
-//					.addGroup(layout.createParallelGroup()
-							.addComponent(startAppointmentButton))
-							
+							.addComponent(message)
+							.addComponent(appointmentListLabel)			
+							.addComponent(startAppointmentButton)	
+					.addComponent(backToMenuButton))
 					.addGroup(layout.createParallelGroup()
 							.addComponent(appointmentList)
-//					.addGroup(layout.createParallelGroup()
 							.addComponent(endAppointmentButton))
 					.addGroup(layout.createParallelGroup()
 							.addComponent(noShowButton))
-					.addGroup(layout.createParallelGroup()
-							.addComponent(backToMenuButton))
+//					.addGroup(layout.createSequentialGroup()
+							
 
 							
 					
 				);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
 		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 //		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
@@ -1652,48 +1607,49 @@ public class FlexiBookPage extends JFrame{
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup()
+						.addComponent(message))
+				.addGroup(layout.createParallelGroup()
 						.addComponent(appointmentListLabel)
 						.addComponent(appointmentList))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(startAppointmentButton)
 						.addComponent(endAppointmentButton)				
-						.addComponent(noShowButton)
-				
+						.addComponent(noShowButton))
+				.addGroup(layout.createParallelGroup()
 						.addComponent(backToMenuButton))
 
-						
+					
 				);
 		 
 		
 		startAppointmentButton.addActionListener(new ActionListener(){ 
 			
 			public void actionPerformed(ActionEvent e) {
-				startAppointmentActionPerformed(e);
 				
+					startAppointmentButtonPressed(e);		
 			}
 		});
 		
 		endAppointmentButton.addActionListener(new ActionListener(){ 
 			
 			public void actionPerformed(ActionEvent e) {
-				endAppointmentActionPerformed(e);
 				
+					endAppointmentButtonPressed(e);	
 			}
 		});
 
 		noShowButton.addActionListener(new ActionListener(){ 
 	
 			public void actionPerformed(ActionEvent e) {
-				registerNoShowActionPerformed(evt);
-		
+					registerNoShowButtonPressed(e);
 			}
 		});
 		
 		
 		backToMenuButton.addActionListener(new ActionListener(){ 
-			//TODO
+			
 			public void actionPerformed(ActionEvent e) {
-				
+				initOwnerMenu();
 		
 			}
 		});
@@ -1701,6 +1657,106 @@ public class FlexiBookPage extends JFrame{
 		
 	}
 	
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 * @throws InvalidInputException 
+	 */
+	private void startAppointmentButtonPressed(ActionEvent evt) {
+		int selectedAppointment = appointmentList.getSelectedIndex();
+			if(selectedAppointment == -1) {
+				error = "Please enter an appointment";
+			}
+			if(error.isEmpty()) {
+			try {
+			FlexiBookController.startAppointment(existingAppointments.get(selectedAppointment).getCustomerName(),
+					existingAppointments.get(selectedAppointment).getStartTime(),
+					existingAppointments.get(selectedAppointment).getStartDate(),
+					FlexiBookApplication.getSystemDate(),
+					FlexiBookApplication.getSystemTime());
+			success = "You have successfully started the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName();
+
+			}
+			catch(InvalidInputException e) {
+				error += e.getMessage();
+			}
+			}
+			refreshAppointmentStatusPage();
+			
+	}
+
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 * @throws InvalidInputException 
+	 */
+	private void endAppointmentButtonPressed(ActionEvent evt) {
+		int selectedAppointment = appointmentList.getSelectedIndex();
+		
+		if(selectedAppointment == -1) {
+			error = "Please enter an appointment";
+		}
+		if(error.isEmpty()) {
+		try {
+		FlexiBookController.endAppointment(existingAppointments.get(selectedAppointment).getCustomerName(),
+				existingAppointments.get(selectedAppointment).getStartTime(),
+				existingAppointments.get(selectedAppointment).getStartDate(),
+				FlexiBookApplication.getSystemDate(),
+				FlexiBookApplication.getSystemTime());
+		success = "You have successfully ended the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName();
+
+		}
+		catch(InvalidInputException e) {
+			error += e.getMessage();
+		}
+		}
+		refreshAppointmentStatusPage();
+	}
+
+
+
+	/**
+	 * @author yasminamatta
+	 * @param evt
+	 * @throws InvalidInputException 
+	 */
+	private void registerNoShowButtonPressed(ActionEvent evt) {
+			int selectedAppointment = appointmentList.getSelectedIndex();
+		
+		if(selectedAppointment == -1) {
+			error = "Please enter an appointment";
+		}
+		if(error.isEmpty()) {
+		try {
+		FlexiBookController.registerNoShow(existingAppointments.get(selectedAppointment).getCustomerName(), 
+				existingAppointments.get(selectedAppointment).getStartDate().toString(),
+				existingAppointments.get(selectedAppointment).getStartTime().toString(),
+				FlexiBookApplication.getSystemDate(),
+				FlexiBookApplication.getSystemTime());
+		success = "You have successfully registered a no show for the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName();
+				
+		}
+		catch(InvalidInputException e) {
+			error += e.getMessage();
+		}
+		}
+	refreshAppointmentStatusPage();
+	}
+	private void refreshAppointmentStatusPage() {
+		
+		message.setForeground(Color.RED);
+		if(!error.isEmpty()) {
+			message.setText(error);
+		}
+
+		if(!success.isEmpty()) {
+			message.setText(success);
+		}
+		if(error.isEmpty()) {
+			appointmentList.removeAllItems();
+		}
+		pack();
+	}
 
 
 

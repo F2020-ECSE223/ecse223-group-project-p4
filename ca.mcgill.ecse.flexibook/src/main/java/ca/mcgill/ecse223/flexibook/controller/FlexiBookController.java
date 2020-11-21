@@ -79,31 +79,29 @@ public class FlexiBookController {
 	 * @param appointment
 	 * @param flexiBook
 	 */
-	public static void registerNoShow(String username, Date appointmentDate, Time appointmentTime, String dateTime) throws InvalidInputException {
+	public static void registerNoShow(String username, String appointmentDate, String appointmentTime, Date todaysDate, Time currentTime) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Appointment appointment = null;
-
+		
+		
+		
 		List<Appointment> appointmentList = flexiBook.getAppointments();
 		for (int i = 0; i < appointmentList.size(); i++) {
 			Appointment thisAppointment = appointmentList.get(i);
 			if (thisAppointment.getCustomer().getUsername().equals(username)
-					&& appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate())
-					&& appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime())) {
+					&& appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate().toString())
+					&& (appointmentTime).equals(thisAppointment.getTimeSlot().getStartTime().toString())) {
 				appointment = thisAppointment;
 				break;
 			}
 		}
-
-		String datePart = dateTime.substring(0, 10);
-		String timePart = dateTime.substring(11, 16);
-		Date date = Date.valueOf(datePart);
-		Time time = Time.valueOf(timePart + ":00");
+	
 
 		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 			return;
 		}
-		if (appointment.getTimeSlot().getStartDate().after(date)
-				|| appointment.getTimeSlot().getStartTime().after(time)) {
+		if (appointment.getTimeSlot().getStartDate().after(todaysDate)
+				|| appointment.getTimeSlot().getStartTime().after(currentTime)) {
 			return;
 		}
 
@@ -131,6 +129,7 @@ public class FlexiBookController {
 	 */
 	public static void endAppointment(String customerName, String startTime, String date, Date todaysDate, Time currentTime) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		
 		
 		Appointment appointment = null;
 		Date appointmentDate = Date.valueOf(date);

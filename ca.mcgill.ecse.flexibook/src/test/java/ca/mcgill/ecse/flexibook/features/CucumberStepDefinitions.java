@@ -2216,7 +2216,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			thisAppointment.getTimeSlot().getStartTime().toString();
 			if (thisAppointment.getTimeSlot().getStartTime().before(cTime)
 					&& thisAppointment.getTimeSlot().getStartDate().equals(cDate)) {
-				FlexiBookController.registerNoShow(appointment.getCustomer().getUsername(), appointment.getTimeSlot().getStartDate(), appointment.getTimeSlot().getStartTime(), string);
+				FlexiBookController.registerNoShow(appointment.getCustomer().getUsername(), appointment.getTimeSlot().getStartDate().toString(), appointment.getTimeSlot().getStartTime().toString(), cDate, cTime);
 			}
 
 		}
