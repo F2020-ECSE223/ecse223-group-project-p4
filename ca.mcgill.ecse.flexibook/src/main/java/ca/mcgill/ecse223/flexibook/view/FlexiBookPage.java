@@ -139,7 +139,8 @@ public class FlexiBookPage extends JFrame{
 	private JButton startAppointmentButton;
 	private JButton endAppointmentButton;
 	private JButton noShowButton;
-	private JComboBox<String> appointmentToggleList;
+	private JComboBox<String> appointmenList;
+	private JButton backToMenuButton;
 	
 	
 	//appointment data
@@ -1371,7 +1372,80 @@ public class FlexiBookPage extends JFrame{
 	 * @param evt
 	 */
 	private void managedAppointmentStatus(ActionEvent evt) {
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+		
+		startAppointmentButton = new JButton();
+		startAppointmentButton.setText("Start Appointment");
+		endAppointmentButton = new JButton();
+		endAppointmentButton.setText("End Appointment");
+		noShowButton = new JButton();
+		noShowButton.setText("No Show");
+		backToMenuButton = new JButton();
+		backToMenuButton.setText("Back");
+		
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup()
+							.addComponent(startAppointmentButton)
+							.addComponent(endAppointmentButton)
+							.addComponent(noShowButton)
+							.addComponent(backToMenuButton))
+					
+				);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+
+		
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+					.addGroup(layout.createSequentialGroup()
+							.addComponent(startAppointmentButton)
+							.addComponent(endAppointmentButton)
+							.addComponent(noShowButton)
+							.addComponent(backToMenuButton))
+						
+				);
+		
+		
+		startAppointmentButton.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e) {
+				startAppointmentActionPerformed(e);
+				
+			}
+		});
+		
+		endAppointmentButton.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e) {
+				endAppointmentActionPerformed(e);
+				
+			}
+		});
+
+		noShowButton.addActionListener(new ActionListener(){ 
 	
+			public void actionPerformed(ActionEvent e) {
+				registerNoShowActionPerformed(evt);
+		
+			}
+		});
+		
+		
+		backToMenuButton.addActionListener(new ActionListener(){ 
+			//TODO
+			public void actionPerformed(ActionEvent e) {
+				
+		
+			}
+		});
 		
 	}
 	
