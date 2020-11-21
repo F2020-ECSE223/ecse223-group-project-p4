@@ -2333,7 +2333,7 @@ public class FlexiBookController {
 
 
 
-	public static Map<String, List<TOTimeSlot>> viewWeeklyTimeSlotAvailable(String startDate) throws InvalidInputException {
+	/*public static Map<String, List<TOTimeSlot>> viewWeeklyTimeSlotAvailable(String startDate) throws InvalidInputException {
 		if(!dateValidation(startDate)){
 			throw new InvalidInputException(startDate + " is not a valid date");
 		}
@@ -2348,7 +2348,7 @@ public class FlexiBookController {
 
 		return timeslotWeeklyView;
 
-	}
+	}*/
 
 
 
