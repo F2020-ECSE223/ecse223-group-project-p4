@@ -164,6 +164,7 @@ public class FlexiBookPage extends JFrame{
 	private JTextField businessAddress = new JTextField();
 	private JTextField businessEmail = new JTextField();
 	private JTextField businessPhone = new JTextField();
+	
 
 
 	public FlexiBookPage() {
@@ -186,6 +187,8 @@ public class FlexiBookPage extends JFrame{
 	private void initOwnerMenu() {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setTitle("FlexiBook System");
 
 		//I added this to test the UI, will delete after if everything is working fine -- Sneha
 		FlexiBookApplication.getFlexiBook().delete();
@@ -1549,6 +1552,9 @@ public class FlexiBookPage extends JFrame{
 	 * @param evt
 	 */
 	private void managedAppointmentStatus(ActionEvent evt) {
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
 		error="";
@@ -1649,6 +1655,7 @@ public class FlexiBookPage extends JFrame{
 		backToMenuButton.addActionListener(new ActionListener(){ 
 			
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initOwnerMenu();
 		
 			}
@@ -1665,7 +1672,7 @@ public class FlexiBookPage extends JFrame{
 	private void startAppointmentButtonPressed(ActionEvent evt) {
 		int selectedAppointment = appointmentList.getSelectedIndex();
 			if(selectedAppointment == -1) {
-				error = "Please enter an appointment";
+				error = "Please enter an appointment.";
 			}
 			if(error.isEmpty()) {
 			try {
@@ -1674,7 +1681,7 @@ public class FlexiBookPage extends JFrame{
 					existingAppointments.get(selectedAppointment).getStartDate(),
 					FlexiBookApplication.getSystemDate(),
 					FlexiBookApplication.getSystemTime());
-			success = "You have successfully started the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName();
+			success = "You have successfully started the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName()+".";
 
 			}
 			catch(InvalidInputException e) {
@@ -1694,7 +1701,7 @@ public class FlexiBookPage extends JFrame{
 		int selectedAppointment = appointmentList.getSelectedIndex();
 		
 		if(selectedAppointment == -1) {
-			error = "Please enter an appointment";
+			error = "Please enter an appointment.";
 		}
 		if(error.isEmpty()) {
 		try {
@@ -1703,7 +1710,7 @@ public class FlexiBookPage extends JFrame{
 				existingAppointments.get(selectedAppointment).getStartDate(),
 				FlexiBookApplication.getSystemDate(),
 				FlexiBookApplication.getSystemTime());
-		success = "You have successfully ended the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName();
+		success = "You have successfully ended the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName()+".";
 
 		}
 		catch(InvalidInputException e) {
@@ -1724,7 +1731,7 @@ public class FlexiBookPage extends JFrame{
 			int selectedAppointment = appointmentList.getSelectedIndex();
 		
 		if(selectedAppointment == -1) {
-			error = "Please enter an appointment";
+			error = "Please enter an appointment.";
 		}
 		if(error.isEmpty()) {
 		try {
@@ -1733,7 +1740,7 @@ public class FlexiBookPage extends JFrame{
 				existingAppointments.get(selectedAppointment).getStartTime().toString(),
 				FlexiBookApplication.getSystemDate(),
 				FlexiBookApplication.getSystemTime());
-		success = "You have successfully registered a no show for the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName();
+		success = "You have successfully registered a no-show for the appointment " + existingAppointments.get(selectedAppointment).getService() + "with the customer" + existingAppointments.get(selectedAppointment).getCustomerName()+".";
 				
 		}
 		catch(InvalidInputException e) {
