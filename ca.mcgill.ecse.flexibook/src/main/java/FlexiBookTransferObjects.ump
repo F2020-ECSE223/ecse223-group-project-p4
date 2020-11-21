@@ -5,6 +5,7 @@ class TOAppointment{
 	service;
 	startTime;
 	startDate;
+
 }
 
 
