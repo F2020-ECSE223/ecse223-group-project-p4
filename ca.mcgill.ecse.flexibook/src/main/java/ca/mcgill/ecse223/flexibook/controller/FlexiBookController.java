@@ -938,12 +938,7 @@ public class FlexiBookController {
 		return existingServices;
 	}
 
-	
-//	public static TOService getServiceByName(String name) {
-//		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-//		
-//		//TOService service = new TOService();
-//	}
+
 	/**
 	 * Helper Method: Add/Update/Delete Service Feature
 	 * 
