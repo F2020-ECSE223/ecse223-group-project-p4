@@ -314,7 +314,6 @@ public class FlexiBookController {
 					if (coi.isMandatory()) {
 						if (!coi.equals(main)) {
 							duration += coi.getService().getDuration();
-
 						}
 					}
 				}
@@ -323,14 +322,10 @@ public class FlexiBookController {
 					Service optionalService;
 					for (int i = 0; i < serviceList.size(); i++) {
 						if (optionalServiceNames.contains(serviceList.get(i).getName())) {
-
 							optionalService = (Service) serviceList.get(i);
 							duration += optionalService.getDuration();
-
-
 						}
 					}
-
 				}
 
 				timeSlot = getTimeSlot(startTime, startDate, duration, flexiBook);
@@ -347,29 +342,24 @@ public class FlexiBookController {
 				Appointment appointment = new Appointment(customer, thisService, timeSlot, flexiBook);
 				
 				if (thisService.getClass().equals(ServiceCombo.class)) { 
-				ServiceCombo combo = (ServiceCombo) thisService;
-
-				for(int z=0; z <combo.getServices().size(); z++) {
-					if(combo.getService(z).isMandatory()) {
-						appointment.addChosenItem(combo.getService(z));
+					ServiceCombo combo = (ServiceCombo) thisService;
+					for(int z=0; z <combo.getServices().size(); z++) {
+						if(combo.getService(z).isMandatory()) {
+							appointment.addChosenItem(combo.getService(z));
+						}
+						if (optionalServiceNames != null) {
+							for (int i = 0; i < serviceList.size(); i++) {
+								if (optionalServiceNames.contains(serviceList.get(i).getName())) {
+									for(int r=0; r<optionalServiceNames.size(); r++) {
+										if(combo.getService(z).getService().getName().equals(optionalServiceNames.get(r))){
+											appointment.addChosenItem(combo.getService(z));
+										}
+									}	
+								}		
+							}
+						}
 					}
 				
-			if (optionalServiceNames != null) {
-				Service optionalService;
-				for (int i = 0; i < serviceList.size(); i++) {
-					if (optionalServiceNames.contains(serviceList.get(i).getName())) {
-						for(int r=0; r<optionalServiceNames.size(); r++) {
-					if(combo.getService(z).getService().getName().equals(optionalServiceNames.get(r))){
-						
-						appointment.addChosenItem(combo.getService(z));
-						}
-						
-						}	
-					}		
-			
-						}
-						}
-					}
 				}
 				FlexiBookPersistence.save(flexiBook);
 				return appointment;
@@ -405,7 +395,7 @@ public class FlexiBookController {
 		
 		ServiceCombo combo = null;
 		Appointment appointment = null;
-		Customer customer = null;
+		Customer customer;
 		BookableService thisService = null;
 		TimeSlot newTimeSlot = null;
 		List<BookableService> serviceList = flexiBook.getBookableServices();
@@ -470,7 +460,6 @@ public class FlexiBookController {
 
 				} else if (removedItems != null) {
 					// remove unwanted items
-
 					if (removedItems.contains(combo.getMainService().getService().getName())) {
 						return "unsuccessful";
 					}
@@ -492,8 +481,6 @@ public class FlexiBookController {
 				}
 
 				// update time slot
-
-				// List <Appointment> listOfts = flexiBook.getAppointments();
 				String[] oldStart = oldStartTime.toString().split(":");
 				String oldtime = oldStart[0] + ":" + oldStart[1];
 
@@ -538,10 +525,7 @@ public class FlexiBookController {
 
 		try {
 
-			// ServiceCombo combo = null;
 			Appointment appointment = null;
-			// Customer customer = null;
-			// BookableService thisService = null;
 			TimeSlot newTimeSlot = null;
 
 			Owner owner = flexiBook.getOwner();
@@ -552,7 +536,6 @@ public class FlexiBookController {
 			if(username == null || oldStartTime == null || oldDate == null) {
 				throw new InvalidInputException("Service name, Customer username, previous start time or previous start date cannot be null");
 			}
-			//ONLY ALLOW TIME SLOT UPDATE IF APPOINTMENT STATE IS BOOKED AND NOT IN-PROGRESS
 			
 			//get the appointment being updated
 			List<Appointment> appointmentList = flexiBook.getAppointments();
@@ -563,12 +546,12 @@ public class FlexiBookController {
 					break;
 				}
 			}
+			
 			//find the service corresponding to the name
 			BookableService thisService = appointment.getBookableService();
 			
-			
+			//ONLY ALLOW TIME SLOT UPDATE IF APPOINTMENT STATE IS BOOKED AND NOT IN-PROGRESS
 			if(!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
-
 				return "unsuccessful";
 			}
 
@@ -593,12 +576,7 @@ public class FlexiBookController {
 
 					ServiceCombo thisCombo = (ServiceCombo) thisService;
 					int duration = thisCombo.getMainService().getService().getDuration();
-//					for (ComboItem coi : thisCombo.getServices()) {
-//						if(coi.isMandatory() && !coi.getService().equals(thisCombo.getMainService().getService())) {
-//							duration += coi.getService().getDuration();
-//						}
-//					}
-
+				
 					// check if there are optional services
 					List<ComboItem> comboItemList = appointment.getChosenItems();
 					Service optionalService;
@@ -674,10 +652,7 @@ public class FlexiBookController {
 			List<Appointment> appointmentList = flexiBook.getAppointments();
 			for (int i = 0; i < appointmentList.size(); i++) {
 				Appointment thisAppointment = appointmentList.get(i);
-				String n = thisAppointment.getCustomer().getUsername();
-				String s = thisAppointment.getBookableService().getName();
-				if (appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate())
-						&& (appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime()))) {
+				if (appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate()) && (appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime()))) {
 					appointment = thisAppointment;
 				}
 			}
@@ -916,8 +891,7 @@ public class FlexiBookController {
 		return null;
 	}
 
-	// ************************************SERVICE
-	// FEATURES******************************
+	// ************************************SERVICE FEATURES******************************
 
 	public static Service service;
 	private static List<Appointment> appointments;
@@ -2340,7 +2314,7 @@ public class FlexiBookController {
 	 *
 	 */
 	private static void createUser(String usernameO, String passwordO, FlexiBook flexiBook) {
-//		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		//FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 
 		Owner owner = new Owner(usernameO, passwordO, flexiBook);
 
