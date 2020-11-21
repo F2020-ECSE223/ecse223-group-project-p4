@@ -1340,8 +1340,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 						Date.valueOf(string4), Time.valueOf(string5 + ":00"), flexiBook);
 			}
 			if (string.equals("vacation")) {
-				FlexiBookController.addVacationSlot(Date.valueOf(string2), Time.valueOf(string3 + ":00"),
-						Date.valueOf(string4), Time.valueOf(string5 + ":00"), flexiBook);
+				FlexiBookController.addVacationSlot(string2, string3, string4, string5);
 			}
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
