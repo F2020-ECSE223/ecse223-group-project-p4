@@ -148,8 +148,11 @@ public class FlexiBookPage extends JFrame{
 	private JButton startAppointmentButton;
 	private JButton endAppointmentButton;
 	private JButton noShowButton;
-	private JComboBox<String> appointmentToggleList;
-
+	private JLabel appointmentListLabel;
+	private JComboBox<String> appointmentList;
+	private JButton backToMenuButton;
+	
+	
 
 	//appointment data
 	ArrayList<String> availableServices = new ArrayList<>();
@@ -1597,6 +1600,109 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private void managedAppointmentStatus(ActionEvent evt) {
 
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+		
+		
+		startAppointmentButton = new JButton();
+		startAppointmentButton.setText("Start Appointment");
+		endAppointmentButton = new JButton();
+		endAppointmentButton.setText("End Appointment");
+		noShowButton = new JButton();
+		noShowButton.setText("No Show");
+		backToMenuButton = new JButton();
+		backToMenuButton.setText("Back");
+		appointmentList = new JComboBox<String>(new String[0]); 
+		appointmentListLabel = new JLabel();
+		appointmentListLabel.setText("List of appointments");
+		
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup()
+							.addComponent(appointmentListLabel)
+//					.addGroup(layout.createParallelGroup()
+							.addComponent(startAppointmentButton))
+							
+					.addGroup(layout.createParallelGroup()
+							.addComponent(appointmentList)
+//					.addGroup(layout.createParallelGroup()
+							.addComponent(endAppointmentButton))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(noShowButton))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(backToMenuButton))
+
+							
+					
+				);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+//		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+		//layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
+		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+//		
+		
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(appointmentListLabel)
+						.addComponent(appointmentList))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startAppointmentButton)
+						.addComponent(endAppointmentButton)				
+						.addComponent(noShowButton)
+				
+						.addComponent(backToMenuButton))
+
+						
+				);
+		 
+		
+		startAppointmentButton.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e) {
+				startAppointmentActionPerformed(e);
+				
+			}
+		});
+		
+		endAppointmentButton.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e) {
+				endAppointmentActionPerformed(e);
+				
+			}
+		});
+
+		noShowButton.addActionListener(new ActionListener(){ 
+	
+			public void actionPerformed(ActionEvent e) {
+				registerNoShowActionPerformed(evt);
+		
+			}
+		});
+		
+		
+		backToMenuButton.addActionListener(new ActionListener(){ 
+			//TODO
+			public void actionPerformed(ActionEvent e) {
+				
+		
+			}
+		});
+	pack();
+		
+	}
+	
+
+
 
 	}
 
@@ -1604,4 +1710,4 @@ public class FlexiBookPage extends JFrame{
 
 
 
-}
+

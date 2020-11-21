@@ -895,7 +895,7 @@ public class FlexiBookController {
 
 	public static Service service;
 	private static List<Appointment> appointments;
-	private static Owner owner = new Owner("owner", "admin", FlexiBookApplication.getFlexiBook());
+	//private static Owner owner = new Owner("owner", "admin", FlexiBookApplication.getFlexiBook());
 	
 	//public static ArrayList<TOService> existingServices = new ArrayList<TOService>(); 
 	
@@ -925,10 +925,10 @@ public class FlexiBookController {
 		boolean userIsOwner = false;
 		
 		//added to test UI, delete before submitting 
-		if (user == null) {
-			FlexiBookApplication.setCurrentUser(owner);
-			user = FlexiBookApplication.getCurrentUser();
-		}
+//		if (user == null) {
+//			FlexiBookApplication.setCurrentUser(owner);
+//			user = FlexiBookApplication.getCurrentUser();
+//		}
 		
 		if (user instanceof Owner) {
 			userIsOwner = true;
