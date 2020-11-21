@@ -921,33 +921,29 @@ public class FlexiBookController {
 
 	public static Service service;
 	private static List<Appointment> appointments;
+	private static Owner owner = new Owner("owner", "admin", FlexiBookApplication.getFlexiBook());
 	
-	public static List<TOService> existingServices; 
+	//public static ArrayList<TOService> existingServices = new ArrayList<TOService>(); 
 	
-	public static List<TOService> getExistingServices() {
-		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-		List<BookableService> allServices = flexiBook.getBookableServices();
-		String serviceName;
-		int duration;
-		int downtimeStart;
-		int downtimeDuration;
-		
-		for (int i = 0; i < allServices.size(); i++) {
-			if (allServices.get(i).getClass().equals(Service.class)) {
-				//existingServices.add((Service) allServices.get(i));
-				serviceName = allServices.get(i).getName();
-				duration = ((Service) allServices.get(i)).getDuration();
-				downtimeStart = ((Service) allServices.get(i)).getDowntimeStart();
-				downtimeDuration = ((Service) allServices.get(i)).getDowntimeDuration();
-				
-				existingServices.add(new TOService(serviceName, duration, downtimeStart, downtimeDuration));
+	public static ArrayList<TOService> getExistingServices() {
+
+		ArrayList<TOService> existingServices = new ArrayList<TOService>(); 
+		for (BookableService service : FlexiBookApplication.getFlexiBook().getBookableServices()) {
+			if (service instanceof Service) {
+			TOService toService = new TOService(service.getName(), ((Service) service).getDuration(), ((Service) service).getDowntimeStart(), ((Service) service).getDowntimeDuration());
+			existingServices.add(toService);
 			}
 		}
-		
-		FlexiBookPersistence.save(flexiBook);
+		FlexiBookPersistence.save(FlexiBookApplication.getFlexiBook());
 		return existingServices;
 	}
 
+	
+//	public static TOService getServiceByName(String name) {
+//		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+//		
+//		//TOService service = new TOService();
+//	}
 	/**
 	 * Helper Method: Add/Update/Delete Service Feature
 	 * 
@@ -958,7 +954,13 @@ public class FlexiBookController {
 	 */
 	private static boolean checkOwner(User user) throws InvalidInputException {
 		boolean userIsOwner = false;
-
+		
+		//added to test UI, delete before submitting 
+		if (user == null) {
+			FlexiBookApplication.setCurrentUser(owner);
+			user = FlexiBookApplication.getCurrentUser();
+		}
+		
 		if (user instanceof Owner) {
 			userIsOwner = true;
 		}
@@ -1128,6 +1130,7 @@ public class FlexiBookController {
 	 */
 	private static boolean serviceExistsAlready(String name) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		
 		boolean serviceExists = false;
 	
 		
@@ -1182,7 +1185,6 @@ public class FlexiBookController {
 	public static void addService(String name, int duration, int downtimeDuration,
 			int downtimeStart) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-		
 
 		try { 
 		if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true)
@@ -1280,6 +1282,9 @@ public class FlexiBookController {
 		boolean noFutureAppts = true;
 		Service serviceToDelete = (Service) Service.getWithName(name);
 
+//		if (existingServices == null) {
+//			existingServices = new List<STOService>
+//		}
 		if (serviceToDelete.hasAppointments() == true) {
 			appointments = serviceToDelete.getAppointments();
 			for (int i = 0; i < appointments.size(); i++) {

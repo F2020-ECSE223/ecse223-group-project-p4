@@ -35,6 +35,7 @@ import javax.swing.table.TableCellRenderer;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.FlexiBook;
+import ca.mcgill.ecse.flexibook.model.Service;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
@@ -117,7 +118,7 @@ public class FlexiBookPage extends JFrame{
 
 	
 	//update service 
-	private JComboBox<String> updateExistingService;
+	private JComboBox<String> updateExistingService = new JComboBox<String>(new String[0]); 
 	private JLabel updateExistingServiceLabel;
 	private JButton updateServiceButton;
 	private JButton updateServiceBackButton; 
@@ -138,7 +139,7 @@ public class FlexiBookPage extends JFrame{
 	
 	
 	//delete service 
-	private JComboBox<String> deleteExistingService;
+	private JComboBox<String> deleteExistingService =  new JComboBox<String>(new String[0]);
 	private JLabel deleteExistingServiceLabel; 
 	private JButton deleteServiceButton;
 	private JButton deleteServiceBackButton; 
@@ -183,6 +184,8 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
 		
+		//I added this to test the UI, will delete after if everything is working fine -- Sneha
+		FlexiBookApplication.getFlexiBook().delete();
 		
 		businessInfoButton = new JButton();
 		businessInfoButton.setText("Manage Business Information");
@@ -938,7 +941,10 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	
-	//Sneha
+	/**
+	 * @author Sneha
+	 * @param evt
+	 */
 	private void manageServiceActionPerformed (ActionEvent evt) {
 		//addServicePage
 
@@ -1014,8 +1020,13 @@ public class FlexiBookPage extends JFrame{
 		pack();
 	}
 	
-	//Sneha 
+	/**
+	 * @author Sneha
+	 * @param evt
+	 */
 	private void addServiceActionPerformed(ActionEvent evt) {
+		error = "";
+		success = ""; 
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
@@ -1092,17 +1103,19 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 
-
+		//refreshServicePage();
 		//resize page to fit all components 
 		pack();
 	}
 
 
+	/**
+	 * @author Sneha
+	 * @param evt
+	 */
 	private void addServiceButtonPressed (ActionEvent evt) {
-		//error = null;
-		success = null;
-
 		error = "";
+		success = ""; 
 		String name = null;
 		int duration = 0 ;
 		int dtDuration = 0; 
@@ -1153,7 +1166,7 @@ public class FlexiBookPage extends JFrame{
 			try {
 				//call controller 
 				FlexiBookController.addService(name, duration, dtDuration, dtStart);
-				//success = "Service " +name+ " successfully added";
+				success = "Service " +name+ " successfully added";
 			}
 
 			catch (InvalidInputException ie){
@@ -1168,19 +1181,22 @@ public class FlexiBookPage extends JFrame{
 		pack();
 	}
 	
-	//Sneha
+	/**
+	 * @author Sneha
+	 * @param evt
+	 */
 	private void updateServiceActionPerformed (ActionEvent evt) {
+		error = "";
+		success = ""; 
+		
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
 		//getContentPane().setSize(dim);
 			
-	
-		
-		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		//page components
-		JComboBox<String> updateExistingService = new JComboBox<String>(); 
+	
 		JLabel updateExistingServiceLabel = new JLabel(); 
 		JButton updateServiceButton = new JButton();
 		JButton updateServiceBackButton = new JButton();
@@ -1214,8 +1230,9 @@ public class FlexiBookPage extends JFrame{
 		
 		layout.setHorizontalGroup(
 			layout.createSequentialGroup()
-			.addComponent(message)
+		
 				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
 						.addComponent(updateExistingServiceLabel)
 						.addComponent(newServiceNameLabel)
 						.addComponent(newServiceDurationLabel)
@@ -1279,11 +1296,12 @@ public class FlexiBookPage extends JFrame{
 	
 		updateServiceBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				manageServiceActionPerformed(e);
 			}
 		});
 
-		
+		refreshServicePage();
 		//resize page to fit all components 
 		pack();
 	}
@@ -1293,8 +1311,14 @@ public class FlexiBookPage extends JFrame{
 	}
 
 	
-	//Sneha 
+	/**
+	 * @author Sneha
+	 * @param evt
+	 */
 	private void deleteServiceActionPerformed (ActionEvent evt) {
+		//error = "";
+		error = "";
+		success = ""; 
 	
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
@@ -1302,7 +1326,7 @@ public class FlexiBookPage extends JFrame{
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		//page components
-		JComboBox<String> deleteExistingService = new JComboBox<String>();
+
 		JLabel deleteExistingServiceLabel = new JLabel();
 		JButton deleteServiceButton = new JButton();
 		JButton deleteServiceBackButton = new JButton();
@@ -1334,8 +1358,9 @@ public class FlexiBookPage extends JFrame{
 						
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
-				.addComponent(message)
+				
 				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
 						.addComponent(deleteExistingServiceLabel)
 						.addComponent(deleteExistingService))
 				.addGroup(layout.createParallelGroup()
@@ -1355,18 +1380,87 @@ public class FlexiBookPage extends JFrame{
 	
 		deleteServiceBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				manageServiceActionPerformed(e);
 			}
 		});
 
-		
+	//	refreshServicePage();
 		//resize page to fit all components 
 		pack();
 	}
 	
 	
+	/**
+	 * @author Sneha
+	 * @param evt
+	 */
 	private void deleteServiceButtonPressed (ActionEvent evt) {
-		//TODO: implement
+		
+		int selectedService = deleteExistingService.getSelectedIndex(); 
+		if (selectedService < 0) {
+			error = "Service must be selected to delete"; 
+		}
+		
+		if (error == null || error.length() == 0) {
+			try {
+				FlexiBookController.deleteService(existingServices.get(selectedService).getServiceName());
+				success = "Service " + existingServices.get(selectedService).getServiceName() + " deleted successfully" ;
+					
+			}
+			catch (InvalidInputException e){
+				error = e.getMessage();
+			}
+		}
+		
+		refreshServicePage();
+		pack();
+	}
+	
+	/**
+	 * @author Sneha
+	 */
+	private void refreshServicePage() {
+		if (error != null && error.length() > 0) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+		
+		if (error == null || error.length() == 0) {
+			//message.setText(error);
+
+			serviceName.setText("");
+			serviceDuration.setText("");
+			downtimeDuration.setText("");
+			downtimeStart.setText("");
+
+		
+			existingServices = new HashMap<Integer, TOService>();
+			updateExistingService.removeAllItems();
+			deleteExistingService.removeAllItems();
+			int index = 0; 
+
+			for (TOService service: FlexiBookController.getExistingServices()) {
+				existingServices.put(index, service);
+				
+				updateExistingService.addItem("Service: " + service.getServiceName() + " | Duration: " + service.getServiceDur() + " | Downtime Start: " 
+				+ service.getDowntimeDurStart() + " | Downtime Duration: " +service.getDowntimeDur());
+				
+				deleteExistingService.addItem("Service: " + service.getServiceName() + " | Duration: " + service.getServiceDur() + " | Downtime Start: " 
+						+ service.getDowntimeDurStart() + " | Downtime Duration: " +service.getDowntimeDur());
+				index++;
+			}
+			updateExistingService.setSelectedIndex(-1);
+			deleteExistingService.setSelectedIndex(-1);
+		}
+		
+		pack();
 	}
 	
 
@@ -1430,43 +1524,6 @@ public class FlexiBookPage extends JFrame{
 	
 	
 
-	//Sneha
-
-	private void refreshServicePage() {
-		if (error != null) {
-			message.setText(error);
-			message.setForeground(Color.RED);
-
-		}
-		else if (success != null) {
-			message.setText(success);
-			message.setForeground(Color.GREEN);
-
-		}
-		
-		if (error.length() == 0 || error == null) {
-			//message.setText(error);
-
-			serviceName.setText("");
-			serviceDuration.setText("");
-			downtimeDuration.setText("");
-			downtimeStart.setText("");
-
-		}
-//		existingServices = new HashMap<Integer, TOService>();
-//		//updateExistingService.removeAllItems();
-//		int index = 0; 
-//		
-//		for (TOService service: FlexiBookController.getExistingServices()) {
-//			existingServices.put(index, service);
-//			updateExistingService.addItem("Service:" + service.getServiceName() + " | Duration: " + service.getServiceDur());
-//			index++;
-//		}
-//		updateExistingService.setSelectedIndex(-1);
-//			
-		
-		pack();
-	}
 	
 	
 }
