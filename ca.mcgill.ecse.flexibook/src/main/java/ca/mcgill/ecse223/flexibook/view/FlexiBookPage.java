@@ -166,15 +166,13 @@ public class FlexiBookPage extends JFrame{
 	private JTextField businessEmail = new JTextField();
 	private JTextField businessPhone = new JTextField();
 	
-<<<<<<< Updated upstream
 
-=======
 	//addVacationSlot
 	private JTextField startVacationDate = new JTextField();
 	private JTextField startVacationTime = new JTextField();
 	private JTextField endVacationDate = new JTextField();
 	private JTextField endVacationTime = new JTextField();
->>>>>>> Stashed changes
+
 
 	public FlexiBookPage() {
 
