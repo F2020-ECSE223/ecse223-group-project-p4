@@ -79,31 +79,29 @@ public class FlexiBookController {
 	 * @param appointment
 	 * @param flexiBook
 	 */
-	public static void registerNoShow(String username, Date appointmentDate, Time appointmentTime, String dateTime) throws InvalidInputException {
+	public static void registerNoShow(String username, String appointmentDate, String appointmentTime, Date todaysDate, Time currentTime) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Appointment appointment = null;
-
+		
+		
+		
 		List<Appointment> appointmentList = flexiBook.getAppointments();
 		for (int i = 0; i < appointmentList.size(); i++) {
 			Appointment thisAppointment = appointmentList.get(i);
 			if (thisAppointment.getCustomer().getUsername().equals(username)
-					&& appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate())
-					&& appointmentTime.equals(thisAppointment.getTimeSlot().getStartTime())) {
+					&& appointmentDate.equals(thisAppointment.getTimeSlot().getStartDate().toString())
+					&& (appointmentTime).equals(thisAppointment.getTimeSlot().getStartTime().toString())) {
 				appointment = thisAppointment;
 				break;
 			}
 		}
-
-		String datePart = dateTime.substring(0, 10);
-		String timePart = dateTime.substring(11, 16);
-		Date date = Date.valueOf(datePart);
-		Time time = Time.valueOf(timePart + ":00");
+	
 
 		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 			return;
 		}
-		if (appointment.getTimeSlot().getStartDate().after(date)
-				|| appointment.getTimeSlot().getStartTime().after(time)) {
+		if (appointment.getTimeSlot().getStartDate().after(todaysDate)
+				|| appointment.getTimeSlot().getStartTime().after(currentTime)) {
 			return;
 		}
 
@@ -131,6 +129,7 @@ public class FlexiBookController {
 	 */
 	public static void endAppointment(String customerName, String startTime, String date, Date todaysDate, Time currentTime) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		
 		
 		Appointment appointment = null;
 		Date appointmentDate = Date.valueOf(date);
@@ -1621,6 +1620,8 @@ public class FlexiBookController {
 			} else {
 				business = new Business(name, address, phoneNumber, email, flexibook);
 			}
+			
+			FlexiBookPersistence.save(flexibook);
 
 		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
@@ -1739,8 +1740,13 @@ public class FlexiBookController {
 	 * @param end
 	 * @throws InvalidInputException
 	 */
-	public static void addBusinessHour(String dow, Time start, Time end, FlexiBook fb) throws InvalidInputException {
-
+	public static void addBusinessHour(String dow, String startTime, String endTime) throws InvalidInputException {
+		
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		
+		Time start = Time.valueOf(startTime + ":00");
+		Time end = Time.valueOf(endTime + ":00");
+		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
 		}
@@ -1758,6 +1764,8 @@ public class FlexiBookController {
 		}
 
 		fb.getBusiness().addBusinessHour(new BusinessHour(getDow(dow), start, end, fb));
+		
+		FlexiBookPersistence.save(fb);
 	}
 
 	public static ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek getDow(String s) {
@@ -1952,7 +1960,15 @@ public class FlexiBookController {
 	 * @param hol
 	 * @throws InvalidInputException
 	 */
-	public static void addHolidaySlot(Date sD, Time sT, Date eD, Time eT, FlexiBook fb) throws InvalidInputException {
+	public static void addHolidaySlot(String startDate, String startTime, String endDate, String endTime) throws InvalidInputException {
+		
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		
+		Date sD = Date.valueOf(startDate);
+		Time sT = Time.valueOf(startTime + ":00");
+		Date eD = Date.valueOf(endDate);
+		Time eT = Time.valueOf(endTime + ":00");
+		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
 		}
@@ -1977,6 +1993,8 @@ public class FlexiBookController {
 		}
 
 		fb.getBusiness().addHoliday(new TimeSlot(sD, sT, eD, eT, fb));
+		
+		FlexiBookPersistence.save(fb);
 	}
 
 	/**
@@ -1987,7 +2005,15 @@ public class FlexiBookController {
 	 * @param vac
 	 * @throws InvalidInputException
 	 */
-	public static void addVacationSlot(Date sD, Time sT, Date eD, Time eT, FlexiBook fb) throws InvalidInputException {
+	public static void addVacationSlot(String startDate, String startTime, String endDate, String endTime) throws InvalidInputException {
+		
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		
+		Date sD = Date.valueOf(startDate);
+		Time sT = Time.valueOf(startTime + ":00");
+		Date eD = Date.valueOf(endDate);
+		Time eT = Time.valueOf(endTime + ":00");
+		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
 		}
@@ -2012,6 +2038,8 @@ public class FlexiBookController {
 		}
 
 		fb.getBusiness().addVacation(new TimeSlot(sD, sT, eD, eT, fb));
+		
+		FlexiBookPersistence.save(fb);
 	}
 
 	public static BusinessHour findBusinessHour(String s, Time start, FlexiBook fb) {
