@@ -1274,7 +1274,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			String string3) {
 		exception = false;
 		try {
-			FlexiBookController.addBusinessHour(string, Time.valueOf(string2 + ":00"), Time.valueOf(string3 + ":00"), flexiBook);
+			FlexiBookController.addBusinessHour(string, string2, string3);
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
@@ -1338,12 +1338,10 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		exception = false;
 		try {
 			if (string.equals("holiday")) {
-				FlexiBookController.addHolidaySlot(Date.valueOf(string2), Time.valueOf(string3 + ":00"),
-						Date.valueOf(string4), Time.valueOf(string5 + ":00"), flexiBook);
+				FlexiBookController.addHolidaySlot(string2, string3, string4, string5);
 			}
 			if (string.equals("vacation")) {
-				FlexiBookController.addVacationSlot(Date.valueOf(string2), Time.valueOf(string3 + ":00"),
-						Date.valueOf(string4), Time.valueOf(string5 + ":00"), flexiBook);
+				FlexiBookController.addVacationSlot(string2, string3, string4, string5);
 			}
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {

@@ -160,11 +160,11 @@ public class FlexiBookPage extends JFrame{
 
 
 	//setupBusinessInfo
-	private JTextField businessName = new JTextField();
-	private JTextField businessAddress = new JTextField();
-	private JTextField businessEmail = new JTextField();
-	private JTextField businessPhone = new JTextField();
-
+	private JTextField setBusinessName = new JTextField();
+	private JTextField setBusinessAddress = new JTextField();
+	private JTextField setBusinessEmail = new JTextField();
+	private JTextField setBusinessPhone = new JTextField();
+	
 
 	//addVacationSlot
 	private JTextField startVacationDate = new JTextField();
@@ -757,6 +757,10 @@ public class FlexiBookPage extends JFrame{
 	}
 
 
+	private void manageOwnerAccountActionPerformed(ActionEvent evt) {
+		//TODO
+	}
+
 	private void businessInfoActionPerformed(ActionEvent evt) {
 		initBusinessInfoPage();
 	}
@@ -798,14 +802,13 @@ public class FlexiBookPage extends JFrame{
 
 		setupBusinessInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setupBusinessInfoActionPerformed(e);
+				initSetupBusinessInfoPage();
 			}
-
 		});
 
 		updateBusinessInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateBusinessInfoActionPerformed(e);
+				initUpdateBusinessInfoPage();
 			}
 
 		});
@@ -814,18 +817,9 @@ public class FlexiBookPage extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				initOwnerMenu();
 			}
-
 		});
 
 		pack();
-	}
-
-	private void setupBusinessInfoActionPerformed(ActionEvent evt) {
-		initSetupBusinessInfoPage();
-	}
-
-	private void updateBusinessInfoActionPerformed(ActionEvent evt) {
-		initUpdateBusinessInfoPage();
 	}
 
 	private void initSetupBusinessInfoPage() {
@@ -845,7 +839,6 @@ public class FlexiBookPage extends JFrame{
 		JButton businessInfoAddBusinessHourButton = new JButton();
 		JButton businessInfoAddVacationButton = new JButton();
 		JButton businessInfoAddHolidayButton = new JButton();
-
 
 		businessNameLabel.setText("Business Name");
 		businessAddressLabel.setText("Business Address");
@@ -870,20 +863,22 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(businessAddressLabel)
 						.addComponent(businessEmailLabel)
 						.addComponent(businessPhoneLabel)
-						.addComponent(businessInfoBackButton)
-						.addComponent(businessInfoSetInfoButton))
+						.addComponent(businessInfoAddVacationButton)
+						.addComponent(businessInfoAddHolidayButton)
+						.addComponent(businessInfoAddBusinessHourButton))
 				.addGroup(layout.createParallelGroup()
-						.addComponent(businessName)
-						.addComponent(businessAddress)
-						.addComponent(businessEmail)
-						.addComponent(businessPhone)
+						.addComponent(message)
+						.addComponent(setBusinessName)
+						.addComponent(setBusinessAddress)
+						.addComponent(setBusinessEmail)
+						.addComponent(setBusinessPhone)
 						.addComponent(businessInfoBackButton)
 						.addComponent(businessInfoSetInfoButton))
 				);
-
+		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone});
-		layout.linkSize(SwingConstants.HORIZONTAL, businessInfoBackButton);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {setBusinessName, setBusinessAddress, setBusinessEmail, setBusinessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoAddHolidayButton, businessInfoAddVacationButton, businessInfoSetInfoButton, businessInfoBackButton, businessInfoAddBusinessHourButton, setBusinessName, setBusinessAddress, setBusinessEmail, setBusinessPhone});
 
 
 		layout.setVerticalGroup(
@@ -891,22 +886,28 @@ public class FlexiBookPage extends JFrame{
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessNameLabel)
-						.addComponent(businessName))
+						.addComponent(setBusinessName))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessAddressLabel)
-						.addComponent(businessAddress))
+						.addComponent(setBusinessAddress))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessEmailLabel)
-						.addComponent(businessEmail))
+						.addComponent(setBusinessEmail))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessPhoneLabel)
-						.addComponent(businessPhone))
+						.addComponent(setBusinessPhone))
 				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoAddVacationButton)
 						.addComponent(businessInfoSetInfoButton))
 				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoAddHolidayButton)
 						.addComponent(businessInfoBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoAddBusinessHourButton))
 				);
+		
 
+		
 		businessInfoBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initBusinessInfoPage();
@@ -918,22 +919,38 @@ public class FlexiBookPage extends JFrame{
 				setInfoButtonPressed(e);
 			}
 		});
+		
+		businessInfoAddVacationButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddVacationPage();
+			}
+		});
+		
+		businessInfoAddHolidayButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddHolidayPage();
+			}
+		});
+		
+		businessInfoAddBusinessHourButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddBusinessHourPage();
+			}
+		});
 
 		pack();
 	}
 
-	private void initUpdateBusinessInfoPage() {
-		//TODO
-	}
+	
 
 	private void setInfoButtonPressed(ActionEvent evt) {
 		error = null;
 		success = null;
 		try {
-			String name = businessName.getText();
-			String address = businessAddress.getText();
-			String phoneNumber = businessPhone.getText();
-			String email = businessEmail.getText();
+			String name = setBusinessName.getText();
+			String address = setBusinessAddress.getText();
+			String phoneNumber = setBusinessPhone.getText();
+			String email = setBusinessEmail.getText();
 			FlexiBookController.setupBusinessInfo(name, address, phoneNumber, email);
 			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
 		} catch (InvalidInputException e) {
@@ -955,13 +972,539 @@ public class FlexiBookPage extends JFrame{
 
 		}
 
-		businessName.setText("");
-		businessAddress.setText("");
-		businessPhone.setText("");
-		businessEmail.setText("");
+		setBusinessName.setText("");
+		setBusinessAddress.setText("");
+		setBusinessPhone.setText("");
+		setBusinessEmail.setText("");
 
 		pack();
 	}
+	
+	private void initAddVacationPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel startVacationDateLabel = new JLabel();
+		JLabel startVacationTimeLabel = new JLabel();
+		JLabel endVacationDateLabel = new JLabel();
+		JLabel endVacationTimeLabel = new JLabel();
+		
+		JButton addVacationBackButton = new JButton();
+		JButton addVacationAddButton = new JButton();
+
+
+
+		startVacationDateLabel.setText("Start Date");
+		startVacationTimeLabel.setText("Start Time");
+		endVacationDateLabel.setText("End Date");
+		endVacationTimeLabel.setText("End Time");
+		addVacationBackButton.setText("Back");
+		addVacationAddButton.setText("Add Vacation Slot");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startVacationDateLabel)
+						.addComponent(startVacationTimeLabel)
+						.addComponent(endVacationDateLabel)
+						.addComponent(endVacationTimeLabel)
+						.addComponent(addVacationBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startVacationDate)
+						.addComponent(startVacationTime)
+						.addComponent(endVacationDate)
+						.addComponent(endVacationTime)
+						.addComponent(addVacationAddButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startVacationDateLabel, startVacationTimeLabel, endVacationDateLabel, endVacationTimeLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startVacationDate, startVacationTime, endVacationDate, endVacationTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addVacationBackButton, addVacationAddButton, startVacationDate, startVacationTime, endVacationDate, endVacationTime});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startVacationDateLabel)
+						.addComponent(startVacationDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startVacationTimeLabel)
+						.addComponent(startVacationTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endVacationDateLabel)
+						.addComponent(endVacationDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endVacationTimeLabel)
+						.addComponent(endVacationTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addVacationBackButton)
+						.addComponent(addVacationAddButton))
+				
+				);
+		
+
+		
+		addVacationBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initSetupBusinessInfoPage();
+			}
+		});
+		
+		addVacationAddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addVacationButtonPressed(e);
+			}
+		});
+
+		pack();
+	}
+	
+	private void addVacationButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			String startDate = startVacationDate.getText();
+			String startTime = startVacationTime.getText();
+			String endDate = endVacationDate.getText();
+			String endTime = endVacationTime.getText();
+			FlexiBookController.addVacationSlot(startDate, startTime, endDate, endTime);
+			success = "Vacation slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at " + endTime + " added"; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshAddVacationPage();
+
+	}
+	
+	private void refreshAddVacationPage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+
+		startVacationDate.setText("");
+		startVacationTime.setText("");
+		endVacationDate.setText("");
+		endVacationTime.setText("");
+
+		pack();
+	}
+	
+	private void initAddHolidayPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel startHolidayDateLabel = new JLabel();
+		JLabel startHolidayTimeLabel = new JLabel();
+		JLabel endHolidayDateLabel = new JLabel();
+		JLabel endHolidayTimeLabel = new JLabel();
+		
+		JButton addHolidayBackButton = new JButton();
+		JButton addHolidayAddButton = new JButton();
+
+
+
+		startHolidayDateLabel.setText("Start Date");
+		startHolidayTimeLabel.setText("Start Time");
+		endHolidayDateLabel.setText("End Date");
+		endHolidayTimeLabel.setText("End Time");
+		addHolidayBackButton.setText("Back");
+		addHolidayAddButton.setText("Add Holiday Slot");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startHolidayDateLabel)
+						.addComponent(startHolidayTimeLabel)
+						.addComponent(endHolidayDateLabel)
+						.addComponent(endHolidayTimeLabel)
+						.addComponent(addHolidayBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startHolidayDate)
+						.addComponent(startHolidayTime)
+						.addComponent(endHolidayDate)
+						.addComponent(endHolidayTime)
+						.addComponent(addHolidayAddButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startHolidayDateLabel, startHolidayTimeLabel, endHolidayDateLabel, endHolidayTimeLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addHolidayBackButton, addHolidayAddButton, startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startHolidayDateLabel)
+						.addComponent(startHolidayDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startHolidayTimeLabel)
+						.addComponent(startHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endHolidayDateLabel)
+						.addComponent(endHolidayDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endHolidayTimeLabel)
+						.addComponent(endHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addHolidayBackButton)
+						.addComponent(addHolidayAddButton))
+				
+				);
+		
+
+		
+		addHolidayBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initSetupBusinessInfoPage();
+			}
+		});
+		
+		addHolidayAddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addHolidayButtonPressed(e);
+			}
+		});
+
+		pack();
+	}
+	
+	private void addHolidayButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			String startDate = startHolidayDate.getText();
+			String startTime = startHolidayTime.getText();
+			String endDate = endHolidayDate.getText();
+			String endTime = endHolidayTime.getText();
+			FlexiBookController.addHolidaySlot(startDate, startTime, endDate, endTime);
+			success = "Holiday slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at " + endTime + " added"; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshAddHolidayPage();
+
+	}
+	
+	private void refreshAddHolidayPage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+
+		startHolidayDate.setText("");
+		startHolidayTime.setText("");
+		endHolidayDate.setText("");
+		endHolidayTime.setText("");
+
+		pack();
+	}
+	
+	private void initAddBusinessHourPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel addBusinessHourDayLabel = new JLabel();
+		JLabel addBusinessHourStartLabel = new JLabel();
+		JLabel addBusinessHourEndLabel = new JLabel();
+		
+		JButton addBusinessHourBackButton = new JButton();
+		JButton addBusinessHourAddButton = new JButton();
+
+		addBusinessHourDayLabel.setText("Day");
+		addBusinessHourStartLabel.setText("Start Time");
+		addBusinessHourEndLabel.setText("End Time");
+		addBusinessHourBackButton.setText("Back");
+		addBusinessHourAddButton.setText("Add Business Hour");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(addBusinessHourDayLabel)
+						.addComponent(addBusinessHourStartLabel)
+						.addComponent(addBusinessHourEndLabel)
+						.addComponent(addBusinessHourBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(addBusinessHourDay)
+						.addComponent(addBusinessHourStart)
+						.addComponent(addBusinessHourEnd)
+						.addComponent(addBusinessHourAddButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addBusinessHourDayLabel, addBusinessHourStartLabel, addBusinessHourEndLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addBusinessHourBackButton, addBusinessHourAddButton, addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourDayLabel)
+						.addComponent(addBusinessHourDay))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourStartLabel)
+						.addComponent(addBusinessHourStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourEndLabel)
+						.addComponent(addBusinessHourEnd))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourBackButton)
+						.addComponent(addBusinessHourAddButton))
+				
+				);
+		
+
+		
+		addBusinessHourBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initSetupBusinessInfoPage();
+			}
+		});
+		
+		addBusinessHourAddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addBusinessHourButtonPressed(e);
+			}
+		});
+
+		pack();
+	}
+	
+	private void addBusinessHourButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			String day = addBusinessHourDay.getText();
+			String startTime = addBusinessHourStart.getText();
+			String endTime = addBusinessHourEnd.getText();
+			FlexiBookController.addBusinessHour(day, startTime, endTime);
+			success = "Business Hour on " + day + " from " + startTime + " to " + endTime + " added"; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshAddBusinessHourPage();
+
+	}
+	
+	private void refreshAddBusinessHourPage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+
+		addBusinessHourDay.setText("");
+		addBusinessHourStart.setText("");
+		addBusinessHourEnd.setText("");
+
+		pack();
+	}
+	
+	private void initUpdateBusinessInfoPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel businessNameLabel = new JLabel();
+		JLabel businessAddressLabel = new JLabel();
+		JLabel businessEmailLabel = new JLabel();
+		JLabel businessPhoneLabel = new JLabel();
+
+		JButton businessInfoBackButton = new JButton();
+		JButton businessInfoUpdateInfoButton = new JButton();
+		JButton businessInfoUpdateBusinessHourButton = new JButton();
+		JButton businessInfoUpdateVacationButton = new JButton();
+		JButton businessInfoUpdateHolidayButton = new JButton();
+
+		businessNameLabel.setText("Business Name");
+		businessAddressLabel.setText("Business Address");
+		businessEmailLabel.setText("Business Email");
+		businessPhoneLabel.setText("Business Phone Number");
+		businessInfoBackButton.setText("Back");
+		businessInfoUpdateInfoButton.setText("Update Business Info");
+		businessInfoUpdateBusinessHourButton.setText("Update Business Hour");
+		businessInfoUpdateVacationButton.setText("Update Vacation slot");
+		businessInfoUpdateHolidayButton.setText("Update Holiday Slot");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(businessNameLabel)
+						.addComponent(businessAddressLabel)
+						.addComponent(businessEmailLabel)
+						.addComponent(businessPhoneLabel)
+						.addComponent(businessInfoUpdateVacationButton)
+						.addComponent(businessInfoUpdateHolidayButton)
+						.addComponent(businessInfoUpdateBusinessHourButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(updateBusinessName)
+						.addComponent(updateBusinessAddress)
+						.addComponent(updateBusinessEmail)
+						.addComponent(updateBusinessPhone)
+						.addComponent(businessInfoBackButton)
+						.addComponent(businessInfoUpdateInfoButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateBusinessName, updateBusinessAddress, updateBusinessEmail, updateBusinessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoUpdateHolidayButton, businessInfoUpdateVacationButton, businessInfoUpdateInfoButton, businessInfoBackButton, businessInfoUpdateBusinessHourButton, updateBusinessName, updateBusinessAddress, updateBusinessEmail, updateBusinessPhone});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessNameLabel)
+						.addComponent(updateBusinessName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessAddressLabel)
+						.addComponent(updateBusinessAddress))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessEmailLabel)
+						.addComponent(updateBusinessEmail))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessPhoneLabel)
+						.addComponent(updateBusinessPhone))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateVacationButton)
+						.addComponent(businessInfoUpdateInfoButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateHolidayButton)
+						.addComponent(businessInfoBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateBusinessHourButton))
+				);
+		
+
+		
+		businessInfoBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initBusinessInfoPage();
+			}
+		});
+
+		businessInfoUpdateInfoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateInfoButtonPressed(e);
+			}
+		});
+		
+		businessInfoUpdateVacationButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddVacationPage();
+			}
+		});
+		
+		businessInfoUpdateHolidayButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddHolidayPage();
+			}
+		});
+		
+		businessInfoUpdateBusinessHourButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddBusinessHourPage();
+			}
+		});
+
+		pack();
+	}
+	
+	private void updateInfoButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			String name = updateBusinessName.getText();
+			String address = updateBusinessAddress.getText();
+			String phoneNumber = updateBusinessPhone.getText();
+			String email = updateBusinessEmail.getText();
+			FlexiBookController.updateBusinessInfo(name, address, phoneNumber, email);
+			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshUpdateBusinessInfoPage();
+	}
+
+	private void refreshUpdateBusinessInfoPage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+
+		updateBusinessName.setText("");
+		updateBusinessAddress.setText("");
+		updateBusinessPhone.setText("");
+		updateBusinessEmail.setText("");
+
+		pack();
+	}
+
 
 
 
