@@ -2264,25 +2264,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
 	@Then("the following slots shall be unavailable:")
-	public void the_following_slots_shall_be_unavailable(String string, io.cucumber.datatable.DataTable dataTable) throws InvalidInputException {
-		/*TOTimeSlot unavailableTS;
-
-		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-		for (Map<String, String> columns : rows) {
-			unavailableTS = new TOTimeSlot(Date.valueOf(columns.get("startDate")),
-					Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
-					Time.valueOf(columns.get("endTime") + ":00"));
-			flexiBook.getBusiness().getBusinessHours().remove(unavailableTS);
-		}*/
-
-		/*unavailableTS = dataTable.asMaps(String.class, String.class);
-		assertEquals(FlexiBookController.getUnavailableTimeSlots(string));
-		assertEquals(((Service) Service.getWithName(string)).getDuration(),
-				Integer.parseInt(preservedProperties.get(0).get("duration")));
-		assertEquals(((Service) Service.getWithName(string)).getDowntimeDuration(),
-				Integer.parseInt(preservedProperties.get(0).get("downtimeDuration")));
-		assertEquals(((Service) Service.getWithName(string)).getDowntimeStart(),
-				Integer.parseInt(preservedProperties.get(0).get("downtimeStart")));*/
+	public void the_following_slots_shall_be_unavailable(String string, io.cucumber.datatable.DataTable dataTable) {
 
 		unavailableTS = dataTable.asMaps(String.class, String.class);
 		try {
@@ -2301,15 +2283,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 
 	@Then("the following slots shall be available:")
 	public void the_following_slots_shall_be_available(String string, io.cucumber.datatable.DataTable dataTable) {
-		/*TOTimeSlot availableTS;
 
-		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-		for (Map<String, String> columns : rows) {
-			availableTS = new TOTimeSlot(Date.valueOf(columns.get("startDate")),
-					Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
-					Time.valueOf(columns.get("endTime") + ":00"));
-			flexiBook.getBusiness().getBusinessHours().remove(availableTS);
-		}*/
 		availableTS = dataTable.asMaps(String.class, String.class);
 		try {
 			List<TOTimeSlot> uats = FlexiBookController.getAvailableTimeSlots(string);

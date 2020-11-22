@@ -2331,6 +2331,20 @@ public class FlexiBookController {
 
 	}
 
+	public static List<TOUser> getCustomers() {
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		ArrayList<TOUser> customers = new ArrayList<TOUser>();
+		for (User customer : FlexiBookApplication.getFlexiBook().getCustomers()) {
+			if (customer instanceof Customer) {
+				TOUser toUser= new TOUser(customer.getUsername(), customer.getPassword() );
+				customers.add(toUser);
+			}
+		}
+		return customers;
+
+	}
+
+
 
 
 	/*public static Map<String, List<TOTimeSlot>> viewWeeklyTimeSlotAvailable(String startDate) throws InvalidInputException {
@@ -2425,6 +2439,18 @@ public class FlexiBookController {
 		return availableTimeSlots;
 
 
+	}
+
+	public static List<TOService> getServices() {
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		ArrayList<TOService> services = new ArrayList<TOService>();
+		for (BookableService service : FlexiBookApplication.getFlexiBook().getBookableServices()) {
+			if(service instanceof Service){
+				TOService toService = new TOService(((Service)service).getName(), ((Service)service).getDuration(), ((Service)service).getDowntimeStart(), ((Service)service).getDowntimeDuration());
+				services.add(toService);
+			}
+		}
+		return services;
 	}
 
 

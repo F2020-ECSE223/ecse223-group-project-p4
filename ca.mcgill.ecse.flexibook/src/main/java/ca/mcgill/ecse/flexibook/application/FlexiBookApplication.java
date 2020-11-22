@@ -13,9 +13,13 @@ import ca.mcgill.ecse.flexibook.model.FlexiBook;
 import ca.mcgill.ecse.flexibook.model.Owner;
 import ca.mcgill.ecse.flexibook.model.User;
 import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
+import ca.mcgill.ecse223.flexibook.view.FlexiBookLogin;
 import ca.mcgill.ecse223.flexibook.view.FlexiBookPage;
 
 public class FlexiBookApplication {
+
+	public static FlexiBookLogin login = new FlexiBookLogin();
+	public static FlexiBookPage mainPage = new FlexiBookPage();
 
 	private static FlexiBook flexiBook;
 	private static User currentUser; 
@@ -29,7 +33,8 @@ public class FlexiBookApplication {
 		// start UI
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FlexiBookPage().setVisible(true);
+				login.frame.setVisible(true);
+               mainPage.setVisible(false);
             }
         });
         
