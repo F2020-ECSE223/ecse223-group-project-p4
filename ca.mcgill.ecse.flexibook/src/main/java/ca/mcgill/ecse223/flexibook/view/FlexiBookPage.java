@@ -62,9 +62,10 @@ public class FlexiBookPage extends JFrame{
 	//owner menu
 	private JButton businessInfoButton;
 	private JButton manageServiceButton;
-	private JButton manageAppButton;
+	//private JButton manageAppButton;
 	private JButton viewAppCalenderButton;
 	private JButton manageAppointmentStatusButton;
+	private JButton manageOwnerAccountButton;
 
 	//appointment overview
 	private JTable overviewTable;
@@ -193,9 +194,6 @@ public class FlexiBookPage extends JFrame{
 		//else if the user is the owner
 		initOwnerMenu();
 
-		//manageServiceActionPerformed();
-
-		//initAppointmentBookingPage();
 	}
 
 	/**
@@ -215,12 +213,14 @@ public class FlexiBookPage extends JFrame{
 		businessInfoButton.setText("Manage Business Information");
 		manageServiceButton = new JButton();
 		manageServiceButton.setText("Manage Services");
-		manageAppButton = new JButton();
-		manageAppButton.setText("Manage Appointments");
+		//manageAppButton = new JButton();
+		//manageAppButton.setText("Manage Appointments");
 		viewAppCalenderButton = new JButton();
 		viewAppCalenderButton.setText("View Appointment Calender");
 		manageAppointmentStatusButton = new JButton();
 		manageAppointmentStatusButton.setText("Manage Appointment Status");
+		manageOwnerAccountButton = new JButton();
+		manageOwnerAccountButton.setText("Manage Account");
 
 
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -233,22 +233,24 @@ public class FlexiBookPage extends JFrame{
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessInfoButton)
 						.addComponent(manageServiceButton)
-						.addComponent(manageAppButton)
+						//.addComponent(manageAppButton)
 						.addComponent(viewAppCalenderButton)
+						.addComponent(manageOwnerAccountButton)
 						.addComponent(manageAppointmentStatusButton))
 
 				);
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton, manageAppointmentStatusButton});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton, manageAppointmentStatusButton});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageOwnerAccountButton, manageAppointmentStatusButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageOwnerAccountButton, manageAppointmentStatusButton});
 
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(businessInfoButton)
 						.addComponent(manageServiceButton)
-						.addComponent(manageAppButton)
+						//.addComponent(manageAppButton)
 						.addComponent(viewAppCalenderButton)
+						.addComponent(manageOwnerAccountButton)
 						.addComponent(manageAppointmentStatusButton))
 				);
 
@@ -265,13 +267,15 @@ public class FlexiBookPage extends JFrame{
 				manageServiceActionPerformed(e);
 			}
 		});
-
+		
+		/*
 		manageAppButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				manageAppActionPerformed(e);
 			}
 		});
-
+		*/
+		
 		viewAppCalenderButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				viewCalenderActionPerformed(e);
@@ -283,6 +287,13 @@ public class FlexiBookPage extends JFrame{
 				managedAppointmentStatus(e);
 			}
 		});	
+		
+		
+		manageOwnerAccountButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manageOwnerAccountActionPerformed(e);
+			}
+		});
 
 
 
@@ -742,7 +753,7 @@ public class FlexiBookPage extends JFrame{
 
 
 	private void manageAccountActionPerformed(ActionEvent evt) {
-		//initManageAccountPage();
+		//TODO
 	}
 
 
@@ -789,7 +800,6 @@ public class FlexiBookPage extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				setupBusinessInfoActionPerformed(e);
 			}
-
 		});
 
 		updateBusinessInfoButton.addActionListener(new ActionListener() {
@@ -803,10 +813,13 @@ public class FlexiBookPage extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				initOwnerMenu();
 			}
-
 		});
 
 		pack();
+	}
+	
+	private void manageOwnerAccountActionPerformed(ActionEvent evt) {
+		//TODO
 	}
 
 	private void setupBusinessInfoActionPerformed(ActionEvent evt) {
