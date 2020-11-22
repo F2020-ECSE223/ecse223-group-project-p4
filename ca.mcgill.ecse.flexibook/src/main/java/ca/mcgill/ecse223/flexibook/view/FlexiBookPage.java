@@ -191,6 +191,13 @@ public class FlexiBookPage extends JFrame{
 	private JTextField updateBusinessEmail = new JTextField();
 	private JTextField updateBusinessPhone = new JTextField();
 	
+	//SignUp
+	private JButton signUp;
+	private JTextField Username = new JTextField();
+	private JTextField Password = new JTextField();
+	private JLabel usernameLabel;
+	private JLabel passwordLabel;
+	
 	public FlexiBookPage() {
 
 		//if the user logged in is a customer 
@@ -2338,7 +2345,40 @@ public class FlexiBookPage extends JFrame{
 		pack();
 	}
 
+	/**
+	 * @author artus
+	 * 
+	 */
 
+	private void singUp(ActionEvent evt) {
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+		error="";
+		success ="";
+
+		signUp = new JButton();
+		signUp.setText("Sign Up");
+		usernameLabel = new JLabel();
+		usernameLabel.setText("Username :");
+		passwordLabel = new JLabel();
+		passwordLabel.setText("Password :");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);			
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup()
+							.addComponent(message)
+							.addComponent(usernameLabel)
+							.addComponent(passwordLabel))
+					.addGroup(layout.createParallelGroup()
+							)
+				);
 
 	}
 
