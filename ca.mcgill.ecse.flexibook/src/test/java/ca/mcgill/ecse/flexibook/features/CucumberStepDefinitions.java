@@ -898,7 +898,7 @@ public class CucumberStepDefinitions {
 	public void initiates_the_definition_of_a_service_combo_with_main_service_services_and_mandatory_setting(
 			String string, String string2, String string3, String string4, String string5) {
 		try {
-			FlexiBookController.defineServiceCombo(string2, string, flexiBook, string3, string5, string4);
+			FlexiBookController.defineServiceCombo(string2, string, string3, string5, string4);
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
@@ -1045,7 +1045,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			String username, String name, String newName, String mainService, String servicesString, String mandatoryString) {
 		try {
 
-			FlexiBookController.updateServiceCombo(name, newName, username,flexiBook, mainService, mandatoryString, servicesString);
+			FlexiBookController.updateServiceCombo(name, newName, username, mainService, mandatoryString, servicesString);
 
 			
 			//FlexiBookPersistence.save(flexiBook);
@@ -1140,7 +1140,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@When("{string} initiates the deletion of service combo {string}")
 	public void initiates_the_deletion_of_service_combo(String string, String string2) {
 		try {
-			FlexiBookController.deleteServiceCombo(string, string2, flexiBook);
+			FlexiBookController.deleteServiceCombo(string, string2);
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
@@ -1356,7 +1356,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			String string4, String string5, String string6) {
 		Date sD = Date.valueOf(string3);
 		Time sT = Time.valueOf(string4 + ":00");
-		TimeSlot ts = FlexiBookController.findOfftime(sD, sT, string, flexiBook);
+		TimeSlot ts = FlexiBookController.findOfftime(sD, sT, string);
 		if (!exception) {
 			assertEquals(ts.getEndDate(), Date.valueOf(string5));
 			assertEquals(ts.getEndTime(), Time.valueOf(string6 + ":00"));
@@ -1402,7 +1402,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			String string2, String string3, String string4, String string5) {
 		exception = false;
 		try {
-			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), string3, Time.valueOf(string4 + ":00"), Time.valueOf(string5 + ":00"), flexiBook);
+			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), string3, Time.valueOf(string4 + ":00"), Time.valueOf(string5 + ":00"));
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
@@ -1430,7 +1430,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	public void the_user_tries_to_remove_the_business_hour_starting_at(String string, String string2) {
 		exception = false;
 		try {
-			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), null, null, null, flexiBook);
+			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), null, null, null);
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
@@ -1443,7 +1443,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 */
 	@Then("the business hour starting {string} at {string} shall {string} exist")
 	public void the_business_hour_starting_at_shall_exist(String string, String string2, String string3) {
-		BusinessHour bh = FlexiBookController.findBusinessHour(string, Time.valueOf(string2 + ":00"), flexiBook);
+		BusinessHour bh = FlexiBookController.findBusinessHour(string, Time.valueOf(string2 + ":00"));
 		if (exception) {
 			assertNotNull(bh);
 		} else {
@@ -1470,13 +1470,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		exception = false;
 		try {
 			if (string.equals("vacation")) {
-				FlexiBookController.updateVacation(Date.valueOf(string2), Time.valueOf(string3 + ":00"),
-						Date.valueOf(string4), Time.valueOf(string5 + ":00"), Date.valueOf(string6),
-						Time.valueOf(string7 + ":00"), flexiBook);
+				FlexiBookController.updateVacation(Date.valueOf(string2), Time.valueOf(string3 + ":00"), Date.valueOf(string4), Time.valueOf(string5 + ":00"), Date.valueOf(string6), Time.valueOf(string7 + ":00"));
 			} else if (string.equals("holiday")) {
-				FlexiBookController.updateHoliday(Date.valueOf(string2), Time.valueOf(string3 + ":00"),
-						Date.valueOf(string4), Time.valueOf(string5 + ":00"), Date.valueOf(string6),
-						Time.valueOf(string7 + ":00"), flexiBook);
+				FlexiBookController.updateHoliday(Date.valueOf(string2), Time.valueOf(string3 + ":00"), Date.valueOf(string4), Time.valueOf(string5 + ":00"), Date.valueOf(string6), Time.valueOf(string7 + ":00"));
 			} else {
 				throw new InvalidInputException("Invalid type");
 			}
@@ -1495,7 +1491,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			String string4, String string5, String string6) {
 		Date sD = Date.valueOf(string3);
 		Time sT = Time.valueOf(string4 + ":00");
-		TimeSlot ts = FlexiBookController.findOfftime(sD, sT, string, flexiBook);
+		TimeSlot ts = FlexiBookController.findOfftime(sD, sT, string);
 		if (!exception) {
 			assertEquals(ts.getEndDate(), Date.valueOf(string5));
 			assertEquals(ts.getEndTime(), Time.valueOf(string6 + ":00"));
@@ -1518,11 +1514,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		exception = false;
 		try {
 			if (string.equals("vacation")) {
-				FlexiBookController.updateVacation(Date.valueOf(string2), Time.valueOf(string3 + ":00"), null, null,
-						null, null, flexiBook);
+				FlexiBookController.updateVacation(Date.valueOf(string2), Time.valueOf(string3 + ":00"), null, null, null, null);
 			} else if (string.equals("holiday")) {
-				FlexiBookController.updateHoliday(Date.valueOf(string2), Time.valueOf(string3 + ":00"), null, null,
-						null, null, flexiBook);
+				FlexiBookController.updateHoliday(Date.valueOf(string2), Time.valueOf(string3 + ":00"), null, null, null, null);
 			} else {
 				throw new InvalidInputException("Invalid type");
 			}
@@ -1539,8 +1533,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 */
 	@Then("the {string} with start date {string} at {string} shall {string} exist")
 	public void the_with_start_date_at_shall_exist(String string, String string2, String string3, String string4) {
-		TimeSlot ts = FlexiBookController.findOfftime(Date.valueOf(string2), Time.valueOf(string3 + ":00"), string,
-				flexiBook);
+		TimeSlot ts = FlexiBookController.findOfftime(Date.valueOf(string2), Time.valueOf(string3 + ":00"), string);
 		if (!exception) {
 			assertNull(ts);
 		} else {
