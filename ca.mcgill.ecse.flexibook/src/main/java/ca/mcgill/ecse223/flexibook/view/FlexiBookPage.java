@@ -194,11 +194,18 @@ public class FlexiBookPage extends JFrame{
 	private JTextField updateBusinessPhone = new JTextField();
 	
 	//SignUp
+<<<<<<< HEAD
+=======
+	private JButton signUp;
+>>>>>>> 3b8a22b127ccbffc9057c81b73d2a52dfdd0e7c8
 	private JTextField Username = new JTextField();
 	private JTextField Password = new JTextField();
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
+<<<<<<< HEAD
 	private JButton signUpButton;
+=======
+>>>>>>> 3b8a22b127ccbffc9057c81b73d2a52dfdd0e7c8
 	
 	public FlexiBookPage() {
 
@@ -2401,12 +2408,48 @@ public class FlexiBookPage extends JFrame{
 					);
 			
 
+<<<<<<< HEAD
 			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
 			layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
 			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {usernameLabel,passwordLabel});
 			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {Username,Password, signUpButton, backToMenuButton});
 			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {Username,Password, signUpButton, backToMenuButton});
+=======
+	/**
+	 * @author artus
+	 * 
+	 */
 
+	private void singUp(ActionEvent evt) {
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+		error="";
+		success ="";
+
+		signUp = new JButton();
+		signUp.setText("Sign Up");
+		usernameLabel = new JLabel();
+		usernameLabel.setText("Username :");
+		passwordLabel = new JLabel();
+		passwordLabel.setText("Password :");
+>>>>>>> 3b8a22b127ccbffc9057c81b73d2a52dfdd0e7c8
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);			
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup()
+							.addComponent(message)
+							.addComponent(usernameLabel)
+							.addComponent(passwordLabel))
+					.addGroup(layout.createParallelGroup()
+							)
+				);
 
 			layout.setVerticalGroup(
 					layout.createSequentialGroup()
@@ -2440,6 +2483,7 @@ public class FlexiBookPage extends JFrame{
 			
 
 	}
+}
 
 
 
