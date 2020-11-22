@@ -64,6 +64,7 @@ public class FlexiBookPage extends JFrame{
 	private JButton manageAppButton;
 	private JButton viewAppCalenderButton;
 	private JButton manageAppointmentStatusButton;
+	private JButton logOutButton;
 
 	//appointment overview
 	private JTable overviewTable;
@@ -232,6 +233,8 @@ public class FlexiBookPage extends JFrame{
 		viewAppCalenderButton.setText("View Appointment Calender");
 		manageAppointmentStatusButton = new JButton();
 		manageAppointmentStatusButton.setText("Manage Appointment Status");
+		logOutButton = new JButton();
+		logOutButton.setText("Logout");
 
 
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -246,12 +249,13 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(manageServiceButton)
 						.addComponent(manageAppButton)
 						.addComponent(viewAppCalenderButton)
-						.addComponent(manageAppointmentStatusButton))
+						.addComponent(manageAppointmentStatusButton)
+						.addComponent(logOutButton))
 
 				);
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton, manageAppointmentStatusButton});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton, manageAppointmentStatusButton});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton, manageAppointmentStatusButton, logOutButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, manageAppButton, viewAppCalenderButton, manageAppointmentStatusButton, logOutButton});
 
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
@@ -260,7 +264,8 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(manageServiceButton)
 						.addComponent(manageAppButton)
 						.addComponent(viewAppCalenderButton)
-						.addComponent(manageAppointmentStatusButton))
+						.addComponent(manageAppointmentStatusButton)
+						.addComponent(logOutButton))
 				);
 
 
@@ -293,12 +298,24 @@ public class FlexiBookPage extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				managedAppointmentStatus(e);
 			}
-		});	
+		});
+		logOutButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				logOutActionPerformed(e);
+			}
+		});
 
 
 
 		pack();
 
+	}
+
+	public void logOutActionPerformed(ActionEvent evt) {
+
+		FlexiBookApplication.login.frame.setVisible(true);
+		FlexiBookApplication.mainPage.setVisible(false);
 	}
 
 

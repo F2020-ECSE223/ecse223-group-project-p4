@@ -2301,7 +2301,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	/**
 	 * @author Venkata Satyanarayana Chivatam
 	 * @param string
-	 * @param string2 
+	 * @param string2
 	 * @throws InvalidInputException
 	 */
 	@When("{string} requests the appointment calendar for the day of {string}")
