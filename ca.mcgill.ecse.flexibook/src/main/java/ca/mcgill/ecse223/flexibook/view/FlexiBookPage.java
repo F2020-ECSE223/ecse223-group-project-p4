@@ -166,7 +166,6 @@ public class FlexiBookPage extends JFrame{
 	private JTextField businessPhone = new JTextField();
 
 
-<<<<<<< HEAD
 	//addVacationSlot
 	private JTextField startVacationDate = new JTextField();
 	private JTextField startVacationTime = new JTextField();
@@ -198,8 +197,7 @@ public class FlexiBookPage extends JFrame{
 	private JLabel passwordLabel;
 	private JButton signUpButton;
 	
-=======
->>>>>>> a6c384b7d11915d4f7235fb219061ba0dd9d44d8
+
 	public FlexiBookPage() {
 
 		//if the user logged in is a customer 
@@ -1791,7 +1789,6 @@ public class FlexiBookPage extends JFrame{
 		}
 		pack();
 	}
-<<<<<<< HEAD
 	
 	/**
 	 * @author artus
@@ -1878,12 +1875,7 @@ public class FlexiBookPage extends JFrame{
 
 	}
 
-=======
 
-
-
-	}
->>>>>>> a6c384b7d11915d4f7235fb219061ba0dd9d44d8
 
 
 
