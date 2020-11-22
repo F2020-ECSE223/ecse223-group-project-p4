@@ -1652,25 +1652,26 @@ public class FlexiBookController {
 				throw new InvalidInputException("No permission to update business information");
 			}
 
-			if (name != null) {
+			if (name != null && !name.equals("")) {
 				b.setName(name);
 			}
 
-			if (address != null) {
+			if (address != null && !address.equals("")) {
 				b.setAddress(address);
 			}
 
-			if (phoneNumber != null) {
+			if (phoneNumber != null && !phoneNumber.equals("")) {
 				b.setPhoneNumber(phoneNumber);
 			}
 
-			if (email != null) {
+			if (email != null && !email.equals("")) {
 				if (!validateEmail(email)) {
 					throw new InvalidInputException("Invalid email");
 				} else {
 					b.setEmail(email);
 				}
 			}
+			
 			FlexiBookPersistence.save(flexibook);
 
 		} catch (RuntimeException e) {

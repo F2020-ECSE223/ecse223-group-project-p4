@@ -162,10 +162,10 @@ public class FlexiBookPage extends JFrame{
 
 
 	//setupBusinessInfo
-	private JTextField businessName = new JTextField();
-	private JTextField businessAddress = new JTextField();
-	private JTextField businessEmail = new JTextField();
-	private JTextField businessPhone = new JTextField();
+	private JTextField setBusinessName = new JTextField();
+	private JTextField setBusinessAddress = new JTextField();
+	private JTextField setBusinessEmail = new JTextField();
+	private JTextField setBusinessPhone = new JTextField();
 	
 
 	//addVacationSlot
@@ -184,8 +184,13 @@ public class FlexiBookPage extends JFrame{
 	private JTextField addBusinessHourDay = new JTextField();
 	private JTextField addBusinessHourStart = new JTextField();
 	private JTextField addBusinessHourEnd = new JTextField();
-
-
+	
+	//updateBusinessInfo
+	private JTextField updateBusinessName = new JTextField();
+	private JTextField updateBusinessAddress = new JTextField();
+	private JTextField updateBusinessEmail = new JTextField();
+	private JTextField updateBusinessPhone = new JTextField();
+	
 	public FlexiBookPage() {
 
 		//if the user logged in is a customer 
@@ -756,6 +761,9 @@ public class FlexiBookPage extends JFrame{
 		//TODO
 	}
 
+	private void manageOwnerAccountActionPerformed(ActionEvent evt) {
+		//TODO
+	}
 
 	private void businessInfoActionPerformed(ActionEvent evt) {
 		initBusinessInfoPage();
@@ -798,13 +806,13 @@ public class FlexiBookPage extends JFrame{
 
 		setupBusinessInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setupBusinessInfoActionPerformed(e);
+				initSetupBusinessInfoPage();
 			}
 		});
 
 		updateBusinessInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateBusinessInfoActionPerformed(e);
+				initUpdateBusinessInfoPage();
 			}
 
 		});
@@ -816,18 +824,6 @@ public class FlexiBookPage extends JFrame{
 		});
 
 		pack();
-	}
-	
-	private void manageOwnerAccountActionPerformed(ActionEvent evt) {
-		//TODO
-	}
-
-	private void setupBusinessInfoActionPerformed(ActionEvent evt) {
-		initSetupBusinessInfoPage();
-	}
-
-	private void updateBusinessInfoActionPerformed(ActionEvent evt) {
-		initUpdateBusinessInfoPage();
 	}
 
 	private void initSetupBusinessInfoPage() {
@@ -876,17 +872,17 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(businessInfoAddBusinessHourButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
-						.addComponent(businessName)
-						.addComponent(businessAddress)
-						.addComponent(businessEmail)
-						.addComponent(businessPhone)
+						.addComponent(setBusinessName)
+						.addComponent(setBusinessAddress)
+						.addComponent(setBusinessEmail)
+						.addComponent(setBusinessPhone)
 						.addComponent(businessInfoBackButton)
 						.addComponent(businessInfoSetInfoButton))
 				);
 		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoAddHolidayButton, businessInfoAddVacationButton, businessInfoSetInfoButton, businessInfoBackButton, businessInfoAddBusinessHourButton, businessName, businessAddress, businessEmail, businessPhone});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {setBusinessName, setBusinessAddress, setBusinessEmail, setBusinessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoAddHolidayButton, businessInfoAddVacationButton, businessInfoSetInfoButton, businessInfoBackButton, businessInfoAddBusinessHourButton, setBusinessName, setBusinessAddress, setBusinessEmail, setBusinessPhone});
 
 
 		layout.setVerticalGroup(
@@ -894,16 +890,16 @@ public class FlexiBookPage extends JFrame{
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessNameLabel)
-						.addComponent(businessName))
+						.addComponent(setBusinessName))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessAddressLabel)
-						.addComponent(businessAddress))
+						.addComponent(setBusinessAddress))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessEmailLabel)
-						.addComponent(businessEmail))
+						.addComponent(setBusinessEmail))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessPhoneLabel)
-						.addComponent(businessPhone))
+						.addComponent(setBusinessPhone))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessInfoAddVacationButton)
 						.addComponent(businessInfoSetInfoButton))
@@ -949,18 +945,16 @@ public class FlexiBookPage extends JFrame{
 		pack();
 	}
 
-	private void initUpdateBusinessInfoPage() {
-		//TODO
-	}
+	
 
 	private void setInfoButtonPressed(ActionEvent evt) {
 		error = null;
 		success = null;
 		try {
-			String name = businessName.getText();
-			String address = businessAddress.getText();
-			String phoneNumber = businessPhone.getText();
-			String email = businessEmail.getText();
+			String name = setBusinessName.getText();
+			String address = setBusinessAddress.getText();
+			String phoneNumber = setBusinessPhone.getText();
+			String email = setBusinessEmail.getText();
 			FlexiBookController.setupBusinessInfo(name, address, phoneNumber, email);
 			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
 		} catch (InvalidInputException e) {
@@ -982,10 +976,10 @@ public class FlexiBookPage extends JFrame{
 
 		}
 
-		businessName.setText("");
-		businessAddress.setText("");
-		businessPhone.setText("");
-		businessEmail.setText("");
+		setBusinessName.setText("");
+		setBusinessAddress.setText("");
+		setBusinessPhone.setText("");
+		setBusinessEmail.setText("");
 
 		pack();
 	}
@@ -1359,7 +1353,161 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
+	
+	private void initUpdateBusinessInfoPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
 
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel businessNameLabel = new JLabel();
+		JLabel businessAddressLabel = new JLabel();
+		JLabel businessEmailLabel = new JLabel();
+		JLabel businessPhoneLabel = new JLabel();
+
+		JButton businessInfoBackButton = new JButton();
+		JButton businessInfoUpdateInfoButton = new JButton();
+		JButton businessInfoUpdateBusinessHourButton = new JButton();
+		JButton businessInfoUpdateVacationButton = new JButton();
+		JButton businessInfoUpdateHolidayButton = new JButton();
+
+		businessNameLabel.setText("Business Name");
+		businessAddressLabel.setText("Business Address");
+		businessEmailLabel.setText("Business Email");
+		businessPhoneLabel.setText("Business Phone Number");
+		businessInfoBackButton.setText("Back");
+		businessInfoUpdateInfoButton.setText("Update Business Info");
+		businessInfoUpdateBusinessHourButton.setText("Update Business Hour");
+		businessInfoUpdateVacationButton.setText("Update Vacation slot");
+		businessInfoUpdateHolidayButton.setText("Update Holiday Slot");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(businessNameLabel)
+						.addComponent(businessAddressLabel)
+						.addComponent(businessEmailLabel)
+						.addComponent(businessPhoneLabel)
+						.addComponent(businessInfoUpdateVacationButton)
+						.addComponent(businessInfoUpdateHolidayButton)
+						.addComponent(businessInfoUpdateBusinessHourButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(updateBusinessName)
+						.addComponent(updateBusinessAddress)
+						.addComponent(updateBusinessEmail)
+						.addComponent(updateBusinessPhone)
+						.addComponent(businessInfoBackButton)
+						.addComponent(businessInfoUpdateInfoButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateBusinessName, updateBusinessAddress, updateBusinessEmail, updateBusinessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoUpdateHolidayButton, businessInfoUpdateVacationButton, businessInfoUpdateInfoButton, businessInfoBackButton, businessInfoUpdateBusinessHourButton, updateBusinessName, updateBusinessAddress, updateBusinessEmail, updateBusinessPhone});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessNameLabel)
+						.addComponent(updateBusinessName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessAddressLabel)
+						.addComponent(updateBusinessAddress))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessEmailLabel)
+						.addComponent(updateBusinessEmail))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessPhoneLabel)
+						.addComponent(updateBusinessPhone))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateVacationButton)
+						.addComponent(businessInfoUpdateInfoButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateHolidayButton)
+						.addComponent(businessInfoBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateBusinessHourButton))
+				);
+		
+
+		
+		businessInfoBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initBusinessInfoPage();
+			}
+		});
+
+		businessInfoUpdateInfoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateInfoButtonPressed(e);
+			}
+		});
+		
+		businessInfoUpdateVacationButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddVacationPage();
+			}
+		});
+		
+		businessInfoUpdateHolidayButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddHolidayPage();
+			}
+		});
+		
+		businessInfoUpdateBusinessHourButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddBusinessHourPage();
+			}
+		});
+
+		pack();
+	}
+	
+	private void updateInfoButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			String name = updateBusinessName.getText();
+			String address = updateBusinessAddress.getText();
+			String phoneNumber = updateBusinessPhone.getText();
+			String email = updateBusinessEmail.getText();
+			FlexiBookController.updateBusinessInfo(name, address, phoneNumber, email);
+			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshUpdateBusinessInfoPage();
+	}
+
+	private void refreshUpdateBusinessInfoPage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+
+		updateBusinessName.setText("");
+		updateBusinessAddress.setText("");
+		updateBusinessPhone.setText("");
+		updateBusinessEmail.setText("");
+
+		pack();
+	}
 
 	private void manageAppActionPerformed(ActionEvent evt) {
 		//initManageAppAcionPerformed();
