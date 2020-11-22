@@ -1766,8 +1766,13 @@ public class FlexiBookController {
 	 * @param end
 	 * @throws InvalidInputException
 	 */
-	public static void addBusinessHour(String dow, Time start, Time end, FlexiBook fb) throws InvalidInputException {
-
+	public static void addBusinessHour(String dow, String startTime, String endTime) throws InvalidInputException {
+		
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		
+		Time start = Time.valueOf(startTime + ":00");
+		Time end = Time.valueOf(endTime + ":00");
+		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
 		}
@@ -1785,6 +1790,8 @@ public class FlexiBookController {
 		}
 
 		fb.getBusiness().addBusinessHour(new BusinessHour(getDow(dow), start, end, fb));
+		
+		FlexiBookPersistence.save(fb);
 	}
 
 	public static ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek getDow(String s) {
@@ -1979,7 +1986,15 @@ public class FlexiBookController {
 	 * @param hol
 	 * @throws InvalidInputException
 	 */
-	public static void addHolidaySlot(Date sD, Time sT, Date eD, Time eT, FlexiBook fb) throws InvalidInputException {
+	public static void addHolidaySlot(String startDate, String startTime, String endDate, String endTime) throws InvalidInputException {
+		
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		
+		Date sD = Date.valueOf(startDate);
+		Time sT = Time.valueOf(startTime + ":00");
+		Date eD = Date.valueOf(endDate);
+		Time eT = Time.valueOf(endTime + ":00");
+		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
 		}
@@ -2004,6 +2019,8 @@ public class FlexiBookController {
 		}
 
 		fb.getBusiness().addHoliday(new TimeSlot(sD, sT, eD, eT, fb));
+		
+		FlexiBookPersistence.save(fb);
 	}
 
 	/**

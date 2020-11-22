@@ -172,6 +172,12 @@ public class FlexiBookPage extends JFrame{
 	private JTextField startVacationTime = new JTextField();
 	private JTextField endVacationDate = new JTextField();
 	private JTextField endVacationTime = new JTextField();
+	
+	//addHolidaySlot
+	private JTextField startHolidayDate = new JTextField();
+	private JTextField startHolidayTime = new JTextField();
+	private JTextField endHolidayDate = new JTextField();
+	private JTextField endHolidayTime = new JTextField();
 
 
 	public FlexiBookPage() {
@@ -910,7 +916,7 @@ public class FlexiBookPage extends JFrame{
 		
 		businessInfoAddHolidayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//addHolidayButtonPressed(e);
+				initAddHolidayPage();
 			}
 		});
 
@@ -1081,6 +1087,133 @@ public class FlexiBookPage extends JFrame{
 		startVacationTime.setText("");
 		endVacationDate.setText("");
 		endVacationTime.setText("");
+
+		pack();
+	}
+	
+	private void initAddHolidayPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel startHolidayDateLabel = new JLabel();
+		JLabel startHolidayTimeLabel = new JLabel();
+		JLabel endHolidayDateLabel = new JLabel();
+		JLabel endHolidayTimeLabel = new JLabel();
+		
+		JButton addHolidayBackButton = new JButton();
+		JButton addHolidayAddButton = new JButton();
+
+
+
+		startHolidayDateLabel.setText("Start Date");
+		startHolidayTimeLabel.setText("Start Time");
+		endHolidayDateLabel.setText("End Date");
+		endHolidayTimeLabel.setText("End Time");
+		addHolidayBackButton.setText("Back");
+		addHolidayAddButton.setText("Add Holiday Slot");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startHolidayDateLabel)
+						.addComponent(startHolidayTimeLabel)
+						.addComponent(endHolidayDateLabel)
+						.addComponent(endHolidayTimeLabel)
+						.addComponent(addHolidayBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startHolidayDate)
+						.addComponent(startHolidayTime)
+						.addComponent(endHolidayDate)
+						.addComponent(endHolidayTime)
+						.addComponent(addHolidayAddButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startHolidayDateLabel, startHolidayTimeLabel, endHolidayDateLabel, endHolidayTimeLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addHolidayBackButton, addHolidayAddButton, startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startHolidayDateLabel)
+						.addComponent(startHolidayDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startHolidayTimeLabel)
+						.addComponent(startHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endHolidayDateLabel)
+						.addComponent(endHolidayDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endHolidayTimeLabel)
+						.addComponent(endHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addHolidayBackButton)
+						.addComponent(addHolidayAddButton))
+				
+				);
+		
+
+		
+		addHolidayBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initSetupBusinessInfoPage();
+			}
+		});
+		
+		addHolidayAddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addHolidayButtonPressed(e);
+			}
+		});
+
+		pack();
+	}
+	
+	private void addHolidayButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			String startDate = startHolidayDate.getText();
+			String startTime = startHolidayTime.getText();
+			String endDate = endHolidayDate.getText();
+			String endTime = endHolidayTime.getText();
+			FlexiBookController.addHolidaySlot(startDate, startTime, endDate, endTime);
+			success = "Holiday slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at " + endTime + " added"; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshAddHolidayPage();
+
+	}
+	
+	private void refreshAddHolidayPage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+
+		startHolidayDate.setText("");
+		startHolidayTime.setText("");
+		endHolidayDate.setText("");
+		endHolidayTime.setText("");
 
 		pack();
 	}
