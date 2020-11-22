@@ -178,6 +178,11 @@ public class FlexiBookPage extends JFrame{
 	private JTextField startHolidayTime = new JTextField();
 	private JTextField endHolidayDate = new JTextField();
 	private JTextField endHolidayTime = new JTextField();
+	
+	//addBusinessHour
+	private JTextField addBusinessHourDay = new JTextField();
+	private JTextField addBusinessHourStart = new JTextField();
+	private JTextField addBusinessHourEnd = new JTextField();
 
 
 	public FlexiBookPage() {
@@ -830,7 +835,6 @@ public class FlexiBookPage extends JFrame{
 		JButton businessInfoAddVacationButton = new JButton();
 		JButton businessInfoAddHolidayButton = new JButton();
 
-
 		businessNameLabel.setText("Business Name");
 		businessAddressLabel.setText("Business Address");
 		businessEmailLabel.setText("Business Email");
@@ -855,7 +859,8 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(businessEmailLabel)
 						.addComponent(businessPhoneLabel)
 						.addComponent(businessInfoAddVacationButton)
-						.addComponent(businessInfoAddHolidayButton))
+						.addComponent(businessInfoAddHolidayButton)
+						.addComponent(businessInfoAddBusinessHourButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(businessName)
@@ -868,7 +873,7 @@ public class FlexiBookPage extends JFrame{
 		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoAddHolidayButton, businessInfoAddVacationButton, businessInfoSetInfoButton, businessInfoBackButton, businessName, businessAddress, businessEmail, businessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoAddHolidayButton, businessInfoAddVacationButton, businessInfoSetInfoButton, businessInfoBackButton, businessInfoAddBusinessHourButton, businessName, businessAddress, businessEmail, businessPhone});
 
 
 		layout.setVerticalGroup(
@@ -892,6 +897,8 @@ public class FlexiBookPage extends JFrame{
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessInfoAddHolidayButton)
 						.addComponent(businessInfoBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoAddBusinessHourButton))
 				);
 		
 
@@ -917,6 +924,12 @@ public class FlexiBookPage extends JFrame{
 		businessInfoAddHolidayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initAddHolidayPage();
+			}
+		});
+		
+		businessInfoAddBusinessHourButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initAddBusinessHourPage();
 			}
 		});
 
@@ -1217,7 +1230,122 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
+	
+	private void initAddBusinessHourPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
 
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel addBusinessHourDayLabel = new JLabel();
+		JLabel addBusinessHourStartLabel = new JLabel();
+		JLabel addBusinessHourEndLabel = new JLabel();
+		
+		JButton addBusinessHourBackButton = new JButton();
+		JButton addBusinessHourAddButton = new JButton();
+
+		addBusinessHourDayLabel.setText("Day");
+		addBusinessHourStartLabel.setText("Start Time");
+		addBusinessHourEndLabel.setText("End Time");
+		addBusinessHourBackButton.setText("Back");
+		addBusinessHourAddButton.setText("Add Business Hour");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(addBusinessHourDayLabel)
+						.addComponent(addBusinessHourStartLabel)
+						.addComponent(addBusinessHourEndLabel)
+						.addComponent(addBusinessHourBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(addBusinessHourDay)
+						.addComponent(addBusinessHourStart)
+						.addComponent(addBusinessHourEnd)
+						.addComponent(addBusinessHourAddButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addBusinessHourDayLabel, addBusinessHourStartLabel, addBusinessHourEndLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addBusinessHourBackButton, addBusinessHourAddButton, addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourDayLabel)
+						.addComponent(addBusinessHourDay))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourStartLabel)
+						.addComponent(addBusinessHourStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourEndLabel)
+						.addComponent(addBusinessHourEnd))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourBackButton)
+						.addComponent(addBusinessHourAddButton))
+				
+				);
+		
+
+		
+		addBusinessHourBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initSetupBusinessInfoPage();
+			}
+		});
+		
+		addBusinessHourAddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addBusinessHourButtonPressed(e);
+			}
+		});
+
+		pack();
+	}
+	
+	private void addBusinessHourButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			String day = addBusinessHourDay.getText();
+			String startTime = addBusinessHourStart.getText();
+			String endTime = addBusinessHourEnd.getText();
+			FlexiBookController.addBusinessHour(day, startTime, endTime);
+			success = "Business Hour on " + day + " from " + startTime + " to " + endTime + " added"; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshAddBusinessHourPage();
+
+	}
+	
+	private void refreshAddBusinessHourPage() {
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+
+		addBusinessHourDay.setText("");
+		addBusinessHourStart.setText("");
+		addBusinessHourEnd.setText("");
+
+		pack();
+	}
 
 
 	private void manageAppActionPerformed(ActionEvent evt) {
