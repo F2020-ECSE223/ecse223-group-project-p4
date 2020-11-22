@@ -89,19 +89,19 @@ public class FlexiBookLogin {
         PasswordLogin = new JPasswordField();
         PasswordLogin.setColumns(10);
 
-        JLabel loginUsername = new JLabel("Username: ");
+        JLabel loginUsername = new JLabel("Username : ");
         loginUsername.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 
-        JLabel loginPassword = new JLabel("Password: ");
+        JLabel loginPassword = new JLabel("Password : ");
         loginPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 
-        JLabel signupPassword = new JLabel("Password: ");
+        JLabel signupPassword = new JLabel("Password : ");
         signupPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 
         JLabel lblLogin = new JLabel("Login");
         lblLogin.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 
-        JLabel lblSignup = new JLabel("Signup");
+        JLabel lblSignup = new JLabel("Sign Up");
         lblSignup.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 
         JLabel lblDesignedByTeam = new JLabel("Designed by Team P04");
@@ -112,7 +112,7 @@ public class FlexiBookLogin {
         UsernameSignup = new JTextField();
         UsernameSignup.setColumns(10);
 
-        JLabel Username = new JLabel("Username:");
+        JLabel Username = new JLabel("Username :");
         Username.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 
 
@@ -121,7 +121,7 @@ public class FlexiBookLogin {
 
         JButton Login = new JButton("Login");
 
-        JButton Signup = new JButton("Signup");
+        JButton Signup = new JButton("Sign Up");
 
         Login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -158,7 +158,7 @@ public class FlexiBookLogin {
                                                                         .addGroup(groupLayout.createSequentialGroup()
                                                                                 .addComponent(loginUsername)
                                                                                 .addGap(18)
-                                                                                .addComponent(UsernameLogin, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE))
+                                                                                .addComponent(UsernameLogin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                                         .addGroup(groupLayout.createSequentialGroup()
                                                                                 .addComponent(loginPassword)
                                                                                 .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -167,8 +167,8 @@ public class FlexiBookLogin {
                                                                 .addPreferredGap(ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
                                                                 .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
                                                                         .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-                                                                                .addComponent(signupPassword, Alignment.LEADING))
-                                                                        .addComponent(Username, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)))
+                                                                                .addComponent(signupPassword, Alignment.LEADING)
+                                                                                .addComponent(Username, Alignment.LEADING))))
                                                         .addGroup(groupLayout.createSequentialGroup()
                                                                 .addGap(276)
                                                                 .addComponent(lblDesignedByTeam)))
@@ -242,7 +242,8 @@ public class FlexiBookLogin {
             String username = UsernameSignup.getText();
             String Password = PasswordSignup.getText();
             try {
-                FlexiBookController.signUpCustomer(username, Password);
+            	if (username.equals("owner") && Password.contentEquals("owner")) error = "owner cannot sign up";
+            	else FlexiBookController.signUpCustomer(username, Password);
             } catch (InvalidInputException e) {
                 error = e.getMessage();
             }
