@@ -61,62 +61,6 @@ public class FlexiBookLogin {
      * Initialize the contents of the frame.
      */
     private void initialize() {
-       /* //font
-        Font f = new Font("Serif", Font.ITALIC, 30);
-        //header
-        JPanel heading;
-        heading = new JPanel();
-        heading.setBackground(Color.BLACK);
-
-        heading.setBounds(0,0,900,100);
-        JLabel welcomeMessage = new JLabel(("Welcome to FlexiBook"));
-        welcomeMessage.setForeground(Color.white);
-        heading.add(welcomeMessage);
-        welcomeMessage.setFont(f);
-
-        //login
-        JPanel login = new JPanel();
-        login.setLayout(null);
-        login.setSize(400,350);
-        login.setBackground(new Color(0,0,0,60));
-        login.setBounds(250,175,400,350);
-        //username field
-        JTextField username = new JTextField("Enter Username");
-        username.setBounds(50,50,300,50);
-        login.add(username);
-        //password field
-        JPasswordField password = new JPasswordField ("Enter password");
-        password.setBounds(50,150,300,50);
-        login.add(password);
-
-        //buttons
-        JButton signUp = new JButton("Sign Up");
-        signUp.setBounds(50,250,100,50);
-        signUp.setForeground(Color.white);
-        signUp.setBackground((Color.BLACK));
-        login.add(signUp);
-
-        JButton logIn = new JButton("Login");
-        logIn.setBounds(250,250,100,50);
-        logIn.setForeground(Color.WHITE);
-        logIn.setBackground(Color.BLACK);
-        login.add(logIn);
-
-        //frame
-        frame = new JFrame();
-        frame.setSize(900,600);
-        frame.setLayout(null);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        //background
-        frame.getContentPane().setBackground(Color.WHITE);
-        JLabel welcome =  new JLabel("", JLabel.CENTER);
-        welcome.add(heading);
-        welcome.setBounds(0,0,900,600);
-        frame.add(welcome);
-        welcome.add(login);
-
-        frame.setVisible(true);*/
 
 
        frame = new JFrame();
@@ -329,20 +273,6 @@ public class FlexiBookLogin {
             } catch (InvalidInputException e) {
                 error = e.getMessage();
             }
-           /* Block223Controller.logout();
-            try {
-                Block223Controller.login(username, password);
-                if (Block223Application.getCurrentUserRole() instanceof Player) {
-                    Block223Application.gamePage.frame.setVisible(true);
-                }
-                if (Block223Application.getCurrentUserRole() instanceof Admin){
-                    Block223Application.adminMainPage.refreshData();
-                    Block223Application.adminMainPage.frame.setVisible(true);
-                }
-                Block223Application.loginPage.frame.setVisible(false);
-            } catch (InvalidInputException e) {
-                error = e.getMessage();
-            }*/
         }
         refreshData();
 

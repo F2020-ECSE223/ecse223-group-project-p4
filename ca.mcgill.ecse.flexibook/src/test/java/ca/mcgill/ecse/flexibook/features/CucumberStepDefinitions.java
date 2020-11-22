@@ -2244,7 +2244,12 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			error = e.getMessage();
 		}
 	}
-
+	/**
+	 * @author Venkata Satyanarayana Chivatam
+	 * @param string
+	 * @param string2
+	 * @throws InvalidInputException
+	 */
 	@When("{string} requests the appointment calendar for the week starting on {string}")
 	public void requests_the_appointment_calendar_for_the_week_starting_on(String string, String string2) {
 		try{
@@ -2295,7 +2300,12 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	}
 
 
-
+	/**
+	 * @author Venkata Satyanarayana Chivatam
+	 * @param string
+	 * @param string2 
+	 * @throws InvalidInputException
+	 */
 	@When("{string} requests the appointment calendar for the day of {string}")
 	public void requests_the_appointment_calendar_for_the_day_of(String string, String string2) {
 		try{
