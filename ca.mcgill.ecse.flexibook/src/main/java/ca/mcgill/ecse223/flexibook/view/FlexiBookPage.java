@@ -166,6 +166,38 @@ public class FlexiBookPage extends JFrame{
 	private JTextField businessPhone = new JTextField();
 
 
+	//addVacationSlot
+	private JTextField startVacationDate = new JTextField();
+	private JTextField startVacationTime = new JTextField();
+	private JTextField endVacationDate = new JTextField();
+	private JTextField endVacationTime = new JTextField();
+	
+	//addHolidaySlot
+	private JTextField startHolidayDate = new JTextField();
+	private JTextField startHolidayTime = new JTextField();
+	private JTextField endHolidayDate = new JTextField();
+	private JTextField endHolidayTime = new JTextField();
+	
+	//addBusinessHour
+	private JTextField addBusinessHourDay = new JTextField();
+	private JTextField addBusinessHourStart = new JTextField();
+	private JTextField addBusinessHourEnd = new JTextField();
+	
+	//updateBusinessInfo
+	private JTextField updateBusinessName = new JTextField();
+	private JTextField updateBusinessAddress = new JTextField();
+	private JTextField updateBusinessEmail = new JTextField();
+	private JTextField updateBusinessPhone = new JTextField();
+	
+	//SignUp
+
+	private JTextField Username = new JTextField();
+	private JTextField Password = new JTextField();
+	private JLabel usernameLabel;
+	private JLabel passwordLabel;
+	private JButton signUpButton;
+	
+
 	public FlexiBookPage() {
 
 		//if the user logged in is a customer 
@@ -1757,10 +1789,93 @@ public class FlexiBookPage extends JFrame{
 		}
 		pack();
 	}
+	
+	/**
+	 * @author artus
+	 * 
+	 */
+
+		private void singUpAction(ActionEvent evt) {
+			
+			
+			getContentPane().removeAll(); 
+			getContentPane().repaint();
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			//error="";
+			//success ="";
+			
+
+			usernameLabel = new JLabel();
+			usernameLabel.setText("Username :");
+			passwordLabel = new JLabel();
+			passwordLabel.setText("Password :");
+			signUpButton = new JButton();
+			signUpButton.setText("Sign Up");
+			backToMenuButton = new JButton();
+			backToMenuButton.setText("Back");
+			
+			GroupLayout layout = new GroupLayout(getContentPane());
+			getContentPane().setLayout(layout);
+			layout.setAutoCreateGaps(true);
+			layout.setAutoCreateContainerGaps(true);			
+			
+			layout.setHorizontalGroup(
+					layout.createSequentialGroup()
+						.addGroup(layout.createParallelGroup()
+								.addComponent(message)
+								.addComponent(usernameLabel)
+								.addComponent(passwordLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(message)
+								.addComponent(Username)
+								.addComponent(Password)
+								.addComponent(signUpButton)
+								.addComponent(backToMenuButton))
+					);
+			
+
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
+			layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {usernameLabel,passwordLabel});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {Username,Password, signUpButton, backToMenuButton});
+			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {Username,Password, signUpButton, backToMenuButton});
 
 
+
+			layout.setVerticalGroup(
+					layout.createSequentialGroup()
+					.addComponent(message)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(usernameLabel)
+							.addComponent(Username))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(passwordLabel)
+							.addComponent(Password))
+					.addComponent(signUpButton)
+					.addComponent(backToMenuButton)
+			);		
+			
+			backToMenuButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					message.setText("");
+					initOwnerMenu();
+				}
+			});
+			
+			signUpButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// TODO
+				}
+			});
+			
+			pack();
+			
+		}
+			
 
 	}
+
+
 
 
 
