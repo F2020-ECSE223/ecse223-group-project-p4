@@ -66,6 +66,8 @@ public class FlexiBookPage extends JFrame{
 	private JButton viewAppCalenderButton;
 	private JButton manageAppointmentStatusButton;
 	private JButton manageOwnerAccountButton;
+	private JButton signUp;
+
 
 	//appointment overview
 	private JTable overviewTable;
@@ -191,6 +193,13 @@ public class FlexiBookPage extends JFrame{
 	private JTextField updateBusinessEmail = new JTextField();
 	private JTextField updateBusinessPhone = new JTextField();
 	
+	//SignUp
+	private JTextField Username = new JTextField();
+	private JTextField Password = new JTextField();
+	private JLabel usernameLabel;
+	private JLabel passwordLabel;
+	private JButton signUpButton;
+	
 	public FlexiBookPage() {
 
 		//if the user logged in is a customer 
@@ -226,6 +235,8 @@ public class FlexiBookPage extends JFrame{
 		manageAppointmentStatusButton.setText("Manage Appointment Status");
 		manageOwnerAccountButton = new JButton();
 		manageOwnerAccountButton.setText("Manage Account");
+		signUp = new JButton();
+		signUp.setText("Sign Up");
 
 
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -241,12 +252,13 @@ public class FlexiBookPage extends JFrame{
 						//.addComponent(manageAppButton)
 						.addComponent(viewAppCalenderButton)
 						.addComponent(manageOwnerAccountButton)
-						.addComponent(manageAppointmentStatusButton))
+						.addComponent(manageAppointmentStatusButton)
+						.addComponent(signUp))
 
 				);
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageOwnerAccountButton, manageAppointmentStatusButton});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageOwnerAccountButton, manageAppointmentStatusButton});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageOwnerAccountButton, manageAppointmentStatusButton, signUp});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageOwnerAccountButton, manageAppointmentStatusButton, signUp});
 
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
@@ -256,7 +268,8 @@ public class FlexiBookPage extends JFrame{
 						//.addComponent(manageAppButton)
 						.addComponent(viewAppCalenderButton)
 						.addComponent(manageOwnerAccountButton)
-						.addComponent(manageAppointmentStatusButton))
+						.addComponent(manageAppointmentStatusButton)
+						.addComponent(signUp))
 				);
 
 
@@ -297,6 +310,12 @@ public class FlexiBookPage extends JFrame{
 		manageOwnerAccountButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				manageOwnerAccountActionPerformed(e);
+			}
+		});
+		
+		signUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				singUpAction(e);
 			}
 		});
 
@@ -2337,8 +2356,88 @@ public class FlexiBookPage extends JFrame{
 		}
 		pack();
 	}
+	
+	/**
+	 * @author artus
+	 * 
+	 */
+
+		private void singUpAction(ActionEvent evt) {
+			
+			
+			getContentPane().removeAll(); 
+			getContentPane().repaint();
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			//error="";
+			//success ="";
+			
+
+			usernameLabel = new JLabel();
+			usernameLabel.setText("Username :");
+			passwordLabel = new JLabel();
+			passwordLabel.setText("Password :");
+			signUpButton = new JButton();
+			signUpButton.setText("Sign Up");
+			backToMenuButton = new JButton();
+			backToMenuButton.setText("Back");
+			
+			GroupLayout layout = new GroupLayout(getContentPane());
+			getContentPane().setLayout(layout);
+			layout.setAutoCreateGaps(true);
+			layout.setAutoCreateContainerGaps(true);			
+			
+			layout.setHorizontalGroup(
+					layout.createSequentialGroup()
+						.addGroup(layout.createParallelGroup()
+								.addComponent(message)
+								.addComponent(usernameLabel)
+								.addComponent(passwordLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(message)
+								.addComponent(Username)
+								.addComponent(Password)
+								.addComponent(signUpButton)
+								.addComponent(backToMenuButton))
+					);
+			
+
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
+			layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {usernameLabel,passwordLabel});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {Username,Password, signUpButton, backToMenuButton});
+			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {Username,Password, signUpButton, backToMenuButton});
 
 
+			layout.setVerticalGroup(
+					layout.createSequentialGroup()
+					.addComponent(message)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(usernameLabel)
+							.addComponent(Username))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(passwordLabel)
+							.addComponent(Password))
+					.addComponent(signUpButton)
+					.addComponent(backToMenuButton)
+			);		
+			
+			backToMenuButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					message.setText("");
+					initOwnerMenu();
+				}
+			});
+			
+			signUpButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// TODO
+				}
+			});
+			
+			pack();
+			
+		}
+			
 
 	}
 
