@@ -2373,7 +2373,7 @@ public class FlexiBookPage extends JFrame{
 			
 
 			usernameLabel = new JLabel();
-			usernameLabel.setText("New Username :");
+			usernameLabel.setText("Owner Username :");
 			passwordLabel = new JLabel();
 			passwordLabel.setText("New Password :");
 			updateButton = new JButton();
@@ -2431,7 +2431,7 @@ public class FlexiBookPage extends JFrame{
 			
 			updateButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// TODO
+					
 				}
 			});
 			
@@ -2439,6 +2439,9 @@ public class FlexiBookPage extends JFrame{
 			
 		}
 			
+		public void updateOwnerAccountMethod(ActionEvent act) {
+			
+		}
 
 	}
 
