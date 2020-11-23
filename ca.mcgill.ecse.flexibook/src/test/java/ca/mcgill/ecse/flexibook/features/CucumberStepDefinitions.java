@@ -82,7 +82,6 @@ public class CucumberStepDefinitions {
 	public void a_flexibook_system_exists() {
 
 		FlexiBookApplication.getFlexiBook().delete();
-
 		flexiBook = FlexiBookApplication.getFlexiBook();
 		appointmentCntr = 0;
 		prevAppointmentCntr = 0;
@@ -1809,10 +1808,10 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 
 	@When("the user tries to log in with username {string} and password {string}")
 	public void the_user_tries_to_log_in_with_username_and_password(String string, String string2) {
-		numberOfAccounts =flexiBook.getCustomers().size();
+		numberOfAccounts = flexiBook.getCustomers().size();
 		try {
 			FlexiBookController.logIn(string, string2);
-			FlexiBookPersistence.save(flexiBook);
+			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			error += e.getMessage();
 		}
