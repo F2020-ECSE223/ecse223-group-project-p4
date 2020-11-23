@@ -1,36 +1,50 @@
 package ca.mcgill.ecse223.flexibook.view;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Group;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-
+import javax.swing.table.TableCellRenderer;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
+import ca.mcgill.ecse.flexibook.model.FlexiBook;
+import ca.mcgill.ecse.flexibook.model.Service;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
 import ca.mcgill.ecse223.flexibook.controller.TOService;
+import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 
 public class FlexiBookPage extends JFrame{
 
@@ -1860,7 +1874,6 @@ public class FlexiBookPage extends JFrame{
 			
 
 			usernameLabel = new JLabel();
-			usernameLabel.setText("Owner Username :");
 			usernameLabel.setText("Username :");
 			passwordLabel = new JLabel();
 			passwordLabel.setText("Password :");
@@ -1919,7 +1932,7 @@ public class FlexiBookPage extends JFrame{
 			
 			signUpButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					// TODO
 				}
 			});
 			
@@ -1927,9 +1940,6 @@ public class FlexiBookPage extends JFrame{
 			
 		}
 			
-		public void updateOwnerAccountMethod(ActionEvent act) {
-			
-		}
 
 	}
 
