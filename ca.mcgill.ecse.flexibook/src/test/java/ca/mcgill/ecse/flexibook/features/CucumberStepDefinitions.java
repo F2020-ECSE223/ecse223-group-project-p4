@@ -1471,13 +1471,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		exception = false;
 		try {
 			if (string.equals("vacation")) {
-				FlexiBookController.updateVacation(Date.valueOf(string2), Time.valueOf(string3 + ":00"),
-						Date.valueOf(string4), Time.valueOf(string5 + ":00"), Date.valueOf(string6),
-						Time.valueOf(string7 + ":00"), flexiBook);
+				FlexiBookController.updateVacation(string2, string3, string4, string5, string6, string7);
 			} else if (string.equals("holiday")) {
-				FlexiBookController.updateHoliday(Date.valueOf(string2), Time.valueOf(string3 + ":00"),
-						Date.valueOf(string4), Time.valueOf(string5 + ":00"), Date.valueOf(string6),
-						Time.valueOf(string7 + ":00"), flexiBook);
+				FlexiBookController.updateHoliday(string2, string3, string4, string5, string6, string7);
 			} else {
 				throw new InvalidInputException("Invalid type");
 			}
@@ -1519,11 +1515,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		exception = false;
 		try {
 			if (string.equals("vacation")) {
-				FlexiBookController.updateVacation(Date.valueOf(string2), Time.valueOf(string3 + ":00"), null, null,
-						null, null, flexiBook);
+				FlexiBookController.updateVacation(string2, string3, null, null, null, null);
 			} else if (string.equals("holiday")) {
-				FlexiBookController.updateHoliday(Date.valueOf(string2), Time.valueOf(string3 + ":00"), null, null,
-						null, null, flexiBook);
+				FlexiBookController.updateHoliday(string2, string3, null, null, null, null);
 			} else {
 				throw new InvalidInputException("Invalid type");
 			}
