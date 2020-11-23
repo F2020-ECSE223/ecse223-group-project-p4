@@ -57,11 +57,13 @@ public class FlexiBookApplication {
 
 	public static User setCurrentUser(User user) {
 		currentUser = user;
-		if(user.getUsername().equals("owner")) {
-			userType = "owner";
-		}
-		else {
-			userType = "customer";
+		if(user != null) {
+			if(user.getUsername().equals("owner")) {
+				userType = "owner";
+			}
+			else {
+				userType = "customer";
+			}
 		}
 		return currentUser;
 	}
