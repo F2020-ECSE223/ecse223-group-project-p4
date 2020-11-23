@@ -2274,20 +2274,27 @@ public class FlexiBookController {
 		for (Customer cust : flexiBook.getCustomers()) {
 			if (username.equals(cust.getUsername())) {
 				flag = true;
-
 				if (User.getWithUsername(username).getPassword().equals(password)) {
 					var = true;
 				}
 			}
 		}
+		
+		
+		
 		if (username.equals("owner") && password.equals("owner")) {
-			createUser(username, password, flexiBook);
-			return;
+			if(flexiBook.getOwner() == null) {	//first time
+				createUser(username, password, flexiBook);
+				return;
+			}
+			else{	//not first time
+				FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+			}
+			
 		}
+		
 		if (!flag) {
-
 			FlexiBookApplication.setCurrentUser(null);
-
 			throw new InvalidInputException("Username/password not found");
 		}
 		if (!var) {
@@ -2295,7 +2302,6 @@ public class FlexiBookController {
 			throw new InvalidInputException("Username/password not found");
 
 		}
-
 
 		FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
 		FlexiBookPersistence.save(flexiBook);
@@ -2505,14 +2511,17 @@ public class FlexiBookController {
 	 * @param usernameO
 	 *
 	 */
-	private static void createUser(String usernameO, String passwordO, FlexiBook flexiBook) {
-//		        FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-
-		Owner owner = new Owner(usernameO, passwordO, flexiBook);
-
-		FlexiBookApplication.setCurrentUser(owner);
-//		            User.getWithUsername(usernameO).setUsername(usernameO);
-//		            User.getWithUsername(usernameO).setPassword(passwordO);
+	private static void createUser(String username, String password, FlexiBook flexiBook) {
+		
+		if(username.equals("owner")) {
+			Owner owner = new Owner(username, password, flexiBook);
+			FlexiBookApplication.setCurrentUser(owner);
+		}
+		else {
+			Customer newCustomer = new Customer(username, password, flexiBook);
+			FlexiBookApplication.setCurrentUser(newCustomer);
+		}
+		
 
 	}
 
@@ -2556,17 +2565,15 @@ public class FlexiBookController {
 				throw new InvalidInputException("The user name cannot be empty");
 			} else if (Pword.equals("") || Pword == null) {
 				throw new InvalidInputException("The password cannot be empty");
-			} else if (findUserByName("owner") != null
-					&& FlexiBookApplication.getCurrentUser() == findUserByName("owner")) {
-				throw new InvalidInputException(
-						"You must log out of the owner account before creating a customer account");
+			} else if (findUserByName("owner") != null && FlexiBookApplication.getCurrentUser() == findUserByName("owner")) {
+				throw new InvalidInputException("You must log out of the owner account before creating a customer account");
 			}
-
 			else if (findUserByName(Uname) != null)
 				throw new InvalidInputException("The username already exists");
-
-			else
+			else {
 				flexibook.addCustomer(Uname, Pword);
+				FlexiBookApplication.setCurrentUser(User.getWithUsername(Uname));
+			}
 		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}

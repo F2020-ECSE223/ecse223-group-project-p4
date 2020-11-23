@@ -1616,9 +1616,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		List<Customer> customerList = flexiBook.getCustomers();
 		Customer customer = null;
 		boolean tf = false;
-		if (string.equals("owner")) {
-			assertEquals(Uname, string);
-			assertEquals(Pword, string2);
+		if (FlexiBookApplication.getCurrentUser() instanceof Owner) {
+			assertEquals(string, Uname);
+			assertEquals(string2, Pword);
 			tf = true;
 		} else {
 			for (int i = 0; i < customerList.size(); i++) {
