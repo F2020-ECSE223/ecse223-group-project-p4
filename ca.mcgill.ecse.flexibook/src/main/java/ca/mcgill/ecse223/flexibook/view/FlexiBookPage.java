@@ -420,19 +420,19 @@ public class FlexiBookPage extends JFrame{
             
             try {
                 FlexiBookController.logIn(username, password);
+                if(FlexiBookApplication.getCurrentUserType().equals("owner")) {
+        			initOwnerMenu();
+        		}
+        		else if(FlexiBookApplication.getCurrentUserType().equals("customer")) {
+        			initCustomerMenu();
+        		}
 
             } catch (InvalidInputException e) {
                 error = e.getMessage();
             }
         }
-        refreshLoginData();
         
-        if(FlexiBookApplication.getCurrentUserType().equals("owner")) {
-			initOwnerMenu();
-		}
-		else if(FlexiBookApplication.getCurrentUserType().equals("customer")) {
-			initCustomerMenu();
-		}
+        refreshLoginData();
 
     }
 	

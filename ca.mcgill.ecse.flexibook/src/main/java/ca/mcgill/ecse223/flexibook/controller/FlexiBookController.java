@@ -2271,40 +2271,53 @@ public class FlexiBookController {
 
 		boolean flag = false;
 		boolean var = false;
-		for (Customer cust : flexiBook.getCustomers()) {
-			if (username.equals(cust.getUsername())) {
-				flag = true;
-				if (User.getWithUsername(username).getPassword().equals(password)) {
-					var = true;
+		
+		try {
+			
+			for (Customer cust : flexiBook.getCustomers()) {
+				if (username.equals(cust.getUsername())) {
+					flag = true;
+					if (User.getWithUsername(username).getPassword().equals(password)) {
+						var = true;
+					}
+					else {
+						FlexiBookApplication.setCurrentUser(null);
+						throw new InvalidInputException("Username/password not found");
+					}
 				}
 			}
-		}
-		
-		
-		
-		if (username.equals("owner") && password.equals("owner")) {
-			if(flexiBook.getOwner() == null) {	//first time
-				createUser(username, password, flexiBook);
-				return;
-			}
-			else{	//not first time
-				FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+			
+			
+			
+			if (username.equals("owner") && password.equals("owner")) {
+				if(flexiBook.getOwner() == null) {	//first time
+					createUser(username, password, flexiBook);
+					return;
+				}
+				else{	//not first time
+					FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+				}
+				
 			}
 			
+			if (!flag) {
+				FlexiBookApplication.setCurrentUser(null);
+				throw new InvalidInputException("Username/password not found");
+			}
+			if (!var) {
+				FlexiBookApplication.setCurrentUser(null);
+				throw new InvalidInputException("Username/password not found");
+
+			}
+
+			FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+			FlexiBookPersistence.save(flexiBook);
+			
+		} catch(RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
 		}
 		
-		if (!flag) {
-			FlexiBookApplication.setCurrentUser(null);
-			throw new InvalidInputException("Username/password not found");
-		}
-		if (!var) {
-			FlexiBookApplication.setCurrentUser(null);
-			throw new InvalidInputException("Username/password not found");
-
-		}
-
-		FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
-		FlexiBookPersistence.save(flexiBook);
+		
 
 	}
 

@@ -1735,7 +1735,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 */
 	@Then("an error message {string} shall be raised")
 	public void anErrorMessageShallBeRaised2(String string) {
-		assertTrue(error.contains(string));
+		assertTrue(error.equals(string));
 	}
 
 	/**
@@ -1828,7 +1828,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 
 	@Then("the user should not be logged in")
 	public void the_user_should_not_be_logged_in() {
-		assertEquals(FlexiBookApplication.getCurrentUser(), null);
+		assertEquals(null, FlexiBookApplication.getCurrentUser());
 	}
 
 
