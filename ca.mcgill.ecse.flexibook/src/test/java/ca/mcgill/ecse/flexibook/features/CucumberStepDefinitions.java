@@ -236,7 +236,7 @@ public class CucumberStepDefinitions {
 			flexiBook.getBusiness().addBusinessHour(businessHour);
 
 		}
-		//FlexiBookPersistence.save(flexiBook);
+//		FlexiBookPersistence.save(flexiBook);
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class CucumberStepDefinitions {
 					Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
 			flexiBook.getBusiness().addHoliday(holiday);
 		}
-		//FlexiBookPersistence.save(flexiBook);
+//		FlexiBookPersistence.save(flexiBook);
 	}
 
 	
@@ -1616,9 +1616,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		List<Customer> customerList = flexiBook.getCustomers();
 		Customer customer = null;
 		boolean tf = false;
-		if (string.equals("owner")) {
-			assertEquals(Uname, string);
-			assertEquals(Pword, string2);
+		if (FlexiBookApplication.getCurrentUser() instanceof Owner) {
+			assertEquals(string, Uname);
+			assertEquals(string2, Pword);
 			tf = true;
 		} else {
 			for (int i = 0; i < customerList.size(); i++) {
@@ -2314,6 +2314,62 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		}
 	}
 
+
+	/**
+	 * @author snehas
+	 * @param dataTable
+	 */
+	@Given("the business has the following opening hours:")
+	public void theBusinessHasTheFollowingOpeningHours(io.cucumber.datatable.DataTable dataTable) {
+		BusinessHour businessHour = null;
+		String Day;
+
+		List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+		for (Map<String, String> columns : rows) {
+			Day = columns.get("day");
+			switch (Day) {
+
+			case "Monday":
+				businessHour = new BusinessHour(DayOfWeek.Monday, Time.valueOf(columns.get("startTime") + ":00"),
+						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+			case "Tuesday":
+				businessHour = new BusinessHour(DayOfWeek.Tuesday, Time.valueOf(columns.get("startTime") + ":00"),
+						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+			case "Wednesday":
+				businessHour = new BusinessHour(DayOfWeek.Wednesday, Time.valueOf(columns.get("startTime") + ":00"),
+						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+			case "Thursday":
+				businessHour = new BusinessHour(DayOfWeek.Thursday, Time.valueOf(columns.get("startTime") + ":00"),
+						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+			case "Friday":
+				businessHour = new BusinessHour(DayOfWeek.Friday, Time.valueOf(columns.get("startTime") + ":00"),
+						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+
+			}
+
+			flexiBook.getBusiness().addBusinessHour(businessHour);
+
+		}
+
+	}
+
+	
+	/**
+	 * @author snehas
+	 * @param dataTable
+	 */
+		@Given("the business has the following holidays:")
+	public void theBusinessHasTheFollowingHolidays(io.cucumber.datatable.DataTable dataTable) {
+			TimeSlot holiday;
+
+			List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+			for (Map<String, String> columns : rows) {
+				holiday = new TimeSlot(Date.valueOf(columns.get("startDate")),
+						Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
+						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				flexiBook.getBusiness().addHoliday(holiday);
+			}
+	}
 
 
 	@After
