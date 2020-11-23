@@ -2117,8 +2117,24 @@ public class FlexiBookController {
 		fb.getBusiness().addBusinessHour(new BusinessHour(newDow, newStart, newEnd, fb));
 	}
 
-	public static void updateVacation(Date sD, Time sT, Date new_sD, Time new_sT, Date new_eD, Time new_eT,
-			FlexiBook fb) throws InvalidInputException {
+	public static void updateVacation(String startDate, String startTime, String new_startDate, String new_startTime, String new_endDate, String new_endTime) throws InvalidInputException {
+		
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		
+		Date sD = Date.valueOf(startDate);
+		Time sT = Time.valueOf(startTime + ":00");
+		Date new_sD = null;
+		Time new_sT = null;
+		Date new_eD = null;
+		Time new_eT = null;
+		if (new_startDate != null && new_startTime != null && new_endDate != null && new_endTime != null) {
+			new_sD = Date.valueOf(new_startDate);
+			new_sT = Time.valueOf(new_startTime + ":00");
+			new_eD = Date.valueOf(new_endDate);
+			new_eT = Time.valueOf(new_endTime + ":00");
+		}
+		
+		
 		TimeSlot temp = findOfftime(sD, sT, "vacation", fb);
 
 		if (!checkBusinessOwner()) {
@@ -2160,11 +2176,28 @@ public class FlexiBookController {
 		}
 
 		fb.getBusiness().addVacation(new TimeSlot(new_sD, new_sT, new_eD, new_eT, fb));
+		
+		FlexiBookPersistence.save(fb);
 
 	}
 
-	public static void updateHoliday(Date sD, Time sT, Date new_sD, Time new_sT, Date new_eD, Time new_eT, FlexiBook fb)
-			throws InvalidInputException {
+	public static void updateHoliday(String startDate, String startTime, String new_startDate, String new_startTime, String new_endDate, String new_endTime) throws InvalidInputException {
+		
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		
+		Date sD = Date.valueOf(startDate);
+		Time sT = Time.valueOf(startTime + ":00");
+		Date new_sD = null;
+		Time new_sT = null;
+		Date new_eD = null;
+		Time new_eT = null;
+		if (new_startDate != null && new_startTime != null && new_endDate != null && new_endTime != null) {
+			new_sD = Date.valueOf(new_startDate);
+			new_sT = Time.valueOf(new_startTime + ":00");
+			new_eD = Date.valueOf(new_endDate);
+			new_eT = Time.valueOf(new_endTime + ":00");
+		}
+		
 		TimeSlot temp = findOfftime(sD, sT, "holiday", fb);
 
 		if (!checkBusinessOwner()) {
@@ -2206,6 +2239,8 @@ public class FlexiBookController {
 		}
 
 		fb.getBusiness().addHoliday(new TimeSlot(new_sD, new_sT, new_eD, new_eT, fb));
+		
+		FlexiBookPersistence.save(fb);
 
 	}
 
@@ -2271,40 +2306,53 @@ public class FlexiBookController {
 
 		boolean flag = false;
 		boolean var = false;
-		for (Customer cust : flexiBook.getCustomers()) {
-			if (username.equals(cust.getUsername())) {
-				flag = true;
-				if (User.getWithUsername(username).getPassword().equals(password)) {
-					var = true;
+		
+		try {
+			
+			for (Customer cust : flexiBook.getCustomers()) {
+				if (username.equals(cust.getUsername())) {
+					flag = true;
+					if (User.getWithUsername(username).getPassword().equals(password)) {
+						var = true;
+					}
+					else {
+						FlexiBookApplication.setCurrentUser(null);
+						throw new InvalidInputException("Username/password not found");
+					}
 				}
 			}
-		}
-		
-		
-		
-		if (username.equals("owner") && password.equals("owner")) {
-			if(flexiBook.getOwner() == null) {	//first time
-				createUser(username, password, flexiBook);
-				return;
-			}
-			else{	//not first time
-				FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+			
+			
+			
+			if (username.equals("owner") && password.equals("owner")) {
+				if(flexiBook.getOwner() == null) {	//first time
+					createUser(username, password, flexiBook);
+					return;
+				}
+				else{	//not first time
+					FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+				}
+				
 			}
 			
+			if (!flag) {
+				FlexiBookApplication.setCurrentUser(null);
+				throw new InvalidInputException("Username/password not found");
+			}
+			if (!var) {
+				FlexiBookApplication.setCurrentUser(null);
+				throw new InvalidInputException("Username/password not found");
+
+			}
+
+			FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+			FlexiBookPersistence.save(flexiBook);
+			
+		} catch(RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
 		}
 		
-		if (!flag) {
-			FlexiBookApplication.setCurrentUser(null);
-			throw new InvalidInputException("Username/password not found");
-		}
-		if (!var) {
-			FlexiBookApplication.setCurrentUser(null);
-			throw new InvalidInputException("Username/password not found");
-
-		}
-
-		FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
-		FlexiBookPersistence.save(flexiBook);
+		
 
 	}
 
