@@ -201,10 +201,7 @@ public class FlexiBookPage extends JFrame{
 
 	}
 
-	/**
-	 * @author Shaswata
-	 * @param evt
-	 */
+	
 	private void initOwnerMenu() {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
@@ -307,10 +304,7 @@ public class FlexiBookPage extends JFrame{
 	}
 
 
-	/**
-	 * @author Shaswata
-	 * @param evt
-	 */
+	
 	private void initCustomerMenu() {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
