@@ -2303,6 +2303,7 @@ public class FlexiBookController {
 
 	public static void logIn(String username, String password) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		
 
 		boolean flag = false;
 		boolean var = false;
@@ -2346,6 +2347,7 @@ public class FlexiBookController {
 			}
 
 			FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+			
 			FlexiBookPersistence.save(flexiBook);
 			
 		} catch(RuntimeException e) {
@@ -2620,6 +2622,7 @@ public class FlexiBookController {
 				throw new InvalidInputException("The username already exists");
 			else {
 				flexibook.addCustomer(Uname, Pword);
+				FlexiBookPersistence.save(flexibook);
 				FlexiBookApplication.setCurrentUser(User.getWithUsername(Uname));
 			}
 		} catch (RuntimeException e) {
@@ -2682,7 +2685,8 @@ public class FlexiBookController {
 					user.setPassword(newPword);
 				}
 				else if (oldUname.equals(newUname)) user.setPassword(newPword);
-				else if (newPword.equals(user.getPassword()))user.setUsername(newUname);
+				else if (newPword.equals(user.getPassword())) user.setUsername(newUname);
+				FlexiBookPersistence.save(flexiBook);
 
 			} else {
 				throw new InvalidInputException("You have to be logged in to the corresponding account to update it");
@@ -2701,12 +2705,12 @@ public class FlexiBookController {
 	 */
 	private static User findUserByName(String Uname) {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		User user = null;
 		User thisCustomer = null;
 
 		if (Uname.equals("owner")) {
 			Owner owner = FlexiBookApplication.getFlexiBook().getOwner();
-			thisCustomer = owner;
-			return thisCustomer;
+			user = owner;
 		}
 
 		else {
@@ -2715,11 +2719,11 @@ public class FlexiBookController {
 			for (int i = 0; i < customerList.size(); i++) {
 				thisCustomer = customerList.get(i);
 				if (thisCustomer.getUsername().equals(Uname)) {
-					return thisCustomer;
+					user = thisCustomer;
 				}
 			}
 		}
-		return thisCustomer;
+		return user;
 	}
 
 	/**
@@ -2749,6 +2753,7 @@ public class FlexiBookController {
 				}
 				flexibook.getCustomers().remove(user);
 				user.delete();
+				FlexiBookPersistence.save(flexibook);
 			}
 
 			FlexiBookApplication.setCurrentUser(null);
