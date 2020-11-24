@@ -43,7 +43,10 @@ public class FlexiBookApplication {
                 setSystemDate(dateTime.substring(0, 10));
                 setSystemTime(dateTime.substring(11, 19));
             	
+    
                 new FlexiBookPage().setVisible(true);
+                
+                
             }
         });
         

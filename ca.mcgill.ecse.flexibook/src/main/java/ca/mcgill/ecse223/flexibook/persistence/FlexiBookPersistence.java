@@ -4,7 +4,7 @@ import ca.mcgill.ecse.flexibook.model.FlexiBook;
 
 public class FlexiBookPersistence {
 	
-private static String filename = "flexibook.data";
+	private static String filename = "flexibook.data";
 	
 	public static void setFilename(String filename) {
 		FlexiBookPersistence.filename = filename;
@@ -17,7 +17,7 @@ private static String filename = "flexibook.data";
 	public static FlexiBook load() {
 	    PersistenceObjectStream.setFilename(filename);
 	    FlexiBook flexiBook = (FlexiBook) PersistenceObjectStream.deserialize();
-	    // model cannot be loaded - create empty BTMS
+	    // model cannot be loaded - create empty FlexiBook
 	    if (flexiBook == null) {
 	        flexiBook = new FlexiBook();
 	    }
