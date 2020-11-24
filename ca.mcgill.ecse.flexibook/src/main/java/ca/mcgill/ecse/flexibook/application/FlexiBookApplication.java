@@ -17,6 +17,9 @@ import ca.mcgill.ecse.flexibook.model.User;
 import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 import ca.mcgill.ecse223.flexibook.view.FlexiBookPage;
 
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+
 public class FlexiBookApplication {
 
 	private static FlexiBook flexiBook;
@@ -32,6 +35,14 @@ public class FlexiBookApplication {
 		// start UI
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+            	
+            	//set the current date and time
+            	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime now = LocalDateTime.now();
+                String dateTime = dtf.format(now);
+                setSystemDate(dateTime.substring(0, 10));
+                setSystemTime(dateTime.substring(11, 19));
+            	
                 new FlexiBookPage().setVisible(true);
             }
         });
@@ -74,7 +85,7 @@ public class FlexiBookApplication {
 
 
 	public static Date setSystemDate(String date) {
-		currentDate= Date.valueOf(date);
+		currentDate = Date.valueOf(date);
 		return currentDate; 
 	}
 
