@@ -2326,7 +2326,8 @@ public class FlexiBookController {
 					return;
 				}
 				else{	//not first time
-					FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
+					FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
+					return;
 				}
 				
 			}
