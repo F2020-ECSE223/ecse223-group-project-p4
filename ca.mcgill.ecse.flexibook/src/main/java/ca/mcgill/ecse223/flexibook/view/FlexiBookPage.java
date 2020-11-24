@@ -2624,7 +2624,7 @@ public class FlexiBookPage extends JFrame{
 			int month = appointmentDatePicker.getModel().getMonth();
 			int year = appointmentDatePicker.getModel().getYear();
 			String fullDate = year+"-"+month+"-"+day;
-//			Date date = Date.valueOf(fullDate);
+
 		for(TOAppointment appointment: existingAppointments) {
 			if(appointment.getStartDate().toString().equals(fullDate)) {
 				appointmentWithSpecificDate.add(appointment);
