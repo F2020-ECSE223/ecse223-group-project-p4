@@ -1981,7 +1981,6 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
-					.addGap(100)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(serviceNameLabel)
@@ -2180,7 +2179,7 @@ public class FlexiBookPage extends JFrame{
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateServiceNameCheckBox, updateServiceDurationCheckBox, updateServiceDowntimeStartCheckBox, updateServiceDowntimeDurationCheckBox});
 
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateExistingServiceLabel, newServiceNameLabel, newServiceDurationLabel, newDowntimeStartLabel, newDowntimeDurationLabel});
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {newServiceName, newServiceDuration, newDowntimeStart, newDowntimeDuration});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateExistingService, newServiceName, newServiceDuration, newDowntimeStart, newDowntimeDuration});
 		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
 
 		layout.setVerticalGroup(
@@ -2364,8 +2363,11 @@ public class FlexiBookPage extends JFrame{
 				);
 
 
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {deleteExistingServiceLabel, deleteExistingService});
 		layout.setVerticalGroup(
+				
 				layout.createSequentialGroup()
+				.addGap(100)
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(deleteExistingServiceLabel)
