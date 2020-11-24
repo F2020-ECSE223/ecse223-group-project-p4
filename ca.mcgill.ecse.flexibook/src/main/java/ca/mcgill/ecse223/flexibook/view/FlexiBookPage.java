@@ -317,9 +317,9 @@ public class FlexiBookPage extends JFrame{
                                  
                                         .addGroup(groupLayout.createSequentialGroup()
                                         		
-                                                .addGap(117)
+                                                .addGap(145)
                                                 .addComponent(lblLogin)
-                                                .addGap(357)
+                                                .addGap(325)
                                                 .addComponent(lblSignup, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(groupLayout.createSequentialGroup()
                                                 .addContainerGap()
