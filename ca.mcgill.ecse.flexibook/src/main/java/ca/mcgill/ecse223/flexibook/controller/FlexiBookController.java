@@ -2320,18 +2320,34 @@ public class FlexiBookController {
 		
 		try {
 			
-			if (username.equals("owner") && password.equals("owner")) {
-				if(flexiBook.getOwner() == null) {			//first time
-					createUser(username, password, flexiBook);
-					return;
-				}
-				else{	//not first time
-					FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
-					return;
-				}
-				
-			}
 			
+			if(flexiBook.getOwner()==null) {
+				if (username.equals("owner") && password.equals("owner")) {
+					if(flexiBook.getOwner() == null) {			//first time
+						createUser(username, password, flexiBook);
+						return;
+					}
+			}
+			}
+				else {
+					if(flexiBook.getOwner().getPassword().equals(password)) {
+						FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
+						return;
+						
+					}
+				}
+//			if (username.equals("owner") && password.equals("owner")) {
+//				if(flexiBook.getOwner() == null) {			//first time
+//					createUser(username, password, flexiBook);
+//					return;
+//				}
+//				else{	//not first time
+//					FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
+//					return;
+//				}
+//				
+//			
+//			}
 			List<Customer> customerList = flexiBook.getCustomers();
 			for (int i = 0; i < customerList.size(); i++) {
 				customer = customerList.get(i);
@@ -2685,7 +2701,7 @@ public class FlexiBookController {
 			User customer = null;
 			for (int i = 0; i < customerList.size(); i++) {
 				customer = customerList.get(i);
-				if (customer.getUsername().equals(newUname)) {
+				if (customer.getUsername().equals(newUname) && !customer.getUsername().equals(oldUname)) {
 					throw new InvalidInputException("Username not available");
 				}
 			}
@@ -2696,7 +2712,7 @@ public class FlexiBookController {
 			//}
 
 			if (user.equals(FlexiBookApplication.getCurrentUser())) {
-				if (user.getUsername().equals(oldUname) && oldUname != newUname) {
+				if (user.getUsername().equals(oldUname) ) {
 					user.setUsername(newUname);
 					user.setPassword(newPword);
 				}
