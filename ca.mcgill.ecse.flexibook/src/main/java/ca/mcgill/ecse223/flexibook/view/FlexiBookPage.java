@@ -208,6 +208,23 @@ public class FlexiBookPage extends JFrame{
     private JTextField PasswordSignup;
     private JTextField UsernameSignup;
     
+    //manage service combo
+    private JButton manageServiceComboButton;
+	private JButton defineServiceComboButton;
+	private JButton updateServiceComboButton;
+	private JButton deleteServiceComboButton;
+
+	
+	//define service combo
+	private JLabel nameOfServiceCombo;	
+	private JLabel mainService;
+	private JComboBox<String> mainServiceList;
+	private JLabel numberOfServiceLabel;
+	private JTextField numberOfServiceTextField;
+	private JLabel listOfServices;
+	private JLabel mandatoryList;
+	private JTextField nameOfServiceComboTextField;
+	private JButton backButton;
     
 	
 
@@ -476,6 +493,8 @@ public class FlexiBookPage extends JFrame{
 		updateOwnerButton.setText("Update Owner Account");
 		ownerLogOutButton = new JButton();
 		ownerLogOutButton.setText("Log Out");
+		manageServiceComboButton = new JButton();
+		manageServiceComboButton.setText("Manage Service Combos");
 
 
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -491,12 +510,14 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(viewAppCalenderButton)
 						.addComponent(manageAppointmentStatusButton)
 						.addComponent(updateOwnerButton)
+						.addComponent(manageServiceComboButton)
 						.addComponent(ownerLogOutButton))
 
 				);
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageAppointmentStatusButton,updateOwnerButton, ownerLogOutButton});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageAppointmentStatusButton, updateOwnerButton, ownerLogOutButton});
+
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageAppointmentStatusButton,updateOwnerButton,manageServiceComboButton, ownerLogOutButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageAppointmentStatusButton, updateOwnerButton, manageServiceComboButton, ownerLogOutButton});
 
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
@@ -505,7 +526,9 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(manageServiceButton)
 						.addComponent(viewAppCalenderButton)
 						.addComponent(manageAppointmentStatusButton)
+
 						.addComponent(updateOwnerButton)
+						.addComponent(manageServiceComboButton)
 						.addComponent(ownerLogOutButton))
 				);
 
@@ -548,6 +571,12 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 		
+		manageServiceComboButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manageServiceComboActionPerformed(e);
+			}
+		});
+
 
 
 		pack();
@@ -2879,10 +2908,94 @@ public class FlexiBookPage extends JFrame{
 	    refreshLoginData();
 	}
 	
-}
+	/**
+	 * @author yasminamatta and sneha
+	 * @param evt
+	 */
+	private void manageServiceComboActionPerformed(ActionEvent evt) {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+		defineServiceComboButton = new JButton();
+		defineServiceComboButton.setText("Define Service Combo");
+		updateServiceComboButton = new JButton();
+		updateServiceComboButton.setText("Update Service Combo");
+		deleteServiceComboButton = new JButton();
+		deleteServiceComboButton.setText("Delete Service Combo");
+		backButton = new JButton();
+		backButton.setText("Back");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(defineServiceComboButton)
+						.addComponent(updateServiceComboButton)
+						.addComponent(deleteServiceComboButton)
+						.addComponent(backButton))
+
+		);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { defineServiceComboButton,updateServiceComboButton, deleteServiceComboButton,backButton });
+
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { defineServiceComboButton,	updateServiceComboButton, deleteServiceComboButton,backButton });
+
+		layout.setVerticalGroup(layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(defineServiceComboButton)
+
+						.addComponent(updateServiceComboButton)
+
+						.addComponent(deleteServiceComboButton)
+						.addComponent(backButton))
+
+		);
+
+		defineServiceComboButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				defineServiceComboActionPermormed(e);
+			}
+		});
+
+		updateServiceComboButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				updateServiceComboActionPermormed(e);
+			}
+		});
+
+		deleteServiceComboButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				deleteServiceComboActionPermormed(e);
+			}
+		});
+		
+		backButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				initOwnerMenu();
+			}
+		});
+
+		pack();
+
+	}
+
+	private void defineServiceComboActionPermormed(ActionEvent evt) {
+
+	}
+
+	private void updateServiceComboActionPermormed(ActionEvent evt) {
+
+	}
+
+	private void deleteServiceComboActionPermormed(ActionEvent evt) {
+
+	}
 	
-
-
-
-
-
+}
