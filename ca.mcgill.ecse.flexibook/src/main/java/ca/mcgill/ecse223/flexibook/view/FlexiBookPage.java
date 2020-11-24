@@ -447,14 +447,6 @@ public class FlexiBookPage extends JFrame{
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	/**
 	 * @author Shaswata
@@ -737,8 +729,6 @@ public class FlexiBookPage extends JFrame{
 		cancelAppButton = new JButton();
 		cancelAppButton.setText("Cancel Appointment");
 
-		refreshDataForAppointmentBooking();
-
 		//action listeners
 		makeAppButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -764,16 +754,21 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 
+		refreshDataForAppointmentBooking();
+		
 
 		//overview table
-        String[][] rowData = new String[existingAppointments.size()][3];
-        for(int i = 0; i < existingAppointments.size(); i++) {
-        	TOAppointment thisAppointment = existingAppointments.get(i);
-        	rowData[i][0] = thisAppointment.getService();
-        	rowData[i][1] = thisAppointment.getStartDate();
-        	rowData[i][2] = thisAppointment.getStartTime();
-        }
-		 
+		String[][] rowData = new String[existingAppointments.size()][3];
+		if(!existingAppointments.isEmpty()) {
+	        for(int i = 0; i < existingAppointments.size(); i++) {
+	        	TOAppointment thisAppointment = existingAppointments.get(i);
+	        	rowData[i][0] = thisAppointment.getService();
+	        	rowData[i][1] = thisAppointment.getStartDate();
+	        	rowData[i][2] = thisAppointment.getStartTime();
+	        }
+		}
+        
+		
 		appOverviewLabel = new JLabel();
 		appOverviewLabel.setText("Your Appointments");
 		String[] columnNames = { "Service", "Date", "Start Time" };
@@ -978,6 +973,7 @@ public class FlexiBookPage extends JFrame{
 
 		//refresh data
 		refreshDataForAppointmentBooking();
+		initAppointmentBookingPage();
 
 	}
 
@@ -1039,6 +1035,7 @@ public class FlexiBookPage extends JFrame{
 
 		//refresh data
 		refreshDataForAppointmentBooking();
+		initAppointmentBookingPage();
 
 	}
 
@@ -1072,6 +1069,7 @@ public class FlexiBookPage extends JFrame{
 
 		//refresh data
 		refreshDataForAppointmentBooking();
+		initAppointmentBookingPage();
 	}
 
 
@@ -2834,12 +2832,12 @@ public class FlexiBookPage extends JFrame{
 				    else {
 				    try {
 				    	FlexiBookController.accountUpdate("owner","owner", Password);
-				    	error = "Account updated successfully";
+				    	message.setText("accout updated");
 				    } catch (InvalidInputException e) {
 				        error = e.getMessage();
 				    }
 				}
-				    refreshLoginData();
+				refreshLoginData();
 		}
 			
 	private void updateCustomerAccount() {
@@ -2933,6 +2931,7 @@ public class FlexiBookPage extends JFrame{
 	    String Password = newPassword.getText();
 	    try {
 	    	FlexiBookController.accountUpdate(oldUname,username, Password);
+	    	message.setText("accout updated");
 	    } catch (InvalidInputException e) {
 	        error = e.getMessage();
 	    }
