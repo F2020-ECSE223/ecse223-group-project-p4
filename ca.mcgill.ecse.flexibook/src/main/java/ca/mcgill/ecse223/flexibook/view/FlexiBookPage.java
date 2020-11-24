@@ -434,13 +434,16 @@ public class FlexiBookPage extends JFrame{
     }
 
     
+
    public void loginActionPerformed(java.awt.event.ActionEvent evt) {
+
  
             String username = UsernameLogin.getText();
             String password = PasswordLogin.getText();
             
             try {
             	FlexiBookApplication.setCurrentUser(null);
+            	
                 FlexiBookController.logIn(username, password);
                 if(FlexiBookApplication.getCurrentUserType().equals("owner")) {
         			initOwnerMenu();
@@ -480,7 +483,7 @@ public class FlexiBookPage extends JFrame{
 		setBounds(100, 100, 700, 500);
 
 		//I added this to test the UI, will delete after if everything is working fine -- Sneha
-		FlexiBookApplication.getFlexiBook().delete();
+	
 
 		businessInfoButton = new JButton();
 		businessInfoButton.setText("Manage Business Information");
@@ -504,6 +507,7 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateContainerGaps(true);
 
 		layout.setHorizontalGroup(
+
 				layout.createParallelGroup(Alignment.LEADING)
 //				layout.createSequentialGroup()
 				.addGroup(layout.createSequentialGroup()
@@ -531,6 +535,7 @@ public class FlexiBookPage extends JFrame{
 						
 							)
 						)
+
 				);
 		
 //						.addComponent(businessInfoButton)
@@ -550,6 +555,7 @@ public class FlexiBookPage extends JFrame{
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
+
 						.addComponent(businessInfoButton,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(manageServiceButton,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(viewAppCalenderButton,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -558,6 +564,7 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(updateOwnerButton,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 
 						.addComponent(ownerLogOutButton,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+
 				);
 
 
@@ -595,15 +602,10 @@ public class FlexiBookPage extends JFrame{
 		
 		updateOwnerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				manageAccountActionPerformed(e);
+				manageOwnerAccountActionPerformed(e);
 			}
 		});
 		
-//		manageServiceComboButton.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				manageServiceComboActionPerformed(e);
-//			}
-//		});
 
 
 
@@ -668,7 +670,7 @@ public class FlexiBookPage extends JFrame{
 
 		manageCustomerAccountButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				manageAccountActionPerformed(e);
+				manageCustomerAccountActionPerformed(e);
 			}
 		});
 		
@@ -680,11 +682,11 @@ public class FlexiBookPage extends JFrame{
 		
 		updateCustomerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateCustomerAccount(e);
+				updateCustomerAccount();
 			}
 		});
 
-		pack();
+		//pack();
 	}
 	
 	
@@ -711,8 +713,10 @@ public class FlexiBookPage extends JFrame{
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+
 		//refreshDataForAppointmentBooking();
 		setBounds(100, 100, 700, 500);
+
 		// elements for error message
 		message = new JLabel();
 		makeAppBackButton = new JButton();
@@ -754,6 +758,7 @@ public class FlexiBookPage extends JFrame{
 		cancelAppButton = new JButton();
 		cancelAppButton.setText("Cancel Appointment");
 
+		refreshDataForAppointmentBooking();
 
 		//action listeners
 		makeAppButton.addActionListener(new ActionListener() {
@@ -1098,13 +1103,13 @@ public class FlexiBookPage extends JFrame{
 	}
 
 
-	private void manageAccountActionPerformed(ActionEvent evt) {
-		updateOwnerAccount();
+	private void manageCustomerAccountActionPerformed(ActionEvent evt) {
+		updateCustomerAccount();
 	}
 
 
 	private void manageOwnerAccountActionPerformed(ActionEvent evt) {
-		//TODO
+		updateOwnerAccount();
 	}
 
 	private void businessInfoActionPerformed(ActionEvent evt) {
@@ -1969,6 +1974,7 @@ public class FlexiBookPage extends JFrame{
 		downtimeDurationLabel.setText("Downtime Duration (mins)");
 		addServiceBackButton.setText("Back");
 		addServiceButton.setText("Add Service");
+		
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -2019,6 +2025,7 @@ public class FlexiBookPage extends JFrame{
 				);
 
 
+		refreshServicePage();
 
 		addServiceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -2044,6 +2051,7 @@ public class FlexiBookPage extends JFrame{
 	 * @param evt
 	 */
 	private void addServiceButtonPressed (ActionEvent evt) {
+		
 		error = "";
 		success = ""; 
 		String name = null;
@@ -2121,8 +2129,10 @@ public class FlexiBookPage extends JFrame{
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+
 		//getContentPane().setSize(dim);
 		setBounds(100, 100, 700, 500);
+
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		//page components
@@ -2135,6 +2145,8 @@ public class FlexiBookPage extends JFrame{
 		updateExistingServiceLabel.setText("Choose service to update:");
 		updateServiceButton.setText("Update Service");
 		updateServiceBackButton.setText("Back");
+		
+		refreshServicePage();
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -2487,10 +2499,6 @@ public class FlexiBookPage extends JFrame{
 		error="";
 		success ="";
 		
-		
-		
-		
-		
 		startAppointmentButton = new JButton();
 		startAppointmentButton.setText("Start Appointment");
 		endAppointmentButton = new JButton();
@@ -2831,7 +2839,6 @@ public class FlexiBookPage extends JFrame{
 			ownerUpdateButton.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
 	            	updatePasswordOwner(evt);
-	            	updateOwnerAccount();
 	            }
 	        });
 			
@@ -2854,7 +2861,7 @@ public class FlexiBookPage extends JFrame{
 				    refreshLoginData();
 		}
 			
-	private void updateCustomerAccount(ActionEvent evt) {
+	private void updateCustomerAccount() {
 			
 			
 			getContentPane().removeAll(); 

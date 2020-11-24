@@ -1173,24 +1173,21 @@ public class FlexiBookController {
 	 * @param downtimeStart
 	 * @throws InvalidInputException
 	 */
-	public static void addService(String name, int duration, int downtimeDuration,
-			int downtimeStart) throws InvalidInputException {
+	public static void addService(String name, int duration, int downtimeDuration, int downtimeStart) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-
-		try { 
-		if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true)
-				&& (timingsMakeSense(downtimeStart, downtimeDuration, duration) == true)
-				&& (serviceExistsAlready(name) == false)) {
-			service = new Service(name, flexiBook, duration, downtimeDuration, downtimeStart);
-		}
-		FlexiBookPersistence.save(flexiBook);
 		
+		try { 
+			if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true) && (timingsMakeSense(downtimeStart, downtimeDuration, duration) == true) && (serviceExistsAlready(name) == false)) {
+				new Service(name, flexiBook, duration, downtimeDuration, downtimeStart);
+				FlexiBookPersistence.save(flexiBook);
+			}
 		}
-		catch (InvalidInputException e) {
+		catch (RuntimeException e) {
 			String error = e.getMessage();
 			throw new InvalidInputException(error);
 		}
 	}
+	
 
 	// **************************UPDATE
 	// SERVICE***********************************************
@@ -1206,8 +1203,7 @@ public class FlexiBookController {
 	 * @return
 	 * @throws InvalidInputException
 	 */
-	private static boolean updatingCorrectService(Service serviceToUpdate, String newName)
-			throws InvalidInputException {
+	private static boolean updatingCorrectService(Service serviceToUpdate, String newName) throws InvalidInputException {
 		
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		boolean updatingCorrService = false;
@@ -1240,18 +1236,35 @@ public class FlexiBookController {
 	 * @param newDowntimeDuration
 	 * @throws InvalidInputException
 	 */
-	public static void updateService(String name, String newName, int newDuration,
-			int newDowntimeStart, int newDowntimeDuration) throws InvalidInputException {
-		Service serviceToUpdate = (Service) Service.getWithName(name);
-				
-		if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true)
-				&& (timingsMakeSense(newDowntimeStart, newDowntimeDuration, newDuration) == true)
-				&& (updatingCorrectService(serviceToUpdate, newName) == true)) {
-			serviceToUpdate.setName(newName);
-			serviceToUpdate.setDuration(newDuration);
-			serviceToUpdate.setDowntimeDuration(newDowntimeDuration);
-			serviceToUpdate.setDowntimeStart(newDowntimeStart);
+	public static void updateService(String name, String newName, int newDuration, int newDowntimeStart, int newDowntimeDuration) throws InvalidInputException {
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		Service serviceToUpdate = null;
+		
+		for(int i = 0; i < flexiBook.getBookableServices().size(); i++) {
+			if(flexiBook.getBookableService(i) instanceof Service) {
+				serviceToUpdate = (Service) flexiBook.getBookableService(i);
+				if(serviceToUpdate.getName().equals(name)) {
+					break;
+				}
+			}
+			
 		}
+		
+		try {
+			if ((checkOwner(FlexiBookApplication.getCurrentUser()) == true) && (timingsMakeSense(newDowntimeStart, newDowntimeDuration, newDuration) == true) && (updatingCorrectService(serviceToUpdate, newName) == true)) {
+				serviceToUpdate.setName(newName);
+				serviceToUpdate.setDuration(newDuration);
+				serviceToUpdate.setDowntimeDuration(newDowntimeDuration);
+				serviceToUpdate.setDowntimeStart(newDowntimeStart);
+			}
+			FlexiBookPersistence.save(flexiBook);
+			
+		} catch(RuntimeException e) {
+			String error = e.getMessage();
+			throw new InvalidInputException(error);
+		}
+		
+		
 		
 		
 	
@@ -1321,7 +1334,6 @@ public class FlexiBookController {
 				}
 			}
 		}
-		
 		FlexiBookPersistence.save(flexiBook);
 	}
 
@@ -1361,8 +1373,7 @@ public class FlexiBookController {
 	 * @throws InvalidInputException
 	 */
 
-	public static void defineServiceCombo(String aName, String user, FlexiBook aFlexiBook, String aMainService,
-			String mandatory, String allServices) throws InvalidInputException {
+	public static void defineServiceCombo(String aName, String user, FlexiBook aFlexiBook, String aMainService, String mandatory, String allServices) throws InvalidInputException {
 
 		Service service;
 		ComboItem comboItem;
@@ -1611,8 +1622,7 @@ public class FlexiBookController {
 	 * @param vacation
 	 * @throws InvalidInputException
 	 */
-	public static void setupBusinessInfo(String name, String address, String phoneNumber, String email)
-			throws InvalidInputException {
+	public static void setupBusinessInfo(String name, String address, String phoneNumber, String email) throws InvalidInputException {
 
 		try {
 
@@ -2303,30 +2313,15 @@ public class FlexiBookController {
 
 	public static void logIn(String username, String password) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
-		
 
 		boolean flag = false;
 		boolean var = false;
+		User customer = null;
 		
 		try {
 			
-			for (Customer cust : flexiBook.getCustomers()) {
-				if (username.equals(cust.getUsername())) {
-					flag = true;
-					if (User.getWithUsername(username).getPassword().equals(password)) {
-						var = true;
-					}
-					else {
-						FlexiBookApplication.setCurrentUser(null);
-						throw new InvalidInputException("Username/password not found");
-					}
-				}
-			}
-			
-			
-			
 			if (username.equals("owner") && password.equals("owner")) {
-				if(flexiBook.getOwner() == null) {	//first time
+				if(flexiBook.getOwner() == null) {			//first time
 					createUser(username, password, flexiBook);
 					return;
 				}
@@ -2335,6 +2330,24 @@ public class FlexiBookController {
 				}
 				
 			}
+			
+			List<Customer> customerList = flexiBook.getCustomers();
+			for (int i = 0; i < customerList.size(); i++) {
+				customer = customerList.get(i);
+				if (username.equals(customer.getUsername())) {
+					flag = true;
+					
+					if (customer.getPassword().equals(password)) {
+						var = true;
+						break;
+					}
+					else {
+						FlexiBookApplication.setCurrentUser(null);
+						throw new InvalidInputException("Username/password not found");
+					}
+				}
+			}
+			
 			
 			if (!flag) {
 				FlexiBookApplication.setCurrentUser(null);
@@ -2346,17 +2359,15 @@ public class FlexiBookController {
 
 			}
 
-			FlexiBookApplication.setCurrentUser(User.getWithUsername(username));
-			
+			FlexiBookApplication.setCurrentUser(customer);
 			FlexiBookPersistence.save(flexiBook);
 			
 		} catch(RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
 		
-		
-
 	}
+	
 
 	/**
 	 *
@@ -2368,14 +2379,17 @@ public class FlexiBookController {
 	public static void logOut() throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 
-		if (FlexiBookApplication.getCurrentUser() == null) {
-
-			throw new InvalidInputException("The user is already logged out");
-
+		try {
+			if (FlexiBookApplication.getCurrentUser() == null) {
+				throw new InvalidInputException("The user is already logged out");
+			}
+			FlexiBookApplication.setCurrentUser(null);
+			FlexiBookPersistence.save(flexiBook);
+		} catch(RuntimeException e) {
+			FlexiBookPersistence.save(flexiBook);
+			throw new InvalidInputException(e.getMessage());
 		}
-
-		FlexiBookApplication.setCurrentUser(null);
-		FlexiBookPersistence.save(flexiBook);
+		
 		
 	}
 
@@ -2622,8 +2636,8 @@ public class FlexiBookController {
 				throw new InvalidInputException("The username already exists");
 			else {
 				flexibook.addCustomer(Uname, Pword);
-				FlexiBookPersistence.save(flexibook);
 				FlexiBookApplication.setCurrentUser(User.getWithUsername(Uname));
+				FlexiBookPersistence.save(flexibook);
 			}
 		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
@@ -2657,6 +2671,7 @@ public class FlexiBookController {
 				if (oldUname.equals(owner.getUsername())) {
 					if (oldUname.equals(newUname)) {
 						owner.setPassword(newPword);
+						FlexiBookPersistence.save(flexiBook);
 						return;
 					} else {
 						throw new InvalidInputException("Changing username of owner is not allowed");
