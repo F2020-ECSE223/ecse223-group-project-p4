@@ -2661,7 +2661,8 @@ public class FlexiBookController {
 				}
 
 			}
-			List<Customer> customerList = flexiBook.getCustomers();
+			if (!oldUname.equals("owner") && !newUname.equals("owner")) {
+					List<Customer> customerList = flexiBook.getCustomers();
 			User customer = null;
 			for (int i = 0; i < customerList.size(); i++) {
 				customer = customerList.get(i);
@@ -2669,15 +2670,19 @@ public class FlexiBookController {
 					throw new InvalidInputException("Username not available");
 				}
 			}
-
-			if (user == null) {
-				throw new InvalidInputException("No user found");
 			}
 
-			else if (user.equals(FlexiBookApplication.getCurrentUser())) {
+			//if (user == null) {
+			//	throw new InvalidInputException("No user found");
+			//}
 
-				user.setUsername(newUname);
-				user.setPassword(newPword);
+			if (user.equals(FlexiBookApplication.getCurrentUser())) {
+				if (user.getUsername().equals(oldUname) && oldUname != newUname) {
+					user.setUsername(newUname);
+					user.setPassword(newPword);
+				}
+				else if (oldUname.equals(newUname)) user.setPassword(newPword);
+				else if (newPword.equals(user.getPassword()))user.setUsername(newUname);
 
 			} else {
 				throw new InvalidInputException("You have to be logged in to the corresponding account to update it");

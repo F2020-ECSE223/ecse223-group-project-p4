@@ -1,60 +1,43 @@
 package ca.mcgill.ecse223.flexibook.view;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
 
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Group;
 import javax.swing.GroupLayout.Alignment;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-import javax.swing.table.TableCellRenderer;
+
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
-import ca.mcgill.ecse.flexibook.model.FlexiBook;
-import ca.mcgill.ecse.flexibook.model.Service;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
 import ca.mcgill.ecse223.flexibook.controller.TOService;
-import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 
 public class FlexiBookPage extends JFrame{
 
@@ -205,12 +188,16 @@ public class FlexiBookPage extends JFrame{
 	private JTextField updateBusinessEmail = new JTextField();
 	private JTextField updateBusinessPhone = new JTextField();
 	
-	//SignUp
-	private JTextField Username = new JTextField();
-	private JTextField Password = new JTextField();
+	//Update account
+	private JTextField ownerUsername = new JTextField();
+	private JTextField newPassword = new JPasswordField();
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
-	private JButton signUpButton;
+	private JButton updateButton;
+	private JTextField customerUsername = new JTextField();
+	private JLabel oldUsernameLabel;
+
+
 	
 	
 	//login
@@ -219,7 +206,6 @@ public class FlexiBookPage extends JFrame{
     private JLabel errorMessage;
     private JTextField PasswordSignup;
     private JTextField UsernameSignup;
-    
     
     //manage service combo
     private JButton manageServiceComboButton;
@@ -298,7 +284,7 @@ public class FlexiBookPage extends JFrame{
 
         JLabel lblDesignedByTeam = new JLabel("Designed by Team P04");
 
-        PasswordSignup = new JTextField();
+        PasswordSignup = new JPasswordField();
         PasswordSignup.setColumns(10);
 
         UsernameSignup = new JTextField();
@@ -378,99 +364,120 @@ public class FlexiBookPage extends JFrame{
                                 )
         );
         groupLayout.setVerticalGroup(
-                groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-				.createSequentialGroup().addGap(14)
-				.addComponent(lblWelcomeToBlock, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false).addGroup(groupLayout
-						.createSequentialGroup().addComponent(lblDesignedByTeam).addGap(26)
-						.addGroup(groupLayout
-								.createParallelGroup(Alignment.BASELINE).addComponent(lblSignup).addComponent(lblLogin))
-						.addGap(80)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(loginPassword)
-								.addComponent(PasswordLogin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addComponent(signupPassword).addComponent(PasswordSignup, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.RELATED))
-						.addGroup(groupLayout.createSequentialGroup()
-								.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(UsernameLogin, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(loginUsername)
-										.addComponent(UsernameSignup, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(Username, GroupLayout.PREFERRED_SIZE, 13,
-												GroupLayout.PREFERRED_SIZE))
-								.addGap(53)))
-				.addGap(13)
-				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(Login).addComponent(Signup))
-				.addGap(76).addComponent(errorMessage).addGap(557)));
-		getContentPane().setLayout(groupLayout);
+                groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayout.createSequentialGroup()
+                                .addGap(14)
+                                .addComponent(lblWelcomeToBlock, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+                                        .addGroup(groupLayout.createSequentialGroup()
+                                                .addComponent(lblDesignedByTeam)
+                                                .addGap(26)
+                                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                                                        .addComponent(lblSignup)
+                                                        .addComponent(lblLogin))
+                                                .addGap(80)
+                                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                                                        .addComponent(loginPassword)
+                                                        .addComponent(PasswordLogin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(signupPassword)
+                                                        .addComponent(PasswordSignup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(ComponentPlacement.RELATED))
+                                        .addGroup(groupLayout.createSequentialGroup()
+                                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                                                        .addComponent(UsernameLogin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(loginUsername)
+                                                        .addComponent(UsernameSignup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(Username, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE))
+                                                .addGap(53)))
+                                .addGap(13)
+                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(Login)
+                                        .addComponent(Signup))
+                                .addGap(76)
+                                .addComponent(errorMessage)
+                                .addGap(557))
+        );
+        getContentPane().setLayout(groupLayout);
+        
+        
 
-	}
+    }
 
-	public void refreshLoginData() {
-		errorMessage.setText(error);
-		if (error == null || error.length() == 0) {
-			UsernameSignup.setText("");
-			PasswordSignup.setText("");
+    public void refreshLoginData() {
+        errorMessage.setText(error);
+        if (error == null || error.length() == 0) {
+            UsernameSignup.setText("");
+            PasswordSignup.setText("");
 
-			UsernameLogin.setText("");
-			PasswordLogin.setText("");
-		}
-	}
+            UsernameLogin.setText("");
+            PasswordLogin.setText("");
+        }
+    }
+    
+    
+    public void signupActionPerformed(ActionEvent evt) {
+        error = "";
+        if (error.length() == 0) {
 
-	public void signupActionPerformed(ActionEvent evt) {
-		error = "";
-		if (error.length() == 0) {
+            String username = UsernameSignup.getText();
+            String Password = PasswordSignup.getText();
+            try {
+            	//if (username.equals("owner") && Password.contentEquals("owner")) error = "owner cannot sign up";
+            	FlexiBookController.signUpCustomer(username, Password);
+            } catch (InvalidInputException e) {
+                error = e.getMessage();
+            }
+        }
+        refreshLoginData();
+    }
 
-			String username = UsernameSignup.getText();
-			String Password = PasswordSignup.getText();
-			try {
-				// if (username.equals("owner") && Password.contentEquals("owner")) error =
-				// "owner cannot sign up";
-				FlexiBookController.signUpCustomer(username, Password);
-			} catch (InvalidInputException e) {
-				error = e.getMessage();
-			}
-		}
-		refreshLoginData();
-	}
+    
+   public void LoginActionPerformed(java.awt.event.ActionEvent evt) {
+        error = "";
+        if (error.length() == 0) {
+            String username = UsernameLogin.getText();
+            String password = PasswordLogin.getText();
+            
+            try {
+                FlexiBookController.logIn(username, password);
+                if(FlexiBookApplication.getCurrentUserType().equals("owner")) {
+        			initOwnerMenu();
+        		}
+        		else if(FlexiBookApplication.getCurrentUserType().equals("customer")) {
+        			initCustomerMenu();
+        		}
 
-	public void LoginActionPerformed(java.awt.event.ActionEvent evt) {
-		error = "";
-		if (error.length() == 0) {
-			String username = UsernameLogin.getText();
-			String password = PasswordLogin.getText();
+            } catch (InvalidInputException e) {
+                error = e.getMessage();
+            }
+        }
+        
+        refreshLoginData();
 
-			try {
-				FlexiBookController.logIn(username, password);
-				if (FlexiBookApplication.getCurrentUserType().equals("owner")) {
-					initOwnerMenu();
-				} else if (FlexiBookApplication.getCurrentUserType().equals("customer")) {
-					initCustomerMenu();
-				}
-
-			} catch (InvalidInputException e) {
-				error = e.getMessage();
-			}
-		}
-
-		refreshLoginData();
-
-	}
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * @author Shaswata
 	 * @param evt
 	 */
 	private void initOwnerMenu() {
-		getContentPane().removeAll();
+		getContentPane().removeAll(); 
 		getContentPane().repaint();
 
-		// I added this to test the UI, will delete after if everything is working fine
-		// -- Sneha
+		//I added this to test the UI, will delete after if everything is working fine -- Sneha
 		FlexiBookApplication.getFlexiBook().delete();
 
 		businessInfoButton = new JButton();
@@ -481,33 +488,48 @@ public class FlexiBookPage extends JFrame{
 		viewAppCalenderButton.setText("View Appointment Calender");
 		manageAppointmentStatusButton = new JButton();
 		manageAppointmentStatusButton.setText("Manage Appointment Status");
+		updateButton = new JButton();
+		updateButton.setText("Update Owner Account");
 		ownerLogOutButton = new JButton();
 		ownerLogOutButton.setText("Log Out");
 		manageServiceComboButton = new JButton();
 		manageServiceComboButton.setText("Manage Service Combos");
+
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup().addGroup(
-				layout.createParallelGroup().addComponent(businessInfoButton).addComponent(manageServiceButton)
-						.addComponent(viewAppCalenderButton).addComponent(manageAppointmentStatusButton)
-						.addComponent(manageServiceComboButton).addComponent(ownerLogOutButton))
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoButton)
+						.addComponent(manageServiceButton)
+						.addComponent(viewAppCalenderButton)
+						.addComponent(manageAppointmentStatusButton)
+						.addComponent(updateButton)
+						.addComponent(manageServiceComboButton)
+						.addComponent(ownerLogOutButton))
 
-		);
+				);
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { businessInfoButton, manageServiceButton,
-				viewAppCalenderButton, manageAppointmentStatusButton, manageServiceComboButton, ownerLogOutButton });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { businessInfoButton, manageServiceButton,
-				viewAppCalenderButton, manageAppointmentStatusButton, manageServiceComboButton, ownerLogOutButton });
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageAppointmentStatusButton,updateButton,manageServiceComboButton, ownerLogOutButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoButton, manageServiceButton, viewAppCalenderButton, manageAppointmentStatusButton, updateButton, manageServiceComboButton,ownerLogOutButton});
 
-		layout.setVerticalGroup(layout.createParallelGroup()
-				.addGroup(layout.createSequentialGroup().addComponent(businessInfoButton)
-						.addComponent(manageServiceButton).addComponent(viewAppCalenderButton)
-						.addComponent(manageAppointmentStatusButton).addComponent(manageServiceComboButton)
-						.addComponent(ownerLogOutButton)));
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(businessInfoButton)
+						.addComponent(manageServiceButton)
+						.addComponent(viewAppCalenderButton)
+						.addComponent(manageAppointmentStatusButton)
+						.addComponent(updateButton)
+						.addComponent(manageServiceComboButton)
+						.addComponent(ownerLogOutButton))
+				);
+
+
 
 		businessInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -521,6 +543,7 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 
+
 		viewAppCalenderButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				viewCalenderActionPerformed(e);
@@ -529,37 +552,49 @@ public class FlexiBookPage extends JFrame{
 
 		manageAppointmentStatusButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				managedAppointmentStatusActionPerformed(e);
+				managedAppointmentStatus(e);
 			}
 		});
-
+		
 		ownerLogOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logoutActionPerformed(e);
 			}
+		});	
+		
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateOwnerAccount(e);
+			}
 		});
+		
 		manageServiceComboButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				manageServiceComboActionPerformed(e);
 			}
 		});
 
+
+
 		pack();
 
 	}
+
 
 	/**
 	 * @author Shaswata
 	 * @param evt
 	 */
 	private void initCustomerMenu() {
-		getContentPane().removeAll();
+		getContentPane().removeAll(); 
 		getContentPane().repaint();
 
 		appBookingButton = new JButton();
 		appBookingButton.setText("Appoinment booking");
 		manageCustomerAccountButton = new JButton();
 		manageCustomerAccountButton.setText("Manage Account");
+		updateButton = new JButton();
+		updateButton.setText("Update customer account");
 		customerLogOutButton = new JButton();
 		customerLogOutButton.setText("Log Out");
 
@@ -569,19 +604,28 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateContainerGaps(true);
 
 		layout.setHorizontalGroup(
-				layout.createSequentialGroup().addGroup(layout.createParallelGroup().addComponent(appBookingButton)
-						.addComponent(manageCustomerAccountButton).addComponent(customerLogOutButton))
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(appBookingButton)
+						.addComponent(manageCustomerAccountButton)
+						.addComponent(updateButton)
+						.addComponent(customerLogOutButton))
 
-		);
+				);
 
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { appBookingButton, manageCustomerAccountButton, customerLogOutButton });
-		layout.linkSize(SwingConstants.HORIZONTAL,
-				new java.awt.Component[] { appBookingButton, manageCustomerAccountButton, customerLogOutButton });
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appBookingButton, manageCustomerAccountButton, updateButton, customerLogOutButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appBookingButton, manageCustomerAccountButton, updateButton, customerLogOutButton});
 
 		layout.setVerticalGroup(
-				layout.createParallelGroup().addGroup(layout.createSequentialGroup().addComponent(appBookingButton)
-						.addComponent(manageCustomerAccountButton).addComponent(customerLogOutButton)));
+				layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(appBookingButton)
+						.addComponent(manageCustomerAccountButton)
+						.addComponent(updateButton)
+						.addComponent(customerLogOutButton))
+				);
+
+
 
 		appBookingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -594,26 +638,37 @@ public class FlexiBookPage extends JFrame{
 				manageAccountActionPerformed(e);
 			}
 		});
-
+		
 		customerLogOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logoutActionPerformed(e);
+			}
+		});	
+		
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateCustomerAccount(e);
 			}
 		});
 
 		pack();
 	}
-
+	
+	
+	
+	
 	private void logoutActionPerformed(ActionEvent evt) {
-
+		
 		try {
 			FlexiBookController.logOut();
 			initializeLoginPage();
-		} catch (InvalidInputException e) {
+		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
-
+		
 	}
+	
+
 
 	/**
 	 * @author Shaswata
@@ -621,7 +676,7 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private void initAppointmentBookingPage() {
 
-		getContentPane().removeAll();
+		getContentPane().removeAll(); 
 		getContentPane().repaint();
 		refreshDataForAppointmentBooking();
 
@@ -630,7 +685,7 @@ public class FlexiBookPage extends JFrame{
 		makeAppBackButton = new JButton();
 		makeAppBackButton.setText("Back");
 
-		// elements for make appointment
+		//elements for make appointment
 		makeAppTime = new JTextField();
 		makeAppDate = new JTextField();
 		makeAppServiceList = new JComboBox<String>(new String[0]);
@@ -643,7 +698,7 @@ public class FlexiBookPage extends JFrame{
 		makeAppButton = new JButton();
 		makeAppButton.setText("Make Appointment");
 
-		// elements for make appointment
+		//elements for make appointment
 		updateAppDateList = new JComboBox<String>(new String[0]);
 		updateAppNewTime = new JTextField();
 		updateAppNewDate = new JTextField();
@@ -659,14 +714,15 @@ public class FlexiBookPage extends JFrame{
 		updateAppButton = new JButton();
 		updateAppButton.setText("Update Appointment");
 
-		// elements for cancel appointment
+		//elements for cancel appointment
 		cancelAppDateList = new JComboBox<String>(new String[0]);
 		cancelAppDateLabel = new JLabel();
 		cancelAppDateLabel.setText("Appointment at: ");
 		cancelAppButton = new JButton();
 		cancelAppButton.setText("Cancel Appointment");
 
-		// action listeners
+
+		//action listeners
 		makeAppButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				makeAppointmentActionPerformed(e);
@@ -691,20 +747,25 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 
-		// overview table
+
+		//overview table
 		/*
-		 * String[][] rowData = new String[existingAppointments.size()][3]; for(int i =
-		 * 0; i < existingAppointments.size(); i++) { TOAppointment thisAppointment =
-		 * existingAppointments.get(i); rowData[i][0] = thisAppointment.getService();
-		 * rowData[i][1] = thisAppointment.getStartDate(); rowData[i][2] =
-		 * thisAppointment.getStartTime(); }
+        String[][] rowData = new String[existingAppointments.size()][3];
+        for(int i = 0; i < existingAppointments.size(); i++) {
+        	TOAppointment thisAppointment = existingAppointments.get(i);
+        	rowData[i][0] = thisAppointment.getService();
+        	rowData[i][1] = thisAppointment.getStartDate();
+        	rowData[i][2] = thisAppointment.getStartTime();
+        }
 		 */
 		appOverviewLabel = new JLabel();
 		appOverviewLabel.setText("Your Appointments");
-		String[][] rowData = { { "A", "B", "C" }, { "D", "E", "F" } };
+		String[][] rowData = {{"A", "B", "C"}, {"D", "E", "F"}};
 		String[] columnNames = { "Service", "Date", "Start Time" };
 		overviewTable = new JTable(rowData, columnNames);
 		JScrollPane appointmentTable = new JScrollPane(overviewTable);
+
+
 
 		// horizontal line elements
 		JSeparator horizontalLineTop = new JSeparator();
@@ -713,70 +774,108 @@ public class FlexiBookPage extends JFrame{
 		JSeparator horizontalLineTable = new JSeparator();
 		JSeparator horizontalLineLast = new JSeparator();
 
+
 		// layout
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup()
-				.addComponent(message).addComponent(horizontalLineTop).addComponent(horizontalLineMiddle)
-				.addComponent(horizontalLineBottom).addComponent(horizontalLineTable).addComponent(horizontalLineLast)
-				.addComponent(makeAppBackButton, 200, 200, 400).addComponent(appOverviewLabel)
-				.addComponent(appointmentTable, 200, 200, 800)
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(horizontalLineTop)
+						.addComponent(horizontalLineMiddle)
+						.addComponent(horizontalLineBottom)
+						.addComponent(horizontalLineTable)
+						.addComponent(horizontalLineLast)
+						.addComponent(makeAppBackButton, 200, 200, 400)
+						.addComponent(appOverviewLabel)
+						.addComponent(appointmentTable, 200, 200, 800)
+						.addGroup(layout.createSequentialGroup()
+								.addGroup(layout.createParallelGroup()
+										.addComponent(makeAppTimeLabel)
+										.addComponent(updateAppDateLabel)
+										.addComponent(updateAppNewTimeLabel)
+										.addComponent(cancelAppDateLabel))
+								.addGroup(layout.createParallelGroup()
+										.addComponent(makeAppTime, 200, 200, 400)
+										.addComponent(updateAppDateList, 200, 200, 400)
+										.addComponent(updateAppNewTime, 200, 200, 400)
+										.addComponent(cancelAppDateList, 200, 200, 400))
+								.addGroup(layout.createParallelGroup()
+										.addComponent(makeAppDateLabel)
+										.addComponent(makeAppButton, 200, 200, 400)
+										.addComponent(updateAppNewDateLabel)
+										.addComponent(updateAppButton, 200, 200, 400)
+										.addComponent(cancelAppButton, 200, 200, 400))
+								.addGroup(layout.createParallelGroup()
+										.addComponent(makeAppDate, 200, 200, 400)
+										.addComponent(updateAppNewDate, 200, 200, 400))
+								.addGroup(layout.createParallelGroup()
+										.addComponent(makeAppServiceLabel)
+										.addComponent(updateAppServiceLabel))
+								.addGroup(layout.createParallelGroup()
+										.addComponent(makeAppServiceList, 200, 200, 400)
+										.addComponent(updateAppServiceList, 200, 200, 400))
+								)
+						)
+				);
+
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {makeAppTime, makeAppDate, makeAppServiceList});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {makeAppTime, makeAppDate, makeAppServiceList});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateAppDateLabel, updateAppDateList});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {updateAppDateLabel, updateAppDateList});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateAppNewTime, updateAppNewDate, updateAppServiceList});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {updateAppNewTime, updateAppNewDate, updateAppServiceList});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {cancelAppDateLabel, cancelAppDateList});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelAppDateLabel, cancelAppDateList});
+
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
-						.addGroup(layout.createParallelGroup().addComponent(makeAppTimeLabel)
-								.addComponent(updateAppDateLabel).addComponent(updateAppNewTimeLabel)
-								.addComponent(cancelAppDateLabel))
-						.addGroup(layout.createParallelGroup().addComponent(makeAppTime, 200, 200, 400)
-								.addComponent(updateAppDateList, 200, 200, 400)
-								.addComponent(updateAppNewTime, 200, 200, 400)
-								.addComponent(cancelAppDateList, 200, 200, 400))
-						.addGroup(layout.createParallelGroup().addComponent(makeAppDateLabel)
-								.addComponent(makeAppButton, 200, 200, 400).addComponent(updateAppNewDateLabel)
-								.addComponent(updateAppButton, 200, 200, 400)
-								.addComponent(cancelAppButton, 200, 200, 400))
-						.addGroup(layout.createParallelGroup().addComponent(makeAppDate, 200, 200, 400)
-								.addComponent(updateAppNewDate, 200, 200, 400))
-						.addGroup(layout.createParallelGroup().addComponent(makeAppServiceLabel)
-								.addComponent(updateAppServiceLabel))
-						.addGroup(layout.createParallelGroup().addComponent(makeAppServiceList, 200, 200, 400)
-								.addComponent(updateAppServiceList, 200, 200, 400)))));
+						.addComponent(message)
+						.addComponent(horizontalLineTop)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(makeAppTimeLabel)
+								.addComponent(makeAppTime)
+								.addComponent(makeAppDateLabel)
+								.addComponent(makeAppDate)
+								.addComponent(makeAppServiceLabel)
+								.addComponent(makeAppServiceList))
+						.addComponent(makeAppButton)
+						.addComponent(horizontalLineMiddle)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(updateAppDateLabel)
+								.addComponent(updateAppDateList))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(updateAppNewTimeLabel)
+								.addComponent(updateAppNewTime)
+								.addComponent(updateAppNewDateLabel)
+								.addComponent(updateAppNewDate)
+								.addComponent(updateAppServiceLabel)
+								.addComponent(updateAppServiceList))
+						.addComponent(updateAppButton)
+						.addComponent(horizontalLineBottom)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(cancelAppDateLabel)
+								.addComponent(cancelAppDateList))
+						.addComponent(cancelAppButton)
+						.addComponent(horizontalLineTable)
+						.addComponent(appOverviewLabel)
+						.addComponent(appointmentTable)
+						.addComponent(horizontalLineLast)
+						.addComponent(makeAppBackButton)
+						)
 
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { makeAppTime, makeAppDate, makeAppServiceList });
-		layout.linkSize(SwingConstants.HORIZONTAL,
-				new java.awt.Component[] { makeAppTime, makeAppDate, makeAppServiceList });
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { updateAppDateLabel, updateAppDateList });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { updateAppDateLabel, updateAppDateList });
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { updateAppNewTime, updateAppNewDate, updateAppServiceList });
-		layout.linkSize(SwingConstants.HORIZONTAL,
-				new java.awt.Component[] { updateAppNewTime, updateAppNewDate, updateAppServiceList });
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { cancelAppDateLabel, cancelAppDateList });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { cancelAppDateLabel, cancelAppDateList });
-
-		layout.setVerticalGroup(layout.createParallelGroup().addGroup(layout.createSequentialGroup()
-				.addComponent(message).addComponent(horizontalLineTop)
-				.addGroup(layout.createParallelGroup().addComponent(makeAppTimeLabel).addComponent(makeAppTime)
-						.addComponent(makeAppDateLabel).addComponent(makeAppDate).addComponent(makeAppServiceLabel)
-						.addComponent(makeAppServiceList))
-				.addComponent(makeAppButton).addComponent(horizontalLineMiddle)
-				.addGroup(layout.createParallelGroup().addComponent(updateAppDateLabel).addComponent(updateAppDateList))
-				.addGroup(
-						layout.createParallelGroup().addComponent(updateAppNewTimeLabel).addComponent(updateAppNewTime)
-								.addComponent(updateAppNewDateLabel).addComponent(updateAppNewDate)
-								.addComponent(updateAppServiceLabel).addComponent(updateAppServiceList))
-				.addComponent(updateAppButton).addComponent(horizontalLineBottom)
-				.addGroup(layout.createParallelGroup().addComponent(cancelAppDateLabel).addComponent(cancelAppDateList))
-				.addComponent(cancelAppButton).addComponent(horizontalLineTable).addComponent(appOverviewLabel)
-				.addComponent(appointmentTable).addComponent(horizontalLineLast).addComponent(makeAppBackButton))
-
-		);
+				);
 
 		pack();
 
+
 	}
+
 
 	/**
 	 * @author Shaswata
@@ -784,42 +883,41 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private void refreshDataForAppointmentBooking() {
 
-		if (error != null) {
+		if(error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
-		} else if (success != null) {
+		}else if(success != null) {
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 		}
 
+
 		// get the available services
 		availableServices = FlexiBookController.getServiceList();
-		if (makeAppServiceList != null) {
+		if(makeAppServiceList != null) {
 			makeAppServiceList.removeAllItems();
 		}
-		if (updateAppServiceList != null) {
+		if(updateAppServiceList != null) {
 			updateAppServiceList.removeAllItems();
 		}
 
 		for (String thisService : availableServices) {
 			makeAppServiceList.addItem(thisService);
 			updateAppServiceList.addItem(thisService);
-		}
-		;
+		};
 
-		if (makeAppServiceList != null) {
+		if(makeAppServiceList != null) {
 			makeAppServiceList.setSelectedIndex(-1);
 		}
-		if (updateAppServiceList != null) {
+		if(updateAppServiceList != null) {
 			updateAppServiceList.setSelectedIndex(-1);
 		}
 
-		if (FlexiBookApplication.getCurrentUser() != null) {
-			existingAppointments = FlexiBookController
-					.getCustomerAppointments(FlexiBookApplication.getCurrentUser().getUsername());
+		if(FlexiBookApplication.getCurrentUser() != null) {
+			existingAppointments = FlexiBookController.getCustomerAppointments(FlexiBookApplication.getCurrentUser().getUsername());
 			updateAppDateList.removeAllItems();
 			cancelAppDateList.removeAllItems();
-			for (TOAppointment appointment : existingAppointments) {
+			for(TOAppointment appointment : existingAppointments) {
 				String dateTime = appointment.getStartDate() + " " + appointment.getStartTime();
 				updateAppDateList.addItem(dateTime);
 				cancelAppDateList.addItem(dateTime);
@@ -828,7 +926,9 @@ public class FlexiBookPage extends JFrame{
 			cancelAppDateList.setSelectedIndex(-1);
 		}
 
+
 	}
+
 
 	/**
 	 * @author Shaswata
@@ -854,18 +954,18 @@ public class FlexiBookPage extends JFrame{
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			Time currentTime = FlexiBookApplication.getSystemTime();
 
-			FlexiBookController.makeAppointment(username, mainServiceName, null, startTime, startDate, todaysDate,
-					currentTime);
-			success = "Appointment booked for " + mainServiceName + " on " + startDate + " at " + startTime;
+			FlexiBookController.makeAppointment(username, mainServiceName, null, startTime, startDate, todaysDate, currentTime);
+			success = "Appointment booked for " + mainServiceName + " on " + startDate + " at " + startTime; 
 
-		} catch (InvalidInputException e) {
+		}catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
 
-		// refresh data
+		//refresh data
 		refreshDataForAppointmentBooking();
 
 	}
+
 
 	/**
 	 * @author Shaswata
@@ -878,13 +978,13 @@ public class FlexiBookPage extends JFrame{
 		try {
 
 			int selectedAppointment = updateAppDateList.getSelectedIndex();
-			if (selectedAppointment == -1) {
+			if(selectedAppointment == -1) {
 				throw new InvalidInputException("Need to select an appointment to update!");
 			}
 
 			String username = FlexiBookApplication.getCurrentUser().getUsername();
 			Time startTime = Time.valueOf(existingAppointments.get(selectedAppointment).getStartTime());
-			String sTime = existingAppointments.get(selectedAppointment).getStartTime().substring(0, 5);
+			String sTime = existingAppointments.get(selectedAppointment).getStartTime().substring(0,5);
 			Date startDate = Date.valueOf(existingAppointments.get(selectedAppointment).getStartDate());
 			String sDate = existingAppointments.get(selectedAppointment).getStartDate();
 			String newStartTime = updateAppNewTime.getText();
@@ -893,45 +993,39 @@ public class FlexiBookPage extends JFrame{
 			Time currentTime = FlexiBookApplication.getSystemTime();
 			int selectedService = updateAppServiceList.getSelectedIndex();
 
-			if (selectedService != -1) { // new service is selected
+			if(selectedService != -1) {		//new service is selected
 
 				String newService = availableServices.get(selectedService);
-				if (!newStartDate.equals("") && !newStartTime.equals("")) { // updating to a new time slot
-					FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime,
-							startDate, todaysDate, currentTime);
-					FlexiBookController.cancelAndBookNewService(username, newService, null, newStartTime, newStartDate,
-							todaysDate, currentTime);
-					success = "Appointment updated to  " + newStartDate + " at " + startTime + " for service "
-							+ newService;
-				} else { // not updating to a new time slot
-					FlexiBookController.cancelAndBookNewService(username, newService, null, sTime, sDate, todaysDate,
-							currentTime);
-					success = "Appointment updated to new service " + newService;
+				if(!newStartDate.equals("") && !newStartTime.equals("")) {		// updating to a new time slot
+					FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime, startDate, todaysDate, currentTime);
+					FlexiBookController.cancelAndBookNewService(username,  newService, null, newStartTime, newStartDate, todaysDate, currentTime);
+					success = "Appointment updated to  " + newStartDate + " at " + startTime + " for service " + newService; 
+				}else {		// not updating to a new time slot
+					FlexiBookController.cancelAndBookNewService(username, newService, null, sTime, sDate, todaysDate, currentTime);
+					success = "Appointment updated to new service " + newService; 
 				}
 
-			} else if ((selectedService == -1) && !newStartDate.equals("") && !newStartTime.equals("")) { // new service
-																											// not
-																											// selected,
-																											// new date
-																											// and time
-																											// selected
-				FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime, startDate,
-						todaysDate, currentTime);
-				success = "Appointment updated to " + newStartDate + " at " + startTime;
-			} else { // nothing selected
+			}
+			else if((selectedService == -1) && !newStartDate.equals("") && !newStartTime.equals("")){			// new service not selected, new date and time selected
+				FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime, startDate, todaysDate, currentTime);
+				success = "Appointment updated to " + newStartDate + " at " + startTime; 
+			}
+			else {		// nothing selected
 
 				throw new InvalidInputException("Cannot update appointment without new information!");
 
 			}
 
-		} catch (InvalidInputException e) {
+
+		}catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
 
-		// refresh data
+		//refresh data
 		refreshDataForAppointmentBooking();
 
 	}
+
 
 	/**
 	 * @author Shaswata
@@ -944,7 +1038,7 @@ public class FlexiBookPage extends JFrame{
 		try {
 
 			int selectedAppointment = cancelAppDateList.getSelectedIndex();
-			if (selectedAppointment == -1) {
+			if(selectedAppointment == -1) {
 				throw new InvalidInputException("Need to select an appointment to cancel!");
 			}
 
@@ -954,27 +1048,31 @@ public class FlexiBookPage extends JFrame{
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 
 			FlexiBookController.cancelAppointment(username, startTime, startDate, todaysDate);
-			success = "Appointment on " + startDate + " at " + startTime + " is cancelled.";
+			success = "Appointment on " + startDate + " at " + startTime + " is cancelled."; 
 
-		} catch (InvalidInputException e) {
+		}catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
 
-		// refresh data
+		//refresh data
 		refreshDataForAppointmentBooking();
 	}
 
-	// menu buttons
+
+
+	//menu buttons
 	private void bookAppActionPerformed(ActionEvent evt) {
 		initAppointmentBookingPage();
 	}
 
+
 	private void manageAccountActionPerformed(ActionEvent evt) {
-		// initManageAccountPage();
+		//initManageAccountPage();
 	}
 
+
 	private void manageOwnerAccountActionPerformed(ActionEvent evt) {
-		// TODO
+		//TODO
 	}
 
 	private void businessInfoActionPerformed(ActionEvent evt) {
@@ -997,18 +1095,24 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(setupBusinessInfoButton)
-						.addComponent(updateBusinessInfoButton).addComponent(businessInfoBackButton)));
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(setupBusinessInfoButton)
+						.addComponent(updateBusinessInfoButton)
+						.addComponent(businessInfoBackButton))
+				);
 
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton });
-		layout.linkSize(SwingConstants.HORIZONTAL,
-				new java.awt.Component[] { setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton });
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton});
 
-		layout.setVerticalGroup(layout.createParallelGroup()
-				.addGroup(layout.createSequentialGroup().addComponent(setupBusinessInfoButton)
-						.addComponent(updateBusinessInfoButton).addComponent(businessInfoBackButton)));
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(setupBusinessInfoButton)
+						.addComponent(updateBusinessInfoButton)
+						.addComponent(businessInfoBackButton))
+				);
 
 		setupBusinessInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1065,36 +1169,59 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(businessNameLabel)
-						.addComponent(businessAddressLabel).addComponent(businessEmailLabel)
-						.addComponent(businessPhoneLabel).addComponent(businessInfoAddVacationButton)
-						.addComponent(businessInfoAddHolidayButton).addComponent(businessInfoAddBusinessHourButton))
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(setBusinessName)
-						.addComponent(setBusinessAddress).addComponent(setBusinessEmail).addComponent(setBusinessPhone)
-						.addComponent(businessInfoBackButton).addComponent(businessInfoSetInfoButton)));
-
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { businessNameLabel, businessAddressLabel,
-				businessEmailLabel, businessPhoneLabel });
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { setBusinessName, setBusinessAddress, setBusinessEmail, setBusinessPhone });
-		layout.linkSize(SwingConstants.HORIZONTAL,
-				new java.awt.Component[] { businessInfoAddHolidayButton, businessInfoAddVacationButton,
-						businessInfoSetInfoButton, businessInfoBackButton, businessInfoAddBusinessHourButton,
-						setBusinessName, setBusinessAddress, setBusinessEmail, setBusinessPhone });
-
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(layout.createParallelGroup().addComponent(businessNameLabel).addComponent(setBusinessName))
-				.addGroup(layout.createParallelGroup().addComponent(businessAddressLabel)
-						.addComponent(setBusinessAddress))
-				.addGroup(layout.createParallelGroup().addComponent(businessEmailLabel).addComponent(setBusinessEmail))
-				.addGroup(layout.createParallelGroup().addComponent(businessPhoneLabel).addComponent(setBusinessPhone))
-				.addGroup(layout.createParallelGroup().addComponent(businessInfoAddVacationButton)
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(businessNameLabel)
+						.addComponent(businessAddressLabel)
+						.addComponent(businessEmailLabel)
+						.addComponent(businessPhoneLabel)
+						.addComponent(businessInfoAddVacationButton)
+						.addComponent(businessInfoAddHolidayButton)
+						.addComponent(businessInfoAddBusinessHourButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(setBusinessName)
+						.addComponent(setBusinessAddress)
+						.addComponent(setBusinessEmail)
+						.addComponent(setBusinessPhone)
+						.addComponent(businessInfoBackButton)
 						.addComponent(businessInfoSetInfoButton))
-				.addGroup(layout.createParallelGroup().addComponent(businessInfoAddHolidayButton)
-						.addComponent(businessInfoBackButton))
-				.addGroup(layout.createParallelGroup().addComponent(businessInfoAddBusinessHourButton)));
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {setBusinessName, setBusinessAddress, setBusinessEmail, setBusinessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoAddHolidayButton, businessInfoAddVacationButton, businessInfoSetInfoButton, businessInfoBackButton, businessInfoAddBusinessHourButton, setBusinessName, setBusinessAddress, setBusinessEmail, setBusinessPhone});
 
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessNameLabel)
+						.addComponent(setBusinessName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessAddressLabel)
+						.addComponent(setBusinessAddress))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessEmailLabel)
+						.addComponent(setBusinessEmail))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessPhoneLabel)
+						.addComponent(setBusinessPhone))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoAddVacationButton)
+						.addComponent(businessInfoSetInfoButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoAddHolidayButton)
+						.addComponent(businessInfoBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoAddBusinessHourButton))
+				);
+		
+
+		
 		businessInfoBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initBusinessInfoPage();
@@ -1106,19 +1233,19 @@ public class FlexiBookPage extends JFrame{
 				setInfoButtonPressed(e);
 			}
 		});
-
+		
 		businessInfoAddVacationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initAddVacationPage();
 			}
 		});
-
+		
 		businessInfoAddHolidayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initAddHolidayPage();
 			}
 		});
-
+		
 		businessInfoAddBusinessHourButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initAddBusinessHourPage();
@@ -1127,6 +1254,8 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
+
+	
 
 	private void setInfoButtonPressed(ActionEvent evt) {
 		error = null;
@@ -1137,8 +1266,7 @@ public class FlexiBookPage extends JFrame{
 			String phoneNumber = setBusinessPhone.getText();
 			String email = setBusinessEmail.getText();
 			FlexiBookController.setupBusinessInfo(name, address, phoneNumber, email);
-			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber
-					+ " and email: " + email;
+			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1151,7 +1279,8 @@ public class FlexiBookPage extends JFrame{
 			message.setText(error);
 			message.setForeground(Color.RED);
 
-		} else if (success != null) {
+		}
+		else if (success != null) {
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 
@@ -1164,7 +1293,7 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
-
+	
 	private void initAddVacationPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
@@ -1175,9 +1304,11 @@ public class FlexiBookPage extends JFrame{
 		JLabel startVacationTimeLabel = new JLabel();
 		JLabel endVacationDateLabel = new JLabel();
 		JLabel endVacationTimeLabel = new JLabel();
-
+		
 		JButton addVacationBackButton = new JButton();
 		JButton addVacationAddButton = new JButton();
+
+
 
 		startVacationDateLabel.setText("Start Date");
 		startVacationTimeLabel.setText("Start Time");
@@ -1191,39 +1322,58 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(startVacationDateLabel)
-						.addComponent(startVacationTimeLabel).addComponent(endVacationDateLabel)
-						.addComponent(endVacationTimeLabel).addComponent(addVacationBackButton))
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(startVacationDate)
-						.addComponent(startVacationTime).addComponent(endVacationDate).addComponent(endVacationTime)
-						.addComponent(addVacationAddButton)));
-
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { startVacationDateLabel,
-				startVacationTimeLabel, endVacationDateLabel, endVacationTimeLabel });
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { startVacationDate, startVacationTime, endVacationDate, endVacationTime });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { addVacationBackButton,
-				addVacationAddButton, startVacationDate, startVacationTime, endVacationDate, endVacationTime });
-
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(layout.createParallelGroup().addComponent(startVacationDateLabel)
-						.addComponent(startVacationDate))
-				.addGroup(layout.createParallelGroup().addComponent(startVacationTimeLabel)
-						.addComponent(startVacationTime))
-				.addGroup(layout.createParallelGroup().addComponent(endVacationDateLabel).addComponent(endVacationDate))
-				.addGroup(layout.createParallelGroup().addComponent(endVacationTimeLabel).addComponent(endVacationTime))
-				.addGroup(layout.createParallelGroup().addComponent(addVacationBackButton)
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startVacationDateLabel)
+						.addComponent(startVacationTimeLabel)
+						.addComponent(endVacationDateLabel)
+						.addComponent(endVacationTimeLabel)
+						.addComponent(addVacationBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startVacationDate)
+						.addComponent(startVacationTime)
+						.addComponent(endVacationDate)
+						.addComponent(endVacationTime)
 						.addComponent(addVacationAddButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startVacationDateLabel, startVacationTimeLabel, endVacationDateLabel, endVacationTimeLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startVacationDate, startVacationTime, endVacationDate, endVacationTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addVacationBackButton, addVacationAddButton, startVacationDate, startVacationTime, endVacationDate, endVacationTime});
 
-		);
 
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startVacationDateLabel)
+						.addComponent(startVacationDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startVacationTimeLabel)
+						.addComponent(startVacationTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endVacationDateLabel)
+						.addComponent(endVacationDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endVacationTimeLabel)
+						.addComponent(endVacationTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addVacationBackButton)
+						.addComponent(addVacationAddButton))
+				
+				);
+		
+
+		
 		addVacationBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initSetupBusinessInfoPage();
 			}
 		});
-
+		
 		addVacationAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addVacationButtonPressed(e);
@@ -1232,7 +1382,7 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
-
+	
 	private void addVacationButtonPressed(ActionEvent evt) {
 		error = null;
 		success = null;
@@ -1242,8 +1392,7 @@ public class FlexiBookPage extends JFrame{
 			String endDate = endVacationDate.getText();
 			String endTime = endVacationTime.getText();
 			FlexiBookController.addVacationSlot(startDate, startTime, endDate, endTime);
-			success = "Vacation slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at "
-					+ endTime + " added";
+			success = "Vacation slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at " + endTime + " added"; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1251,13 +1400,14 @@ public class FlexiBookPage extends JFrame{
 		refreshAddVacationPage();
 
 	}
-
+	
 	private void refreshAddVacationPage() {
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
 
-		} else if (success != null) {
+		}
+		else if (success != null) {
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 
@@ -1270,7 +1420,7 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
-
+	
 	private void initAddHolidayPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
@@ -1281,9 +1431,11 @@ public class FlexiBookPage extends JFrame{
 		JLabel startHolidayTimeLabel = new JLabel();
 		JLabel endHolidayDateLabel = new JLabel();
 		JLabel endHolidayTimeLabel = new JLabel();
-
+		
 		JButton addHolidayBackButton = new JButton();
 		JButton addHolidayAddButton = new JButton();
+
+
 
 		startHolidayDateLabel.setText("Start Date");
 		startHolidayTimeLabel.setText("Start Time");
@@ -1297,39 +1449,58 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(startHolidayDateLabel)
-						.addComponent(startHolidayTimeLabel).addComponent(endHolidayDateLabel)
-						.addComponent(endHolidayTimeLabel).addComponent(addHolidayBackButton))
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(startHolidayDate)
-						.addComponent(startHolidayTime).addComponent(endHolidayDate).addComponent(endHolidayTime)
-						.addComponent(addHolidayAddButton)));
-
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { startHolidayDateLabel,
-				startHolidayTimeLabel, endHolidayDateLabel, endHolidayTimeLabel });
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { addHolidayBackButton, addHolidayAddButton,
-				startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime });
-
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(
-						layout.createParallelGroup().addComponent(startHolidayDateLabel).addComponent(startHolidayDate))
-				.addGroup(
-						layout.createParallelGroup().addComponent(startHolidayTimeLabel).addComponent(startHolidayTime))
-				.addGroup(layout.createParallelGroup().addComponent(endHolidayDateLabel).addComponent(endHolidayDate))
-				.addGroup(layout.createParallelGroup().addComponent(endHolidayTimeLabel).addComponent(endHolidayTime))
-				.addGroup(layout.createParallelGroup().addComponent(addHolidayBackButton)
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startHolidayDateLabel)
+						.addComponent(startHolidayTimeLabel)
+						.addComponent(endHolidayDateLabel)
+						.addComponent(endHolidayTimeLabel)
+						.addComponent(addHolidayBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(startHolidayDate)
+						.addComponent(startHolidayTime)
+						.addComponent(endHolidayDate)
+						.addComponent(endHolidayTime)
 						.addComponent(addHolidayAddButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startHolidayDateLabel, startHolidayTimeLabel, endHolidayDateLabel, endHolidayTimeLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addHolidayBackButton, addHolidayAddButton, startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime});
 
-		);
 
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startHolidayDateLabel)
+						.addComponent(startHolidayDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startHolidayTimeLabel)
+						.addComponent(startHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endHolidayDateLabel)
+						.addComponent(endHolidayDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endHolidayTimeLabel)
+						.addComponent(endHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addHolidayBackButton)
+						.addComponent(addHolidayAddButton))
+				
+				);
+		
+
+		
 		addHolidayBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initSetupBusinessInfoPage();
 			}
 		});
-
+		
 		addHolidayAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addHolidayButtonPressed(e);
@@ -1338,7 +1509,7 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
-
+	
 	private void addHolidayButtonPressed(ActionEvent evt) {
 		error = null;
 		success = null;
@@ -1348,8 +1519,7 @@ public class FlexiBookPage extends JFrame{
 			String endDate = endHolidayDate.getText();
 			String endTime = endHolidayTime.getText();
 			FlexiBookController.addHolidaySlot(startDate, startTime, endDate, endTime);
-			success = "Holiday slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at "
-					+ endTime + " added";
+			success = "Holiday slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at " + endTime + " added"; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1357,13 +1527,14 @@ public class FlexiBookPage extends JFrame{
 		refreshAddHolidayPage();
 
 	}
-
+	
 	private void refreshAddHolidayPage() {
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
 
-		} else if (success != null) {
+		}
+		else if (success != null) {
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 
@@ -1376,7 +1547,7 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
-
+	
 	private void initAddBusinessHourPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
@@ -1386,7 +1557,7 @@ public class FlexiBookPage extends JFrame{
 		JLabel addBusinessHourDayLabel = new JLabel();
 		JLabel addBusinessHourStartLabel = new JLabel();
 		JLabel addBusinessHourEndLabel = new JLabel();
-
+		
 		JButton addBusinessHourBackButton = new JButton();
 		JButton addBusinessHourAddButton = new JButton();
 
@@ -1401,39 +1572,53 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(addBusinessHourDayLabel)
-						.addComponent(addBusinessHourStartLabel).addComponent(addBusinessHourEndLabel)
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(addBusinessHourDayLabel)
+						.addComponent(addBusinessHourStartLabel)
+						.addComponent(addBusinessHourEndLabel)
 						.addComponent(addBusinessHourBackButton))
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(addBusinessHourDay)
-						.addComponent(addBusinessHourStart).addComponent(addBusinessHourEnd)
-						.addComponent(addBusinessHourAddButton)));
-
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { addBusinessHourDayLabel,
-				addBusinessHourStartLabel, addBusinessHourEndLabel });
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { addBusinessHourBackButton,
-				addBusinessHourAddButton, addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd });
-
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(layout.createParallelGroup().addComponent(addBusinessHourDayLabel)
-						.addComponent(addBusinessHourDay))
-				.addGroup(layout.createParallelGroup().addComponent(addBusinessHourStartLabel)
-						.addComponent(addBusinessHourStart))
-				.addGroup(layout.createParallelGroup().addComponent(addBusinessHourEndLabel)
-						.addComponent(addBusinessHourEnd))
-				.addGroup(layout.createParallelGroup().addComponent(addBusinessHourBackButton)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(addBusinessHourDay)
+						.addComponent(addBusinessHourStart)
+						.addComponent(addBusinessHourEnd)
 						.addComponent(addBusinessHourAddButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addBusinessHourDayLabel, addBusinessHourStartLabel, addBusinessHourEndLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addBusinessHourBackButton, addBusinessHourAddButton, addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
 
-		);
 
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourDayLabel)
+						.addComponent(addBusinessHourDay))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourStartLabel)
+						.addComponent(addBusinessHourStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourEndLabel)
+						.addComponent(addBusinessHourEnd))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addBusinessHourBackButton)
+						.addComponent(addBusinessHourAddButton))
+				
+				);
+		
+
+		
 		addBusinessHourBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initSetupBusinessInfoPage();
 			}
 		});
-
+		
 		addBusinessHourAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addBusinessHourButtonPressed(e);
@@ -1442,7 +1627,7 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
-
+	
 	private void addBusinessHourButtonPressed(ActionEvent evt) {
 		error = null;
 		success = null;
@@ -1451,7 +1636,7 @@ public class FlexiBookPage extends JFrame{
 			String startTime = addBusinessHourStart.getText();
 			String endTime = addBusinessHourEnd.getText();
 			FlexiBookController.addBusinessHour(day, startTime, endTime);
-			success = "Business Hour on " + day + " from " + startTime + " to " + endTime + " added";
+			success = "Business Hour on " + day + " from " + startTime + " to " + endTime + " added"; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1459,13 +1644,14 @@ public class FlexiBookPage extends JFrame{
 		refreshAddBusinessHourPage();
 
 	}
-
+	
 	private void refreshAddBusinessHourPage() {
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
 
-		} else if (success != null) {
+		}
+		else if (success != null) {
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 
@@ -1477,7 +1663,7 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
-
+	
 	private void initUpdateBusinessInfoPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
@@ -1510,40 +1696,59 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(businessNameLabel)
-						.addComponent(businessAddressLabel).addComponent(businessEmailLabel)
-						.addComponent(businessPhoneLabel).addComponent(businessInfoUpdateVacationButton)
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(businessNameLabel)
+						.addComponent(businessAddressLabel)
+						.addComponent(businessEmailLabel)
+						.addComponent(businessPhoneLabel)
+						.addComponent(businessInfoUpdateVacationButton)
 						.addComponent(businessInfoUpdateHolidayButton)
 						.addComponent(businessInfoUpdateBusinessHourButton))
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(updateBusinessName)
-						.addComponent(updateBusinessAddress).addComponent(updateBusinessEmail)
-						.addComponent(updateBusinessPhone).addComponent(businessInfoBackButton)
-						.addComponent(businessInfoUpdateInfoButton)));
-
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { businessNameLabel, businessAddressLabel,
-				businessEmailLabel, businessPhoneLabel });
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { updateBusinessName, updateBusinessAddress,
-				updateBusinessEmail, updateBusinessPhone });
-		layout.linkSize(SwingConstants.HORIZONTAL,
-				new java.awt.Component[] { businessInfoUpdateHolidayButton, businessInfoUpdateVacationButton,
-						businessInfoUpdateInfoButton, businessInfoBackButton, businessInfoUpdateBusinessHourButton,
-						updateBusinessName, updateBusinessAddress, updateBusinessEmail, updateBusinessPhone });
-
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(layout.createParallelGroup().addComponent(businessNameLabel).addComponent(updateBusinessName))
-				.addGroup(layout.createParallelGroup().addComponent(businessAddressLabel)
-						.addComponent(updateBusinessAddress))
-				.addGroup(
-						layout.createParallelGroup().addComponent(businessEmailLabel).addComponent(updateBusinessEmail))
-				.addGroup(
-						layout.createParallelGroup().addComponent(businessPhoneLabel).addComponent(updateBusinessPhone))
-				.addGroup(layout.createParallelGroup().addComponent(businessInfoUpdateVacationButton)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(updateBusinessName)
+						.addComponent(updateBusinessAddress)
+						.addComponent(updateBusinessEmail)
+						.addComponent(updateBusinessPhone)
+						.addComponent(businessInfoBackButton)
 						.addComponent(businessInfoUpdateInfoButton))
-				.addGroup(layout.createParallelGroup().addComponent(businessInfoUpdateHolidayButton)
-						.addComponent(businessInfoBackButton))
-				.addGroup(layout.createParallelGroup().addComponent(businessInfoUpdateBusinessHourButton)));
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateBusinessName, updateBusinessAddress, updateBusinessEmail, updateBusinessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {businessInfoUpdateHolidayButton, businessInfoUpdateVacationButton, businessInfoUpdateInfoButton, businessInfoBackButton, businessInfoUpdateBusinessHourButton, updateBusinessName, updateBusinessAddress, updateBusinessEmail, updateBusinessPhone});
 
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessNameLabel)
+						.addComponent(updateBusinessName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessAddressLabel)
+						.addComponent(updateBusinessAddress))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessEmailLabel)
+						.addComponent(updateBusinessEmail))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessPhoneLabel)
+						.addComponent(updateBusinessPhone))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateVacationButton)
+						.addComponent(businessInfoUpdateInfoButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateHolidayButton)
+						.addComponent(businessInfoBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessInfoUpdateBusinessHourButton))
+				);
+		
+
+		
 		businessInfoBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initBusinessInfoPage();
@@ -1555,19 +1760,19 @@ public class FlexiBookPage extends JFrame{
 				updateInfoButtonPressed(e);
 			}
 		});
-
+		
 		businessInfoUpdateVacationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initAddVacationPage();
 			}
 		});
-
+		
 		businessInfoUpdateHolidayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initAddHolidayPage();
 			}
 		});
-
+		
 		businessInfoUpdateBusinessHourButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initAddBusinessHourPage();
@@ -1576,7 +1781,7 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
-
+	
 	private void updateInfoButtonPressed(ActionEvent evt) {
 		error = null;
 		success = null;
@@ -1586,8 +1791,7 @@ public class FlexiBookPage extends JFrame{
 			String phoneNumber = updateBusinessPhone.getText();
 			String email = updateBusinessEmail.getText();
 			FlexiBookController.updateBusinessInfo(name, address, phoneNumber, email);
-			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber
-					+ " and email: " + email;
+			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1600,7 +1804,8 @@ public class FlexiBookPage extends JFrame{
 			message.setText(error);
 			message.setForeground(Color.RED);
 
-		} else if (success != null) {
+		}
+		else if (success != null) {
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 
@@ -1614,23 +1819,29 @@ public class FlexiBookPage extends JFrame{
 		pack();
 	}
 
+
+
 	private void manageAppActionPerformed(ActionEvent evt) {
-		// initManageAppAcionPerformed();
+		//initManageAppAcionPerformed();
 	}
 
+
+
 	private void viewCalenderActionPerformed(ActionEvent evt) {
-		// initViewAppCalenderPage();
+		//initViewAppCalenderPage();
 	}
+
 
 	/**
 	 * @author Sneha
 	 * @param evt
 	 */
-	private void manageServiceActionPerformed(ActionEvent evt) {
-		// addServicePage
+	private void manageServiceActionPerformed (ActionEvent evt) {
+		//addServicePage
 
-		getContentPane().removeAll();
+		getContentPane().removeAll(); 
 		getContentPane().repaint();
+
 
 		JButton addServPageButton = new JButton();
 		addServPageButton.setText("Add Service");
@@ -1641,26 +1852,36 @@ public class FlexiBookPage extends JFrame{
 		JButton manageServiceBackButton = new JButton();
 		manageServiceBackButton.setText("Back");
 
+
+
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup().addGroup(
-				layout.createParallelGroup().addComponent(addServPageButton).addComponent(updateServPageButton)
-						.addComponent(deleteServPageButton).addComponent(manageServiceBackButton))
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addServPageButton)
+						.addComponent(updateServPageButton)
+						.addComponent(deleteServPageButton)
+						.addComponent(manageServiceBackButton))
 
-		);
+				);
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { addServPageButton, deleteServPageButton,
-				updateServPageButton, manageServiceBackButton });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { addServPageButton, deleteServPageButton,
-				updateServPageButton, manageServiceBackButton });
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
 
-		layout.setVerticalGroup(layout.createParallelGroup()
-				.addGroup(layout.createSequentialGroup().addComponent(addServPageButton)
-						.addComponent(updateServPageButton).addComponent(deleteServPageButton)
-						.addComponent(manageServiceBackButton)));
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(addServPageButton)
+						.addComponent(updateServPageButton)
+						.addComponent(deleteServPageButton)
+						.addComponent(manageServiceBackButton))
+				);
+
+
 
 		addServPageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1696,9 +1917,9 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private void addServiceActionPerformed(ActionEvent evt) {
 		error = "";
-		success = "";
+		success = ""; 
 
-		getContentPane().removeAll();
+		getContentPane().removeAll(); 
 		getContentPane().repaint();
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -1715,30 +1936,50 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
 
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(serviceNameLabel)
-						.addComponent(serviceDurationLabel).addComponent(downtimeStartLabel)
-						.addComponent(downtimeDurationLabel).addComponent(addServiceBackButton))
-				.addGroup(layout.createParallelGroup().addComponent(serviceName).addComponent(serviceDuration)
-						.addComponent(downtimeStart).addComponent(downtimeDuration).addComponent(addServiceButton)));
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(serviceNameLabel)
+						.addComponent(serviceDurationLabel)
+						.addComponent(downtimeStartLabel)
+						.addComponent(downtimeDurationLabel)
+						.addComponent(addServiceBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(serviceName)
+						.addComponent(serviceDuration)
+						.addComponent(downtimeStart)
+						.addComponent(downtimeDuration)
+						.addComponent(addServiceButton))
+				);
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { serviceNameLabel, serviceDurationLabel,
-				downtimeStartLabel, downtimeDurationLabel });
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { serviceName, serviceDuration, downtimeStart, downtimeDuration });
-		// layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[]
-		// {addServPageButton, deleteServPageButton, updateServPageButton,
-		// manageServiceBackButton});
 
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(layout.createParallelGroup().addComponent(serviceNameLabel).addComponent(serviceName))
-				.addGroup(layout.createParallelGroup().addComponent(serviceDurationLabel).addComponent(serviceDuration))
-				.addGroup(layout.createParallelGroup().addComponent(downtimeStartLabel).addComponent(downtimeStart))
-				.addGroup(
-						layout.createParallelGroup().addComponent(downtimeDurationLabel).addComponent(downtimeDuration))
-				.addGroup(layout.createParallelGroup().addComponent(addServiceBackButton)
-						.addComponent(addServiceButton)));
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceNameLabel, serviceDurationLabel, downtimeStartLabel, downtimeDurationLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {serviceName, serviceDuration, downtimeStart, downtimeDuration});
+		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(serviceNameLabel)
+						.addComponent(serviceName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(serviceDurationLabel)
+						.addComponent(serviceDuration))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(downtimeStartLabel)
+						.addComponent(downtimeStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(downtimeDurationLabel)
+						.addComponent(downtimeDuration))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addServiceBackButton)
+						.addComponent(addServiceButton))
+				);
+
+
 
 		addServiceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1753,21 +1994,22 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 
-		// refreshServicePage();
-		// resize page to fit all components
+		//refreshServicePage();
+		//resize page to fit all components 
 		pack();
 	}
+
 
 	/**
 	 * @author Sneha
 	 * @param evt
 	 */
-	private void addServiceButtonPressed(ActionEvent evt) {
+	private void addServiceButtonPressed (ActionEvent evt) {
 		error = "";
-		success = "";
+		success = ""; 
 		String name = null;
-		int duration = 0;
-		int dtDuration = 0;
+		int duration = 0 ;
+		int dtDuration = 0; 
 		int dtStart = 0;
 		name = serviceName.getText();
 
@@ -1775,45 +2017,50 @@ public class FlexiBookPage extends JFrame{
 			error = "Please enter a name.";
 		}
 
-		// duration validation check
+		//duration validation check
 		if (error == null || error.length() == 0) {
 			try {
 				duration = Integer.parseInt(serviceDuration.getText());
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				error = "Please enter a valid service duration.";
 			}
 		}
 
-		// downtime start validation check
+		//downtime start validation check
 		if (error == null || error.length() == 0) {
 			try {
 
 				dtStart = Integer.parseInt(downtimeStart.getText());
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				error = "Please enter a valid downtime start.";
 			}
 		}
 
-		// downtime duration validation check
+		//downtime duration validation check
 		if (error == null || error.length() == 0) {
 			try {
 
 				dtDuration = Integer.parseInt(downtimeDuration.getText());
 
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				error = "Please enter a valid downtime duration.";
 			}
 		}
 
+
+
 		if (error == null || error.length() == 0) {
 
 			try {
-				// call controller
+				//call controller 
 				FlexiBookController.addService(name, duration, dtDuration, dtStart);
-				success = "Service " + name + " successfully added";
+				success = "Service " +name+ " successfully added";
 			}
 
-			catch (InvalidInputException ie) {
+			catch (InvalidInputException ie){
 				error = ie.getMessage();
 
 			}
@@ -1821,7 +2068,7 @@ public class FlexiBookPage extends JFrame{
 
 		refreshServicePage();
 
-		// FlexiBookPersistence.save(flexiBook);
+		//FlexiBookPersistence.save(flexiBook);
 		pack();
 	}
 
@@ -1829,17 +2076,18 @@ public class FlexiBookPage extends JFrame{
 	 * @author Sneha
 	 * @param evt
 	 */
-	private void updateServiceActionPerformed(ActionEvent evt) {
+	private void updateServiceActionPerformed (ActionEvent evt) {
 		error = "";
-		success = "";
+		success = ""; 
 
-		getContentPane().removeAll();
+		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		// getContentPane().setSize(dim);
+		//getContentPane().setSize(dim);
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		// page components
+		//page components
+
 
 		newServiceNameLabel.setText("New name:");
 		newServiceDurationLabel.setText("New duration (mins):");
@@ -1854,43 +2102,65 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
 
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(updateExistingServiceLabel)
-						.addComponent(newServiceNameLabel).addComponent(newServiceDurationLabel)
-						.addComponent(newDowntimeStartLabel).addComponent(newDowntimeDurationLabel)
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(updateExistingServiceLabel)
+						.addComponent(newServiceNameLabel)
+						.addComponent(newServiceDurationLabel)
+						.addComponent(newDowntimeStartLabel)
+						.addComponent(newDowntimeDurationLabel)
 						.addComponent(updateServiceBackButton))
-				.addGroup(layout.createParallelGroup().addComponent(updateServiceNameCheckBox)
-						.addComponent(updateServiceDurationCheckBox).addComponent(updateServiceDowntimeStartCheckBox)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateServiceNameCheckBox)
+						.addComponent(updateServiceDurationCheckBox)
+						.addComponent(updateServiceDowntimeStartCheckBox)
 						.addComponent(updateServiceDowntimeDurationCheckBox))
-				.addGroup(layout.createParallelGroup().addComponent(updateExistingService).addComponent(newServiceName)
-						.addComponent(newServiceDuration).addComponent(newDowntimeStart)
-						.addComponent(newDowntimeDuration).addComponent(updateServiceButton)));
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { updateServiceNameCheckBox, updateServiceDurationCheckBox,
-						updateServiceDowntimeStartCheckBox, updateServiceDowntimeDurationCheckBox });
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateExistingService)
+						.addComponent(newServiceName)
+						.addComponent(newServiceDuration)
+						.addComponent(newDowntimeStart)
+						.addComponent(newDowntimeDuration)
+						.addComponent(updateServiceButton))
+				);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateServiceNameCheckBox, updateServiceDurationCheckBox, updateServiceDowntimeStartCheckBox, updateServiceDowntimeDurationCheckBox});
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { updateExistingServiceLabel,
-				newServiceNameLabel, newServiceDurationLabel, newDowntimeStartLabel, newDowntimeDurationLabel });
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { newServiceName, newServiceDuration, newDowntimeStart, newDowntimeDuration });
-		// layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[]
-		// {addServPageButton, deleteServPageButton, updateServPageButton,
-		// manageServiceBackButton});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateExistingServiceLabel, newServiceNameLabel, newServiceDurationLabel, newDowntimeStartLabel, newDowntimeDurationLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {newServiceName, newServiceDuration, newDowntimeStart, newDowntimeDuration});
+		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addServPageButton, deleteServPageButton, updateServPageButton, manageServiceBackButton});
 
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(layout.createParallelGroup().addComponent(updateExistingServiceLabel)
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateExistingServiceLabel)
 						.addComponent(updateExistingService))
-				.addGroup(layout.createParallelGroup().addComponent(newServiceNameLabel)
-						.addComponent(updateServiceNameCheckBox).addComponent(newServiceName))
-				.addGroup(layout.createParallelGroup().addComponent(newServiceDurationLabel)
-						.addComponent(updateServiceDurationCheckBox).addComponent(newServiceDuration))
-				.addGroup(layout.createParallelGroup().addComponent(newDowntimeStartLabel)
-						.addComponent(updateServiceDowntimeStartCheckBox).addComponent(newDowntimeStart))
-				.addGroup(layout.createParallelGroup().addComponent(newDowntimeDurationLabel)
-						.addComponent(updateServiceDowntimeDurationCheckBox).addComponent(newDowntimeDuration))
-				.addGroup(layout.createParallelGroup().addComponent(updateServiceBackButton)
-						.addComponent(updateServiceButton)));
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newServiceNameLabel)
+						.addComponent(updateServiceNameCheckBox)
+						.addComponent(newServiceName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newServiceDurationLabel)
+						.addComponent(updateServiceDurationCheckBox)
+						.addComponent(newServiceDuration))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newDowntimeStartLabel)
+						.addComponent(updateServiceDowntimeStartCheckBox)
+						.addComponent(newDowntimeStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newDowntimeDurationLabel)
+						.addComponent(updateServiceDowntimeDurationCheckBox)
+						.addComponent(newDowntimeDuration))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateServiceBackButton)
+						.addComponent(updateServiceButton))
+				);
+
+
 
 		updateServiceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1907,28 +2177,29 @@ public class FlexiBookPage extends JFrame{
 		});
 
 		refreshServicePage();
-		// resize page to fit all components
+		//resize page to fit all components 
 		pack();
 	}
 
-	private void updateServiceButtonPressed(ActionEvent evt) {
+	private void updateServiceButtonPressed (ActionEvent evt) {
 		error = "";
-		success = "";
-
+		success = ""; 
+		
 		int selectedService = updateExistingService.getSelectedIndex();
-
+		
 		if (selectedService < 0) {
-			error = "Please select a service to update.";
+			error = "Please select a service to update."; 
 			refreshServicePage();
 		}
 
-		// original service parameters:
-		String name = null;
+		
+		//original service parameters:
+		String name = null; 
 		String newName = null;
 		int duration = 0;
-		int dtDur = 0;
+		int dtDur = 0; 
 		int dtStart = 0;
-
+		
 		if (error == null || error.length() == 0) {
 			name = existingServices.get(selectedService).getServiceName();
 			newName = existingServices.get(selectedService).getServiceName();
@@ -1936,52 +2207,56 @@ public class FlexiBookPage extends JFrame{
 			dtDur = existingServices.get(selectedService).getDowntimeDur();
 			dtStart = existingServices.get(selectedService).getDowntimeDurStart();
 		}
-
+		
 		if (updateServiceNameCheckBox.isSelected()) {
-			if (newServiceName.getText().length() == 0) {
+			if(newServiceName.getText().length() == 0) {
 				error = "Please enter a name.";
 			}
 			newName = newServiceName.getText();
 		}
 
-		// duration validation check
+		//duration validation check
 		if ((error == null || error.length() == 0) && updateServiceDurationCheckBox.isSelected()) {
 			try {
 				duration = Integer.parseInt(newServiceDuration.getText());
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				error = "Please enter a valid service duration.";
 			}
 		}
 
-		// downtime start validation check
+		//downtime start validation check
 		if ((error == null || error.length() == 0) && updateServiceDowntimeStartCheckBox.isSelected()) {
 			try {
 				dtStart = Integer.parseInt(newDowntimeStart.getText());
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				error = "Please enter a valid downtime start.";
 			}
 		}
 
-		// downtime duration validation check
+		//downtime duration validation check
 		if ((error == null || error.length() == 0) && updateServiceDowntimeDurationCheckBox.isSelected()) {
 			try {
 
 				dtDur = Integer.parseInt(newDowntimeDuration.getText());
 
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				error = "Please enter a valid downtime duration.";
 			}
 		}
 
+
 		if (error == null || error.length() == 0) {
 			try {
-				// call controller
+				//call controller 
 				FlexiBookController.updateService(name, newName, duration, dtDur, dtStart);
-				success = "Service " + name + " successfully updated";
+				success = "Service " +name+ " successfully updated";
 				refreshServicePage();
 			}
 
-			catch (InvalidInputException ie) {
+			catch (InvalidInputException ie){
 				error = ie.getMessage();
 
 			}
@@ -1989,25 +2264,26 @@ public class FlexiBookPage extends JFrame{
 
 		refreshServicePage();
 
-		// FlexiBookPersistence.save(flexiBook);
+		//FlexiBookPersistence.save(flexiBook);
 		pack();
 	}
+
 
 	/**
 	 * @author Sneha
 	 * @param evt
 	 */
-	private void deleteServiceActionPerformed(ActionEvent evt) {
-		// error = "";
+	private void deleteServiceActionPerformed (ActionEvent evt) {
+		//error = "";
 		error = "";
-		success = "";
+		success = ""; 
 
-		getContentPane().removeAll();
+		getContentPane().removeAll(); 
 		getContentPane().repaint();
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		// page components
+		//page components
 
 		JLabel deleteExistingServiceLabel = new JLabel();
 		JButton deleteServiceButton = new JButton();
@@ -2022,20 +2298,33 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(layout.createSequentialGroup()
 
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(deleteExistingServiceLabel)
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(deleteExistingServiceLabel)
 						.addComponent(deleteServiceBackButton))
-				.addGroup(layout.createParallelGroup().addComponent(deleteExistingService)
-						.addComponent(deleteServiceButton)));
+				.addGroup(layout.createParallelGroup()
+						.addComponent(deleteExistingService)
+						.addComponent(deleteServiceButton))
+				);
 
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(layout.createParallelGroup().addComponent(deleteExistingServiceLabel)
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(deleteExistingServiceLabel)
 						.addComponent(deleteExistingService))
-				.addGroup(layout.createParallelGroup().addComponent(deleteServiceBackButton)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(deleteServiceBackButton)
 						.addComponent(deleteServiceButton))
 
-		);
+				);
+
+
 
 		deleteServiceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -2052,30 +2341,32 @@ public class FlexiBookPage extends JFrame{
 		});
 
 		refreshServicePage();
-		// resize page to fit all components
+		//resize page to fit all components 
 		pack();
 	}
+
 
 	/**
 	 * @author Sneha
 	 * @param evt
 	 */
-	private void deleteServiceButtonPressed(ActionEvent evt) {
+	private void deleteServiceButtonPressed (ActionEvent evt) {
 		error = "";
-		success = "";
+		success = ""; 
 
-		int selectedService = deleteExistingService.getSelectedIndex();
+		int selectedService = deleteExistingService.getSelectedIndex(); 
 		if (selectedService < 0) {
-			error = "Please select a service to delete.";
+			error = "Please select a service to delete."; 
 			refreshServicePage();
 		}
 
 		if (error == null || error.length() == 0) {
 			try {
 				FlexiBookController.deleteService(existingServices.get(selectedService).getServiceName());
-				success = "Service " + existingServices.get(selectedService).getServiceName() + " deleted successfully";
+				success = "Service " + existingServices.get(selectedService).getServiceName() + " deleted successfully" ;
 
-			} catch (InvalidInputException e) {
+			}
+			catch (InvalidInputException e){
 				error = e.getMessage();
 			}
 		}
@@ -2092,21 +2383,22 @@ public class FlexiBookPage extends JFrame{
 			message.setText(error);
 			message.setForeground(Color.RED);
 
-		} else {
+		}
+		else {
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 
 		}
 
 		if (error == null || error.length() == 0) {
-
-			// reset addService parameters
+		
+			//reset addService parameters
 			serviceName.setText("");
 			serviceDuration.setText("");
 			downtimeDuration.setText("");
 			downtimeStart.setText("");
 
-			// reset updateService parameters
+			//reset updateService parameters
 			newServiceName.setText("");
 			newServiceDuration.setText("");
 			newDowntimeDuration.setText("");
@@ -2116,21 +2408,21 @@ public class FlexiBookPage extends JFrame{
 			updateServiceDowntimeStartCheckBox.setSelected(false);
 			updateServiceNameCheckBox.setSelected(false);
 
+			
+
 			existingServices = new HashMap<Integer, TOService>();
 			updateExistingService.removeAllItems();
 			deleteExistingService.removeAllItems();
-			int index = 0;
+			int index = 0; 
 
-			for (TOService service : FlexiBookController.getExistingServices()) {
+			for (TOService service: FlexiBookController.getExistingServices()) {
 				existingServices.put(index, service);
 
-				updateExistingService.addItem("Service: " + service.getServiceName() + " | Duration: "
-						+ service.getServiceDur() + " | Downtime Start: " + service.getDowntimeDurStart()
-						+ " | Downtime Duration: " + service.getDowntimeDur());
+				updateExistingService.addItem("Service: " + service.getServiceName() + " | Duration: " + service.getServiceDur() + " | Downtime Start: " 
+						+ service.getDowntimeDurStart() + " | Downtime Duration: " +service.getDowntimeDur());
 
-				deleteExistingService.addItem("Service: " + service.getServiceName() + " | Duration: "
-						+ service.getServiceDur() + " | Downtime Start: " + service.getDowntimeDurStart()
-						+ " | Downtime Duration: " + service.getDowntimeDur());
+				deleteExistingService.addItem("Service: " + service.getServiceName() + " | Duration: " + service.getServiceDur() + " | Downtime Start: " 
+						+ service.getDowntimeDurStart() + " | Downtime Duration: " +service.getDowntimeDur());
 				index++;
 			}
 			updateExistingService.setSelectedIndex(-1);
@@ -2139,17 +2431,23 @@ public class FlexiBookPage extends JFrame{
 
 		pack();
 	}
+	
+	
 
 	/**
 	 * @author yasminamatta
 	 * @param evt
 	 */
-	private void managedAppointmentStatusActionPerformed(ActionEvent evt) {
-		getContentPane().removeAll();
+	private void managedAppointmentStatus(ActionEvent evt) {
+		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		error = "";
-		success = "";
-
+		error="";
+		success ="";
+		
+		
+		
+		
+		
 		startAppointmentButton = new JButton();
 		startAppointmentButton.setText("Start Appointment");
 		endAppointmentButton = new JButton();
@@ -2158,12 +2456,12 @@ public class FlexiBookPage extends JFrame{
 		noShowButton.setText("No Show");
 		backToMenuButton = new JButton();
 		backToMenuButton.setText("Back");
-		appointmentList = new JComboBox<String>(new String[0]);
+		appointmentList = new JComboBox<String>(new String[0]); 
 		appointmentListLabel = new JLabel();
 		appointmentListLabel.setText("Choose an appointment:");
 		appointmentDateLabel = new JLabel();
 		appointmentDateLabel.setText("Choose a date:");
-
+		
 		SqlDateModel model = new SqlDateModel();
 		Properties properties = new Properties();
 		properties.put("text.today", "Today");
@@ -2171,229 +2469,446 @@ public class FlexiBookPage extends JFrame{
 		properties.put("text.year", "Year");
 
 		JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
-		appointmentDatePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-
+		appointmentDatePicker = new JDatePickerImpl(datePanel , new DateLabelFormatter());
+		
+		
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-
-		layout.setHorizontalGroup(layout.createSequentialGroup()
+		
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
 //					.addGroup(layout.createParallelGroup()
 //							.addComponent(appointmentDateLabel)										
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(appointmentDateLabel)
-						.addComponent(appointmentListLabel).addComponent(startAppointmentButton)
-						.addComponent(endAppointmentButton).addComponent(noShowButton).addComponent(backToMenuButton))
-				.addGroup(
-						layout.createParallelGroup().addComponent(appointmentList).addComponent(appointmentDatePicker))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(message)
+							.addComponent(appointmentDateLabel)
+							.addComponent(appointmentListLabel)			
+							.addComponent(startAppointmentButton)	
+							.addComponent(endAppointmentButton)
+							.addComponent(noShowButton)
+							.addComponent(backToMenuButton))							
+					.addGroup(layout.createParallelGroup()
+							.addComponent(appointmentList)
+							.addComponent(appointmentDatePicker))
 //					.addGroup(layout.createParallelGroup()
-
+							
+							
 //					.addGroup(layout.createSequentialGroup()
+							
 
-		);
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { message });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { message });
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { appointmentListLabel, appointmentList });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { startAppointmentButton,
-				endAppointmentButton, noShowButton, appointmentDatePicker, backToMenuButton });
+							
+					
+				);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appointmentDatePicker,backToMenuButton});
 //		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
-		// layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[]
-		// {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { appointmentListLabel, appointmentList });
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { startAppointmentButton,
-				endAppointmentButton, noShowButton, appointmentDatePicker, backToMenuButton });
+		//layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
+		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appointmentDatePicker,backToMenuButton});
 //		
-
-		layout.setVerticalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(message))
-				.addGroup(layout.createParallelGroup().addComponent(appointmentDateLabel)
+		
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(appointmentDateLabel)
 						.addComponent(appointmentDatePicker))
-				.addGroup(layout.createParallelGroup().addComponent(appointmentListLabel).addComponent(appointmentList))
-				.addGroup(layout.createParallelGroup().addComponent(startAppointmentButton))
-				.addGroup(layout.createParallelGroup().addComponent(endAppointmentButton))
-				.addGroup(layout.createParallelGroup().addComponent(noShowButton))
-				.addGroup(layout.createParallelGroup().addComponent(backToMenuButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(appointmentListLabel)
+						.addComponent(appointmentList))						
+				.addGroup(layout.createParallelGroup()
+						.addComponent(startAppointmentButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(endAppointmentButton)	)
+				.addGroup(layout.createParallelGroup()		
+						.addComponent(noShowButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(backToMenuButton))
 
-		);
-
-		startAppointmentButton.addActionListener(new ActionListener() {
-
+					
+				);
+		 
+		
+		startAppointmentButton.addActionListener(new ActionListener(){ 
+			
 			public void actionPerformed(ActionEvent e) {
-
-				startAppointmentButtonPressed(e);
+				
+					startAppointmentButtonPressed(e);		
+			}
+		});
+		
+		endAppointmentButton.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e) {
+				
+					endAppointmentButtonPressed(e);	
 			}
 		});
 
-		endAppointmentButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-
-				endAppointmentButtonPressed(e);
-			}
-		});
-
-		noShowButton.addActionListener(new ActionListener() {
-
+		noShowButton.addActionListener(new ActionListener(){ 
+	
 			public void actionPerformed(ActionEvent e) {
 				registerNoShowButtonPressed(e);
 			}
 		});
-
-		backToMenuButton.addActionListener(new ActionListener() {
-
+		
+		
+		backToMenuButton.addActionListener(new ActionListener(){ 
+			
 			public void actionPerformed(ActionEvent e) {
 				initOwnerMenu();
 				message.setText("");
-
+		
 			}
 		});
-		pack();
-
+	pack();
+		
 	}
-
+	
 	/**
 	 * @author yasminamatta
 	 * @param evt
-	 * @throws InvalidInputException
+	 * @throws InvalidInputException 
 	 */
 	private void startAppointmentButtonPressed(ActionEvent evt) {
 		int selectedAppointment = appointmentList.getSelectedIndex();
-		if (selectedAppointment == -1) {
-			error = "Please enter an appointment";
-		}
-		if (appointmentDatePicker.getModel().getValue() == null) {
-			error = "Please enter a date";
-		}
-		if (error.isEmpty()) {
+			if(selectedAppointment == -1) {
+				error = "Please enter an appointment";
+			}
+			if(appointmentDatePicker.getModel().getValue()== null) {
+				error = "Please enter a date";
+			}
+			if(error.isEmpty()) {
 			try {
 				int day = appointmentDatePicker.getModel().getDay();
 				int month = appointmentDatePicker.getModel().getMonth();
 				int year = appointmentDatePicker.getModel().getYear();
-				String fullDate = year + "-" + month + "-" + day;
-				// Date date = Date.valueOf(fullDate);
-				for (TOAppointment appointment : existingAppointments) {
-					if (appointment.getStartDate().toString().equals(fullDate)) {
-						appointmentWithSpecificDate.add(appointment);
-					}
+				String fullDate = year+"-"+month+"-"+day;
+			//	Date date = Date.valueOf(fullDate);
+			for(TOAppointment appointment: existingAppointments) {
+				if(appointment.getStartDate().toString().equals(fullDate)) {
+					appointmentWithSpecificDate.add(appointment);
 				}
-				FlexiBookController.startAppointment(
-						appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(),
-						appointmentWithSpecificDate.get(selectedAppointment).getStartTime(),
-						appointmentWithSpecificDate.get(selectedAppointment).getStartDate(),
-						FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
-				success = "You have successfully started the appointment "
-						+ appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer"
-						+ appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
+			}
+			FlexiBookController.startAppointment(appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(),
+					appointmentWithSpecificDate.get(selectedAppointment).getStartTime(),
+					appointmentWithSpecificDate.get(selectedAppointment).getStartDate(),
+					FlexiBookApplication.getSystemDate(),
+					FlexiBookApplication.getSystemTime());
+			success = "You have successfully started the appointment " + appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer" + appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
 
-			} catch (InvalidInputException e) {
+			}
+			catch(InvalidInputException e) {
 				error += e.getMessage();
 			}
-		}
-		refreshAppointmentStatusPage();
-
+			}
+			refreshAppointmentStatusPage();
+			
 	}
 
 	/**
 	 * @author yasminamatta
 	 * @param evt
-	 * @throws InvalidInputException
+	 * @throws InvalidInputException 
 	 */
 	private void endAppointmentButtonPressed(ActionEvent evt) {
 		int selectedAppointment = appointmentList.getSelectedIndex();
-
-		if (selectedAppointment == -1) {
+		
+		if(selectedAppointment == -1) {
 			error = "Please enter an appointment";
 		}
-		if (appointmentDatePicker.getModel().getValue() == null) {
+		if(appointmentDatePicker.getModel().getValue()== null) {
 			error = "Please enter a date";
 		}
-		if (error.isEmpty()) {
-			try {
-
-				int day = appointmentDatePicker.getModel().getDay();
-				int month = appointmentDatePicker.getModel().getMonth();
-				int year = appointmentDatePicker.getModel().getYear();
-				String fullDate = year + "-" + month + "-" + day;
+		if(error.isEmpty()) {
+		try {
+			
+			int day = appointmentDatePicker.getModel().getDay();
+			int month = appointmentDatePicker.getModel().getMonth();
+			int year = appointmentDatePicker.getModel().getYear();
+			String fullDate = year+"-"+month+"-"+day;
 //			Date date = Date.valueOf(fullDate);
-				for (TOAppointment appointment : existingAppointments) {
-					if (appointment.getStartDate().toString().equals(fullDate)) {
-						appointmentWithSpecificDate.add(appointment);
-					}
-				}
-				FlexiBookController.endAppointment(
-						appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(),
-						appointmentWithSpecificDate.get(selectedAppointment).getStartTime(),
-						appointmentWithSpecificDate.get(selectedAppointment).getStartDate(),
-						FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
-				success = "You have successfully ended the appointment "
-						+ appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer"
-						+ appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
-
-			} catch (InvalidInputException e) {
-				error += e.getMessage();
+		for(TOAppointment appointment: existingAppointments) {
+			if(appointment.getStartDate().toString().equals(fullDate)) {
+				appointmentWithSpecificDate.add(appointment);
 			}
+		}
+		FlexiBookController.endAppointment(appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(),
+				appointmentWithSpecificDate.get(selectedAppointment).getStartTime(),
+				appointmentWithSpecificDate.get(selectedAppointment).getStartDate(),
+				FlexiBookApplication.getSystemDate(),
+				FlexiBookApplication.getSystemTime());
+		success = "You have successfully ended the appointment " + appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer" + appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
+
+		}
+		catch(InvalidInputException e) {
+			error += e.getMessage();
+		}
 		}
 		refreshAppointmentStatusPage();
 	}
+
+
 
 	/**
 	 * @author yasminamatta
 	 * @param evt
-	 * @throws InvalidInputException
+	 * @throws InvalidInputException 
 	 */
 	private void registerNoShowButtonPressed(ActionEvent evt) {
-		int selectedAppointment = appointmentList.getSelectedIndex();
-
-		if (selectedAppointment == -1) {
+			int selectedAppointment = appointmentList.getSelectedIndex();
+		
+		if(selectedAppointment == -1) {
 			error = "Please enter an appointment";
 		}
-		if (appointmentDatePicker.getModel().getValue() == null) {
+		if(appointmentDatePicker.getModel().getValue()== null) {
 			error = "Please enter a date";
 		}
-		if (error.isEmpty()) {
-			try {
-				int day = appointmentDatePicker.getModel().getDay();
-				int month = appointmentDatePicker.getModel().getMonth();
-				int year = appointmentDatePicker.getModel().getYear();
-				String fullDate = year + "-" + month + "-" + day;
+		if(error.isEmpty()) {
+		try {
+			int day = appointmentDatePicker.getModel().getDay();
+			int month = appointmentDatePicker.getModel().getMonth();
+			int year = appointmentDatePicker.getModel().getYear();
+			String fullDate = year+"-"+month+"-"+day;
 //			Date date = Date.valueOf(fullDate);
-				for (TOAppointment appointment : existingAppointments) {
-					if (appointment.getStartDate().toString().equals(fullDate)) {
-						appointmentWithSpecificDate.add(appointment);
-					}
-				}
-				FlexiBookController.registerNoShow(
-						appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(),
-						appointmentWithSpecificDate.get(selectedAppointment).getStartDate().toString(),
-						appointmentWithSpecificDate.get(selectedAppointment).getStartTime().toString(),
-						FlexiBookApplication.getSystemDate(), FlexiBookApplication.getSystemTime());
-				success = "You have successfully registered a no show for the appointment "
-						+ appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer"
-						+ appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
-
-			} catch (InvalidInputException e) {
-				error += e.getMessage();
+		for(TOAppointment appointment: existingAppointments) {
+			if(appointment.getStartDate().toString().equals(fullDate)) {
+				appointmentWithSpecificDate.add(appointment);
 			}
+		}
+		FlexiBookController.registerNoShow(appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(), 
+				appointmentWithSpecificDate.get(selectedAppointment).getStartDate().toString(),
+				appointmentWithSpecificDate.get(selectedAppointment).getStartTime().toString(),
+				FlexiBookApplication.getSystemDate(),
+				FlexiBookApplication.getSystemTime());
+		success = "You have successfully registered a no show for the appointment " + appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer" + appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
+				
+		}
+		catch(InvalidInputException e) {
+			error += e.getMessage();
+		}
 		}
 		refreshAppointmentStatusPage();
 	}
-
+	
 	private void refreshAppointmentStatusPage() {
-
+		
 		message.setForeground(Color.RED);
-		if (!error.isEmpty()) {
+		if(!error.isEmpty()) {
 			message.setText(error);
 		}
 
-		if (!success.isEmpty()) {
+		if(!success.isEmpty()) {
 			message.setText(success);
 		}
-		if (error.isEmpty()) {
+		if(error.isEmpty()) {
 			appointmentList.removeAllItems();
 		}
 		pack();
 	}
+	
+	/**
+	 * @author artus
+	 * 
+	 */
 
+	private void updateOwnerAccount(ActionEvent evt) {
+			
+			
+			getContentPane().removeAll(); 
+			getContentPane().repaint();
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			//error="";
+			//success ="";
+			
+
+			usernameLabel = new JLabel();
+			usernameLabel.setText("Owner Username :");
+			passwordLabel = new JLabel();
+			passwordLabel.setText("New Password :");
+			updateButton = new JButton();
+			updateButton.setText("Update Account");
+			backToMenuButton = new JButton();
+			backToMenuButton.setText("Back");
+			
+			GroupLayout layout = new GroupLayout(getContentPane());
+			getContentPane().setLayout(layout);
+			layout.setAutoCreateGaps(true);
+			layout.setAutoCreateContainerGaps(true);			
+			
+			layout.setHorizontalGroup(
+					layout.createSequentialGroup()
+						.addGroup(layout.createParallelGroup()
+								.addComponent(message)
+								.addComponent(usernameLabel)
+								.addComponent(passwordLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(message)
+								.addComponent(ownerUsername)
+								.addComponent(newPassword)
+								.addComponent(updateButton)
+								.addComponent(backToMenuButton))
+					);
+			
+
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
+			layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {usernameLabel,passwordLabel});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {ownerUsername,newPassword, updateButton, backToMenuButton});
+			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {ownerUsername,newPassword, updateButton, backToMenuButton});
+
+
+
+
+			layout.setVerticalGroup(
+					layout.createSequentialGroup()
+					.addComponent(message)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(usernameLabel)
+							.addComponent(ownerUsername))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(passwordLabel)
+							.addComponent(newPassword))
+					.addComponent(updateButton)
+					.addComponent(backToMenuButton)
+			);		
+			
+			backToMenuButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					message.setText("");
+					initOwnerMenu();
+				}
+			});
+			
+			updateButton.addActionListener(new java.awt.event.ActionListener() {
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	updatePasswordOwner(evt);
+	            }
+	        });
+			
+			pack();
+		
+	}
+			
+		public void updatePasswordOwner(ActionEvent evt) {		
+				    String username = ownerUsername.getText();
+				    String Password = newPassword.getText();
+				    if (!username.equals("owner")) message.setText("The username must be 'owner'");
+				    else {
+				    try {
+				    	FlexiBookController.accountUpdate("owner","owner", Password);
+				    } catch (InvalidInputException e) {
+				        error = e.getMessage();
+				    }
+				}
+				    refreshLoginData();
+		}
+			
+	private void updateCustomerAccount(ActionEvent evt) {
+			
+			
+			getContentPane().removeAll(); 
+			getContentPane().repaint();
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			//error="";
+			//success ="";
+			
+
+			oldUsernameLabel = new JLabel();
+			oldUsernameLabel.setText("Old Username :");
+			usernameLabel = new JLabel();
+			usernameLabel.setText("New Username :");
+			passwordLabel = new JLabel();
+			passwordLabel.setText("New Password :");
+			updateButton = new JButton();
+			updateButton.setText("Update Account");
+			backToMenuButton = new JButton();
+			backToMenuButton.setText("Back");
+			
+			GroupLayout layout = new GroupLayout(getContentPane());
+			getContentPane().setLayout(layout);
+			layout.setAutoCreateGaps(true);
+			layout.setAutoCreateContainerGaps(true);			
+			
+			layout.setHorizontalGroup(
+					layout.createSequentialGroup()
+						.addGroup(layout.createParallelGroup()
+								.addComponent(message)
+								.addComponent(oldUsernameLabel)
+								.addComponent(usernameLabel)
+								.addComponent(passwordLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(message)
+								.addComponent(customerUsername)
+								.addComponent(ownerUsername)
+								.addComponent(newPassword)
+								.addComponent(updateButton)
+								.addComponent(backToMenuButton))
+					);
+			
+
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
+			layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {oldUsernameLabel, usernameLabel,passwordLabel});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {customerUsername, ownerUsername,newPassword, updateButton, backToMenuButton});
+			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {customerUsername, ownerUsername,newPassword, updateButton, backToMenuButton});
+
+
+
+
+			layout.setVerticalGroup(
+					layout.createSequentialGroup()
+					.addComponent(message)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(oldUsernameLabel)
+							.addComponent(customerUsername))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(usernameLabel)
+							.addComponent(ownerUsername))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(passwordLabel)
+							.addComponent(newPassword))
+					.addComponent(updateButton)
+					.addComponent(backToMenuButton)
+			);		
+			
+			backToMenuButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					message.setText("");
+					initCustomerMenu();
+				}
+			});
+			
+			updateButton.addActionListener(new java.awt.event.ActionListener() {
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	updateCustomer(evt);
+	            }
+	        });
+			
+			pack();
+		
+	}
+	public void updateCustomer(ActionEvent evt) {	
+		String oldUname = customerUsername.getText();
+	    String username = ownerUsername.getText();
+	    String Password = newPassword.getText();
+	    try {
+	    	FlexiBookController.accountUpdate(oldUname,username, Password);
+	    } catch (InvalidInputException e) {
+	        error = e.getMessage();
+	    }
+	    refreshLoginData();
+	}
+	
+	/**
+	 * @author yasminamatta and sneha
+	 * @param evt
+	 */
 	private void manageServiceComboActionPerformed(ActionEvent evt) {
 		getContentPane().removeAll();
 		getContentPane().repaint();
@@ -2479,68 +2994,5 @@ public class FlexiBookPage extends JFrame{
 	private void deleteServiceComboActionPermormed(ActionEvent evt) {
 
 	}
-
-	/**
-	 * @author artus
-	 * 
-	 */
-
-	private void singUpAction(ActionEvent evt) {
-
-		getContentPane().removeAll();
-		getContentPane().repaint();
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		// error="";
-		// success ="";
-
-		usernameLabel = new JLabel();
-		usernameLabel.setText("Username :");
-		passwordLabel = new JLabel();
-		passwordLabel.setText("Password :");
-		signUpButton = new JButton();
-		signUpButton.setText("Sign Up");
-		backToMenuButton = new JButton();
-		backToMenuButton.setText("Back");
-
-		GroupLayout layout = new GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setAutoCreateGaps(true);
-		layout.setAutoCreateContainerGaps(true);
-
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(usernameLabel)
-						.addComponent(passwordLabel))
-				.addGroup(layout.createParallelGroup().addComponent(message).addComponent(Username)
-						.addComponent(Password).addComponent(signUpButton).addComponent(backToMenuButton)));
-
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { message });
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { message });
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] { usernameLabel, passwordLabel });
-		layout.linkSize(SwingConstants.VERTICAL,
-				new java.awt.Component[] { Username, Password, signUpButton, backToMenuButton });
-		layout.linkSize(SwingConstants.HORIZONTAL,
-				new java.awt.Component[] { Username, Password, signUpButton, backToMenuButton });
-
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(message)
-				.addGroup(layout.createParallelGroup().addComponent(usernameLabel).addComponent(Username))
-				.addGroup(layout.createParallelGroup().addComponent(passwordLabel).addComponent(Password))
-				.addComponent(signUpButton).addComponent(backToMenuButton));
-
-		backToMenuButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				message.setText("");
-				initOwnerMenu();
-			}
-		});
-
-		signUpButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// TODO
-			}
-		});
-
-		pack();
-
-	}
-
+	
 }
