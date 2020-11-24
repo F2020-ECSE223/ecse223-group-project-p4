@@ -2779,6 +2779,7 @@ public class FlexiBookPage extends JFrame{
 				        error = e.getMessage();
 				    }
 				}
+				    refreshLoginData();
 		}
 			
 	private void updateCustomerAccount(ActionEvent evt) {
@@ -2874,7 +2875,9 @@ public class FlexiBookPage extends JFrame{
 	    } catch (InvalidInputException e) {
 	        error = e.getMessage();
 	    }
+	    refreshLoginData();
 	}
+	
 }
 	
 

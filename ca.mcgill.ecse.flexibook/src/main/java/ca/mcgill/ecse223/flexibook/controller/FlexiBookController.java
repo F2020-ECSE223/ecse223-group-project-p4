@@ -2672,14 +2672,17 @@ public class FlexiBookController {
 			}
 			}
 
-			if (user == null) {
-				throw new InvalidInputException("No user found");
-			}
+			//if (user == null) {
+			//	throw new InvalidInputException("No user found");
+			//}
 
-			else if (user.equals(FlexiBookApplication.getCurrentUser())) {
-
-				user.setUsername(newUname);
-				user.setPassword(newPword);
+			if (user.equals(FlexiBookApplication.getCurrentUser())) {
+				if (user.getUsername().equals(oldUname) && oldUname != newUname) {
+					user.setUsername(newUname);
+					user.setPassword(newPword);
+				}
+				else if (oldUname.equals(newUname)) user.setPassword(newPword);
+				else if (newPword.equals(user.getPassword()))user.setUsername(newUname);
 
 			} else {
 				throw new InvalidInputException("You have to be logged in to the corresponding account to update it");
