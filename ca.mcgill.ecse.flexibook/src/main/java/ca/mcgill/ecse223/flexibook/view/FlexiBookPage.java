@@ -1112,7 +1112,9 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
+				.addGap(250)
 				.addGroup(layout.createParallelGroup()
+						
 						.addComponent(setupBusinessInfoButton)
 						.addComponent(updateBusinessInfoButton)
 						.addComponent(businessInfoBackButton))
@@ -1124,8 +1126,11 @@ public class FlexiBookPage extends JFrame{
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
+						.addGap(75)
 						.addComponent(setupBusinessInfoButton)
+						.addGap(15)
 						.addComponent(updateBusinessInfoButton)
+						.addGap(15)
 						.addComponent(businessInfoBackButton))
 				);
 
@@ -1186,6 +1191,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
+				.addGap(190)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(businessNameLabel)
@@ -1212,8 +1218,10 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
+				.addGap(25)
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
+						
 						.addComponent(businessNameLabel)
 						.addComponent(setBusinessName))
 				.addGroup(layout.createParallelGroup()
@@ -1290,6 +1298,8 @@ public class FlexiBookPage extends JFrame{
 	}
 
 	private void refreshSetupBusinessInfoPage() {
+		setBounds(100, 100, 700, 300);
+
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -1306,7 +1316,7 @@ public class FlexiBookPage extends JFrame{
 		setBusinessPhone.setText("");
 		setBusinessEmail.setText("");
 
-		pack();
+		//pack();
 	}
 	
 	private void initAddVacationPage() {
@@ -1341,6 +1351,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
+				.addGap(190)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(startVacationDateLabel)
@@ -1364,6 +1375,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
+				.addGap(35)
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(startVacationDateLabel)
@@ -1419,6 +1431,8 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshAddVacationPage() {
+		setBounds(100, 100, 700, 300);
+
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -1435,7 +1449,7 @@ public class FlexiBookPage extends JFrame{
 		endVacationDate.setText("");
 		endVacationTime.setText("");
 
-		pack();
+//		pack();
 	}
 	
 	private void initAddHolidayPage() {
@@ -1468,6 +1482,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
+				.addGap(190)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(startHolidayDateLabel)
@@ -1491,6 +1506,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
+				.addGap(35)
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(startHolidayDateLabel)
@@ -1592,6 +1608,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
+				.addGap(190)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(addBusinessHourDayLabel)
@@ -1613,6 +1630,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
+				.addGap(35)
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(addBusinessHourDayLabel)
@@ -1717,6 +1735,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
+				.addGap(190)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(businessNameLabel)
@@ -1743,6 +1762,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
+				.addGap(25)
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(businessNameLabel)
@@ -1881,7 +1901,9 @@ public class FlexiBookPage extends JFrame{
 		layout.setAutoCreateContainerGaps(true);
 
 		layout.setHorizontalGroup(
+				
 				layout.createSequentialGroup()
+				.addGap(270)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(addServPageButton)
 						.addComponent(updateServPageButton)
@@ -1896,9 +1918,13 @@ public class FlexiBookPage extends JFrame{
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
+						.addGap(60)
 						.addComponent(addServPageButton)
+						.addGap(15)
 						.addComponent(updateServPageButton)
+						.addGap(15)
 						.addComponent(deleteServPageButton)
+						.addGap(15)
 						.addComponent(manageServiceBackButton))
 				);
 
@@ -1960,7 +1986,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
-
+					.addGap(100)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(serviceNameLabel)
@@ -1983,6 +2009,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
+				.addGap(35)
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(serviceNameLabel)
@@ -2093,7 +2120,7 @@ public class FlexiBookPage extends JFrame{
 		refreshServicePage();
 
 		//FlexiBookPersistence.save(flexiBook);
-		pack();
+		//pack();
 	}
 
 	/**
@@ -2133,7 +2160,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
-
+				
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(updateExistingServiceLabel)
@@ -2163,6 +2190,7 @@ public class FlexiBookPage extends JFrame{
 
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
+				.addGap(25)
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(updateExistingServiceLabel)
@@ -2773,6 +2801,7 @@ public class FlexiBookPage extends JFrame{
 			
 			layout.setHorizontalGroup(
 					layout.createSequentialGroup()
+					.addGap(190)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(message)
 								.addComponent(usernameLabel)
@@ -2797,6 +2826,7 @@ public class FlexiBookPage extends JFrame{
 
 			layout.setVerticalGroup(
 					layout.createSequentialGroup()
+					.addGap(40)
 					.addComponent(message)
 					.addGroup(layout.createParallelGroup()
 							.addComponent(usernameLabel)
@@ -2868,6 +2898,7 @@ public class FlexiBookPage extends JFrame{
 			
 			layout.setHorizontalGroup(
 					layout.createSequentialGroup()
+					.addGap(190)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(message)
 								.addComponent(oldUsernameLabel)
@@ -2894,6 +2925,7 @@ public class FlexiBookPage extends JFrame{
 
 			layout.setVerticalGroup(
 					layout.createSequentialGroup()
+					.addGap(40)
 					.addComponent(message)
 					.addGroup(layout.createParallelGroup()
 							.addComponent(oldUsernameLabel)
