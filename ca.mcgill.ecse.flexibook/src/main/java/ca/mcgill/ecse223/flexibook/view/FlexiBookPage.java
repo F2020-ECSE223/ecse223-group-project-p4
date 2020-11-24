@@ -2793,12 +2793,12 @@ public class FlexiBookPage extends JFrame{
 				    else {
 				    try {
 				    	FlexiBookController.accountUpdate("owner","owner", Password);
-				    	error = "Account updated successfully";
+				    	message.setText("accout updated");
 				    } catch (InvalidInputException e) {
 				        error = e.getMessage();
 				    }
 				}
-				    refreshLoginData();
+				refreshLoginData();
 		}
 			
 	private void updateCustomerAccount() {
@@ -2892,6 +2892,7 @@ public class FlexiBookPage extends JFrame{
 	    String Password = newPassword.getText();
 	    try {
 	    	FlexiBookController.accountUpdate(oldUname,username, Password);
+	    	message.setText("accout updated");
 	    } catch (InvalidInputException e) {
 	        error = e.getMessage();
 	    }
