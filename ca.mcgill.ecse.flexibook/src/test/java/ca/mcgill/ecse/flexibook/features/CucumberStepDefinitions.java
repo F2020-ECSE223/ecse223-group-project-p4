@@ -1665,7 +1665,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	 * @param string
 	 */
 	@Given("the account with username {string} has pending appointments")
-	public void theAccountWithUsernameHasPendingAppointments(String string) {
+	public void theAccountWithUsernameHasPendingAppointments(String username) {
+
 		
 	}
 
