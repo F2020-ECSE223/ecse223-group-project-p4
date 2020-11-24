@@ -2661,13 +2661,15 @@ public class FlexiBookController {
 				}
 
 			}
-			List<Customer> customerList = flexiBook.getCustomers();
+			if (!oldUname.equals("owner") && !newUname.equals("owner")) {
+					List<Customer> customerList = flexiBook.getCustomers();
 			User customer = null;
 			for (int i = 0; i < customerList.size(); i++) {
 				customer = customerList.get(i);
 				if (customer.getUsername().equals(newUname)) {
 					throw new InvalidInputException("Username not available");
 				}
+			}
 			}
 
 			if (user == null) {
