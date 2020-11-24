@@ -214,8 +214,7 @@ public class FlexiBookPage extends JFrame{
     private JLabel errorMessage;
     private JTextField passwordSignup;
     private JTextField usernameSignup;
-    
-  
+   
 	
 
 	public FlexiBookPage() {
@@ -237,6 +236,7 @@ public class FlexiBookPage extends JFrame{
         setLayout(new BorderLayout());
         setBounds(100, 100, 700, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("FlexiBook System P04");
 
         JPanel panel = new JPanel();
 
