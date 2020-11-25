@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.peer.SystemTrayPeer;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -2791,21 +2792,58 @@ public class FlexiBookPage extends JFrame{
 		if(appointmentList!=null) {
 			appointmentList.removeAllItems();
 		}
-		
+		ArrayList <String> appInOrderOfDate = new ArrayList<String>();
 		error="";
 		success="";
 		for(Customer user : FlexiBookApplication.getFlexiBook().getCustomers()) {
 			
 			for(TOAppointment app : FlexiBookController.getCustomerAppointments(user.getUsername())) {
-				String fullInfo = app.getCustomerName() + "|" + app.getService() + "|" + app.getStartDate() +"|"+ app.getStartTime()+".";
-				appointmentList.addItem(fullInfo);
-			}
+				String fullInfo = app.getStartDate() + "|" + app.getStartTime()  + "|" + app.getService() +"|"+ app.getCustomerName()+".";
+				
+				if(appInOrderOfDate.isEmpty()) {
+					appInOrderOfDate.add(fullInfo);
+				}
+				else {
+						appInOrderOfDate.add(fullInfo);
+						appInOrderOfDate = sortArray(appInOrderOfDate);
+					
+						}
+					}
+					
+				}
+				for (String str : appInOrderOfDate) {
+					appointmentList.addItem(str);
+				}
+			
 
-		}
+		
 		appointmentList.setSelectedIndex(-1);
 
 		
 		//pack();
+	}
+	
+	/**
+	 * @author yasminamatta
+	 */
+	private static ArrayList<String> sortArray (ArrayList<String> list) {
+		for(int i=0 ; i<list.size()-1; i++) {
+			String inputDate = list.get(i).substring(0, 10);
+			Date dateFirst = Date.valueOf(inputDate);
+			String nextInput = list.get(i+1).substring(0, 10);
+			Date dateNext = Date.valueOf(nextInput);
+			
+			if(dateNext.before(dateFirst)) {
+				String temp = list.get(i+1);
+				list.set(i+1, list.get(i));
+				list.set(i, temp);
+				return sortArray(list);
+			}
+			
+		}
+		
+		return list;
+		
 	}
 	
 	/**
