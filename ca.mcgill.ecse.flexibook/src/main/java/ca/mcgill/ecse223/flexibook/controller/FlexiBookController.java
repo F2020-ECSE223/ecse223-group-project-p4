@@ -36,7 +36,7 @@ public class FlexiBookController {
 	 *                               endAppointment.
 	 * 
 	 */
-	public static void startAppointment(String customerName, String startTime, String date, Date SystemDate, Time SystemTime) throws InvalidInputException {
+	public static void startAppointment(String customerName, String startTime, String date, Date systemDate, Time systemTime) throws InvalidInputException {
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		
 		Appointment appointment = null;
@@ -54,15 +54,15 @@ public class FlexiBookController {
 		}
 
 		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
-			return;
+			throw new InvalidInputException("The appointment is not Booked");
 		}
 
-		if (!SystemDate.equals(appointmentDate) || SystemTime.before(appointmentTime)) {
-			return; // appointment reamins booked
+		if (appointment.getTimeSlot().getStartDate().after(systemDate)
+				||(appointment.getTimeSlot().getStartDate().equals(systemDate) && appointment.getTimeSlot().getStartTime().after(systemTime))) {
+		throw new InvalidInputException("You cannot start an appointment before its start time");
 		}
-
 		try {
-			appointment.startAppointment(SystemDate, SystemTime);
+			appointment.startAppointment(systemDate, systemTime);
 		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
@@ -95,12 +95,12 @@ public class FlexiBookController {
 		}
 	
 
-		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
-			return;
-		}
+//		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
+//			throw new InvalidInputException("The appoi")
+//		}
 		if (appointment.getTimeSlot().getStartDate().after(todaysDate)
-				|| appointment.getTimeSlot().getStartTime().after(currentTime)) {
-			return;
+				||(appointment.getTimeSlot().getStartDate().equals(todaysDate) && appointment.getTimeSlot().getStartTime().after(currentTime))) {
+			throw new InvalidInputException("You cannot register a no show for an appointment that did not start.");
 		}
 
 		try {
@@ -148,7 +148,7 @@ public class FlexiBookController {
 			// owner attempts to end appointment before appointment starts
 			if (todaysDate.before(appointmentDate)
 					|| (todaysDate.equals(appointmentDate) && currentTime.before(appointmentTime))) {
-				return;
+				throw new InvalidInputException("You cannot end the appointment before it starts");
 			}
 			appointment.finishAppointment();
 			FlexiBookPersistence.save(flexiBook);
@@ -728,14 +728,14 @@ public class FlexiBookController {
 		List<Appointment> existingAppointments = flexiBook.getAppointments();
 		Time startTimeApp = timeSlot.getStartTime();
 		Time endTimeApp = timeSlot.getEndTime();
-
+		List<TimeSlot> holidays = flexiBook.getBusiness().getHolidays();
 		long startTime = timeSlot.getStartTime().getTime();
 		long endTime = timeSlot.getEndTime().getTime();
 		Date startDate = timeSlot.getStartDate();
 		Date endDate = timeSlot.getStartDate();
 
 		// check if time slot not in holiday or vacation
-		List<TimeSlot> holidays = flexiBook.getBusiness().getHolidays();
+		
 		for (int i = 0; i < holidays.size(); i++) {
 			TimeSlot thisHoliday = holidays.get(i);
 			Date sdate = thisHoliday.getStartDate(); // in ms
