@@ -696,7 +696,9 @@ public class FlexiBookPage extends JFrame{
 
 		//elements for make appointment
 		makeAppTime = new JTextField();
+		makeAppTime.setText("hh:mm");
 		makeAppDate = new JTextField();
+		makeAppDate.setText("yyyy-mm-dd");
 		makeAppServiceList = new JComboBox<String>(new String[0]);
 		makeAppTimeLabel = new JLabel();
 		makeAppTimeLabel.setText("Appointment Time: ");
@@ -710,7 +712,9 @@ public class FlexiBookPage extends JFrame{
 		//elements for make appointment
 		updateAppDateList = new JComboBox<String>(new String[0]);
 		updateAppNewTime = new JTextField();
+		updateAppNewTime.setText("hh:mm");
 		updateAppNewDate = new JTextField();
+		updateAppNewDate.setText("yyyy-mm-dd");
 		updateAppServiceList = new JComboBox<String>(new String[0]);
 		updateAppDateLabel = new JLabel();
 		updateAppDateLabel.setText("Appointment at: ");
@@ -1024,9 +1028,7 @@ public class FlexiBookPage extends JFrame{
 				success = "Appointment updated to " + newStartDate + " at " + startTime; 
 			}
 			else {		// nothing selected
-
 				throw new InvalidInputException("Cannot update appointment without new information!");
-
 			}
 
 
