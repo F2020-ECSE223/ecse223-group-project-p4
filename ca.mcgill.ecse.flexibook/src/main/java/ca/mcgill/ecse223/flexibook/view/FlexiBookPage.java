@@ -220,7 +220,7 @@ public class FlexiBookPage extends JFrame{
 	
 
 	public FlexiBookPage() {
-		//FlexiBookApplication.getFlexiBook().delete();
+		FlexiBookApplication.getFlexiBook().delete();
 		
 		initializeLoginPage();
 	
@@ -2062,8 +2062,8 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private void addServiceButtonPressed (ActionEvent evt) {
 		
-		error = "";
-		success = ""; 
+//		error = "";
+//		success = ""; 
 		message.setText("");
 		String name = null;
 		int duration = 0 ;
