@@ -1807,8 +1807,15 @@ public class FlexiBookController {
 		
 		FlexiBook fb = FlexiBookApplication.getFlexiBook();
 		
-		Time start = Time.valueOf(startTime + ":00");
-		Time end = Time.valueOf(endTime + ":00");
+		Time start;
+		Time end;
+		
+		try {
+			start = Time.valueOf(startTime + ":00");
+			end = Time.valueOf(endTime + ":00");
+		} catch (IllegalArgumentException e) {
+			throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
+		}
 		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
@@ -2119,14 +2126,38 @@ public class FlexiBookController {
 		return null;
 	}
 
-	public static void updateBusinessHour(String s1, Time start, String s2, Time newStart, Time newEnd, FlexiBook fb)
+	public static void updateBusinessHour(String s1, String oldStart, String s2, String newStart, String newEnd)
 			throws InvalidInputException {
+		
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		
+		Time oldS = null;
+		Time newS = null;
+		Time newE = null;
+		
+		try {
+			if (s2.equals("") && newStart.equals("") && newEnd.equals("")) {
+				oldS = Time.valueOf(oldStart + ":00");
+				s2 = null;
+			} else {
+				oldS = Time.valueOf(oldStart + ":00");
+				newS = Time.valueOf(newStart + ":00");
+				newE = Time.valueOf(newEnd + ":00");
+			}
+		} catch (IllegalArgumentException e) {
+			throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
+		}
+		
 		ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow = getDow(s1);
+		
+		BusinessHour temp = findBusinessHour(s1, oldS, fb);
 
-		BusinessHour temp = findBusinessHour(s1, start, fb);
-
-		if (dow == null || temp == null) {
+		if (dow == null) {
 			throw new InvalidInputException("Invalid Day of Week");
+		}
+		
+		if (temp == null) {
+			throw new InvalidInputException("Business Hour to be updated not found");
 		}
 
 		if (!checkBusinessOwner()) {
@@ -2136,23 +2167,29 @@ public class FlexiBookController {
 
 		fb.getBusiness().removeBusinessHour(temp);
 
-		if (s2 == null && newStart == null && newEnd == null) {
+		if (s2 == null && newS == null && newE == null) {
 			return;
 		}
 
 		ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek newDow = getDow(s2);
 
-		if (!validateBusinessHourForTiming(newStart, newEnd)) {
+		if (newDow == null) {
+			throw new InvalidInputException("Invalid Day of Week");
+		}
+		
+		if (!validateBusinessHourForTiming(newS, newE)) {
 			fb.getBusiness().addBusinessHour(temp);
 			throw new InvalidInputException("Start time must be before end time");
 		}
 
-		if (!validateBusinessHourForOverlap(newDow, newStart, newEnd, fb)) {
+		if (!validateBusinessHourForOverlap(newDow, newS, newE, fb)) {
 			fb.getBusiness().addBusinessHour(temp);
 			throw new InvalidInputException("The business hours cannot overlap");
 		}
 
-		fb.getBusiness().addBusinessHour(new BusinessHour(newDow, newStart, newEnd, fb));
+		fb.getBusiness().addBusinessHour(new BusinessHour(newDow, newS, newE, fb));
+		
+		FlexiBookPersistence.save(fb);
 	}
 
 	public static void updateVacation(String startDate, String startTime, String new_startDate, String new_startTime, String new_endDate, String new_endTime) throws InvalidInputException {
@@ -2223,17 +2260,28 @@ public class FlexiBookController {
 		
 		FlexiBook fb = FlexiBookApplication.getFlexiBook();
 		
-		Date sD = Date.valueOf(startDate);
-		Time sT = Time.valueOf(startTime + ":00");
+		Date sD;
+		Time sT;
+		try {
+			sD = Date.valueOf(startDate);
+			sT = Time.valueOf(startTime + ":00");
+		} catch (IllegalArgumentException e) {
+			throw new InvalidInputException("Wrong input format");
+		}
+		
 		Date new_sD = null;
 		Time new_sT = null;
 		Date new_eD = null;
 		Time new_eT = null;
 		if (new_startDate != null && new_startTime != null && new_endDate != null && new_endTime != null) {
-			new_sD = Date.valueOf(new_startDate);
-			new_sT = Time.valueOf(new_startTime + ":00");
-			new_eD = Date.valueOf(new_endDate);
-			new_eT = Time.valueOf(new_endTime + ":00");
+			try {
+				new_sD = Date.valueOf(new_startDate);
+				new_sT = Time.valueOf(new_startTime + ":00");
+				new_eD = Date.valueOf(new_endDate);
+				new_eT = Time.valueOf(new_endTime + ":00");
+			} catch (IllegalArgumentException e) {
+				throw new InvalidInputException("Wrong input format");
+			}
 		}
 		
 		TimeSlot temp = findOfftime(sD, sT, "holiday", fb);
