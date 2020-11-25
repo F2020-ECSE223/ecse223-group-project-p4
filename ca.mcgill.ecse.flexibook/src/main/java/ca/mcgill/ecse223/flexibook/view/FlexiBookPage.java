@@ -1148,6 +1148,7 @@ public class FlexiBookPage extends JFrame{
 
 		businessInfoBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initOwnerMenu();
 			}
 		});
@@ -1288,7 +1289,7 @@ public class FlexiBookPage extends JFrame{
 			String phoneNumber = setBusinessPhone.getText();
 			String email = setBusinessEmail.getText();
 			FlexiBookController.setupBusinessInfo(name, address, phoneNumber, email);
-			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
+			success = "There is a Business named " + name + " at " + address + " with phone number: " + phoneNumber +" and email: " + email; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1399,12 +1400,16 @@ public class FlexiBookPage extends JFrame{
 		addVacationBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initSetupBusinessInfoPage();
+				message.setText("");
 			}
 		});
 		
 		addVacationAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addVacationButtonPressed(e);
+				error = "";
+				success = "";
+				message.setText("");
 			}
 		});
 
@@ -1530,12 +1535,16 @@ public class FlexiBookPage extends JFrame{
 		addHolidayBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initSetupBusinessInfoPage();
+				message.setText("");
 			}
 		});
 		
 		addHolidayAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addHolidayButtonPressed(e);
+				error = "";
+				success = "";
+				message.setText("");
 			}
 		});
 
@@ -1651,12 +1660,18 @@ public class FlexiBookPage extends JFrame{
 		addBusinessHourBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initSetupBusinessInfoPage();
+				message.setText("");
+				error = "";
+				success = "";
 			}
 		});
 		
 		addBusinessHourAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addBusinessHourButtonPressed(e);
+				message.setText("");
+				error = "";
+				success = "";
 			}
 		});
 
@@ -1790,29 +1805,34 @@ public class FlexiBookPage extends JFrame{
 		businessInfoBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initBusinessInfoPage();
+				message.setText("");
 			}
 		});
 
 		businessInfoUpdateInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				updateInfoButtonPressed(e);
 			}
 		});
 		
 		businessInfoUpdateVacationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initAddVacationPage();
 			}
 		});
 		
 		businessInfoUpdateHolidayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initAddHolidayPage();
 			}
 		});
 		
 		businessInfoUpdateBusinessHourButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initAddBusinessHourPage();
 			}
 		});
@@ -1850,7 +1870,7 @@ public class FlexiBookPage extends JFrame{
 			message.setForeground(Color.GREEN);
 
 		}
-
+		
 		updateBusinessName.setText("");
 		updateBusinessAddress.setText("");
 		updateBusinessPhone.setText("");
