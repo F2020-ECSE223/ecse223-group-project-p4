@@ -209,6 +209,8 @@ public class FlexiBookPage extends JFrame{
 	private JLabel newCustomerPasswordLabel = new JLabel();
 	private JLabel newCustomerUsernameLabel = new JLabel();
 	private JButton backCustomerButton;
+	private JButton deleteAccount;
+	
 	//login
 	private JTextField usernameLogin;
     private JTextField passwordLogin;
@@ -603,7 +605,7 @@ public class FlexiBookPage extends JFrame{
 //		manageCustomerAccountButton = new JButton();
 //		manageCustomerAccountButton.setText("Manage Account");
 		updateCustomerButton = new JButton();
-		updateCustomerButton.setText("Update customer account");
+		updateCustomerButton.setText("Manage customer account");
 		customerLogOutButton = new JButton();
 		customerLogOutButton.setText("Log Out");
 
@@ -2935,6 +2937,8 @@ public class FlexiBookPage extends JFrame{
 			newCustomerPasswordLabel.setText("New Password :");
 			customerUpdateButton = new JButton();
 			customerUpdateButton.setText("Update Account");
+			deleteAccount = new JButton();
+			deleteAccount.setText("Delete account");
 			backCustomerButton = new JButton();
 			backCustomerButton.setText("Back");
 			
@@ -2957,6 +2961,7 @@ public class FlexiBookPage extends JFrame{
 								.addComponent(newCustomerUsername)
 								.addComponent(newCustomerPassword)
 								.addComponent(customerUpdateButton)
+								.addComponent(deleteAccount)
 								.addComponent(backCustomerButton))
 					);
 			
@@ -2964,8 +2969,8 @@ public class FlexiBookPage extends JFrame{
 			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
 			layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
 			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {oldCustomerUsernameLabel, newCustomerUsernameLabel,newCustomerPasswordLabel});
-			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {oldCustomerUsername, newCustomerUsername,newCustomerPassword, customerUpdateButton, backCustomerButton});
-			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {oldCustomerUsername, newCustomerUsername,newCustomerPassword, customerUpdateButton, backCustomerButton});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {oldCustomerUsername, newCustomerUsername,newCustomerPassword, customerUpdateButton, deleteAccount, backCustomerButton});
+			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {oldCustomerUsername, newCustomerUsername,newCustomerPassword, customerUpdateButton, deleteAccount, backCustomerButton});
 
 
 
@@ -2983,7 +2988,8 @@ public class FlexiBookPage extends JFrame{
 					.addGroup(layout.createParallelGroup()
 							.addComponent(newCustomerPasswordLabel)
 							.addComponent(newCustomerPassword))
-					.addComponent(customerUpdateButton)
+					.addComponent(customerUpdateButton)								
+					.addComponent(deleteAccount)
 					.addComponent(backCustomerButton)
 			);		
 			
@@ -3002,8 +3008,27 @@ public class FlexiBookPage extends JFrame{
 	            }
 	        });
 			
+			deleteAccount.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					message.setText("");
+					deleteAccount();
+					initializeLoginPage();
+					
+					
+				}
+			});
+			
 			//pack();
 		
+	}
+	private void deleteAccount() {
+		String username = FlexiBookApplication.getCurrentUser().getUsername();
+		try {
+			FlexiBookController.deleteCustomerAccount(username);
+			initializeLoginPage();
+		} catch (InvalidInputException e1) {
+			error = e1.getMessage();					
+		}
 	}
 	
 	private void updateCustomerActionPerformed(ActionEvent evt) {	
