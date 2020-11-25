@@ -2835,8 +2835,8 @@ public class FlexiBookController {
 					flexibook.removeAppointment(app);
 					app.delete();
 				}
-				flexibook.getCustomers().remove(user);
 				user.delete();
+				flexibook.getCustomers().remove(user);
 				FlexiBookPersistence.save(flexibook);
 			}
 
