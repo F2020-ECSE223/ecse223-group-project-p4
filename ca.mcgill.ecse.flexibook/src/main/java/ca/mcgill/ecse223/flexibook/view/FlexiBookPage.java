@@ -2082,8 +2082,8 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private void addServiceButtonPressed (ActionEvent evt) {
 		
-//		error = "";
-//		success = ""; 
+		error = "";
+		success = ""; 
 		message.setText("");
 		String name = null;
 		int duration = 0 ;
@@ -2093,7 +2093,7 @@ public class FlexiBookPage extends JFrame{
 
 		if (error == null || error.length() == 0) {
 			name = serviceName.getText();
-			if (serviceName.getText().length() == 0) {
+			if (name.equals("")) {
 				error = "Please enter a name.";
 			}
 		}
