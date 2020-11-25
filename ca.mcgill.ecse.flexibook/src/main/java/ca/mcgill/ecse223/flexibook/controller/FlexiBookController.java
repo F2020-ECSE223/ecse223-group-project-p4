@@ -10,6 +10,7 @@ import java.util.*;
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.*;
 import ca.mcgill.ecse.flexibook.model.Appointment.AppointmentStatus;
+import ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek;
 import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 
 public class FlexiBookController {
@@ -766,7 +767,6 @@ public class FlexiBookController {
 			}
 		}
 
-		String d = startDate.toString();
 		// check time slot not in the weekend
 		Calendar c = Calendar.getInstance();
 		c.setTime(startDate);
@@ -774,18 +774,45 @@ public class FlexiBookController {
 		if (dayOfWeek == 6 || dayOfWeek == 7) {
 			return false;
 		}
-
+		
+		DayOfWeek day = null; 
+		switch(dayOfWeek) {
+		case 1:
+			day = DayOfWeek.Monday;
+			break;
+		case 2:
+			day = DayOfWeek.Tuesday;
+			break;
+		case 3:
+			day = DayOfWeek.Wednesday;
+			break;
+		case 4:
+			day = DayOfWeek.Thursday;
+			break;
+		case 5:
+			day = DayOfWeek.Friday;
+			break;
+		}
+		
+		boolean outsideHours = true;
 		// check timeslot within busness hours
 		for (int i = 0; i < flexiBook.getBusiness().getBusinessHours().size(); i++) { // for each day
-
+			
 			BusinessHour thisHour = flexiBook.getBusiness().getBusinessHours().get(i);
-			long start = thisHour.getStartTime().getTime();
-			long end = thisHour.getEndTime().getTime();
-
-			if (!(startTime >= start && endTime <= end)) {
-				return false;
+			if(thisHour.getDayOfWeek() == day) {
+				long start = thisHour.getStartTime().getTime();
+				long end = thisHour.getEndTime().getTime();
+				
+				if (startTime >= start && endTime <= end) {
+					outsideHours = false;
+					break;
+				}
 			}
 
+		}
+		
+		if(outsideHours) {
+			return false;
 		}
 
 		
@@ -793,9 +820,9 @@ public class FlexiBookController {
 		if(Integer.parseInt(startDate.toString().substring(0, 4))<=2019){
 			return false;
 		}
-//		// check time slot not in the past
-//				
-		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate) && startTimeApp.before(todaysTime)  ){
+		
+		// check time slot not in the past		
+		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate) && startTimeApp.before(todaysTime)){
 			return false;
 
 		}
