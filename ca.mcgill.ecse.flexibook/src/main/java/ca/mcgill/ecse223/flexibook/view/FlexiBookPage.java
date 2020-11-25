@@ -237,7 +237,7 @@ public class FlexiBookPage extends JFrame{
        
         getContentPane().setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-        setBounds(100, 100, 700, 300);
+        setBounds(300, 300, 700, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
@@ -360,7 +360,6 @@ public class FlexiBookPage extends JFrame{
         groupLayout.setVerticalGroup(
                 groupLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(groupLayout.createSequentialGroup()
-                        		.addComponent(errorMessage)
                         		.addGap(14)
                                 .addComponent(lblWelcomeToBlock, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -467,7 +466,7 @@ public class FlexiBookPage extends JFrame{
 	private void initOwnerMenu() {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 
 		//I added this to test the UI, will delete after if everything is working fine -- Sneha
 	
@@ -597,7 +596,7 @@ public class FlexiBookPage extends JFrame{
 		
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		appBookingButton = new JButton();
 		appBookingButton.setText("Appoinment booking");
@@ -690,7 +689,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().repaint();
 
 		//refreshDataForAppointmentBooking();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 400);
 
 		// elements for error message
 		message = new JLabel();
@@ -699,7 +698,9 @@ public class FlexiBookPage extends JFrame{
 
 		//elements for make appointment
 		makeAppTime = new JTextField();
+		makeAppTime.setText("hh:mm");
 		makeAppDate = new JTextField();
+		makeAppDate.setText("yyyy-mm-dd");
 		makeAppServiceList = new JComboBox<String>(new String[0]);
 		makeAppTimeLabel = new JLabel();
 		makeAppTimeLabel.setText("Appointment Time: ");
@@ -713,7 +714,9 @@ public class FlexiBookPage extends JFrame{
 		//elements for make appointment
 		updateAppDateList = new JComboBox<String>(new String[0]);
 		updateAppNewTime = new JTextField();
+		updateAppNewTime.setText("hh:mm");
 		updateAppNewDate = new JTextField();
+		updateAppNewDate.setText("yyyy-mm-dd");
 		updateAppServiceList = new JComboBox<String>(new String[0]);
 		updateAppDateLabel = new JLabel();
 		updateAppDateLabel.setText("Appointment at: ");
@@ -1027,9 +1030,7 @@ public class FlexiBookPage extends JFrame{
 				success = "Appointment updated to " + newStartDate + " at " + startTime; 
 			}
 			else {		// nothing selected
-
 				throw new InvalidInputException("Cannot update appointment without new information!");
-
 			}
 
 
@@ -1095,7 +1096,7 @@ public class FlexiBookPage extends JFrame{
 	private void initBusinessInfoPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		JButton setupBusinessInfoButton = new JButton();
 		setupBusinessInfoButton.setText("Setup Business Info");
@@ -1160,7 +1161,7 @@ public class FlexiBookPage extends JFrame{
 		
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JLabel businessNameLabel = new JLabel();
@@ -1298,7 +1299,7 @@ public class FlexiBookPage extends JFrame{
 	}
 
 	private void refreshSetupBusinessInfoPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 
 		if (error != null) {
 			message.setText(error);
@@ -1323,7 +1324,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().removeAll();
 		getContentPane().repaint();
 
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -1435,7 +1436,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshAddVacationPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 
 		if (error != null) {
 			message.setText(error);
@@ -1459,7 +1460,7 @@ public class FlexiBookPage extends JFrame{
 	private void initAddHolidayPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JLabel startHolidayDateLabel = new JLabel();
@@ -1570,7 +1571,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshAddHolidayPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -1593,7 +1594,7 @@ public class FlexiBookPage extends JFrame{
 	private void initAddBusinessHourPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JLabel addBusinessHourDayLabel = new JLabel();
@@ -1696,7 +1697,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshAddBusinessHourPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -1718,7 +1719,7 @@ public class FlexiBookPage extends JFrame{
 	private void initUpdateBusinessInfoPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JLabel businessNameLabel = new JLabel();
@@ -1859,7 +1860,7 @@ public class FlexiBookPage extends JFrame{
 
 	private void refreshUpdateBusinessInfoPage() {
 		
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -1901,7 +1902,7 @@ public class FlexiBookPage extends JFrame{
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		error= "";
 		success = "";
@@ -1991,7 +1992,7 @@ public class FlexiBookPage extends JFrame{
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		serviceNameLabel.setText("Service Name");
@@ -2163,7 +2164,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().repaint();
 
 		//getContentPane().setSize(dim);
-		setBounds(100, 100, 1000, 300);
+		setBounds(100, 100, 1000, 500);
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -2271,7 +2272,7 @@ public class FlexiBookPage extends JFrame{
 	private void updateServiceButtonPressed (ActionEvent evt) {
 		error = "";
 		success = ""; 
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		int selectedService = updateExistingService.getSelectedIndex();
 		
 		if (selectedService < 0) {
@@ -2367,7 +2368,7 @@ public class FlexiBookPage extends JFrame{
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		//page components
@@ -2445,7 +2446,7 @@ public class FlexiBookPage extends JFrame{
 	private void deleteServiceButtonPressed (ActionEvent evt) {
 		error = "";
 		success = ""; 
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		int selectedService = deleteExistingService.getSelectedIndex(); 
 		if (selectedService < 0) {
 			error = "Please select a service to delete."; 
@@ -2472,7 +2473,7 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private void refreshServicePage() {
 		
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		if (error != null && error.length() > 0) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -2536,7 +2537,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
 		
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		error="";
 		success ="";
 		
@@ -2774,7 +2775,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshAppointmentStatusPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 	
 		if(!error.equals("")) {
 			message.setText(error);
@@ -2814,7 +2815,7 @@ public class FlexiBookPage extends JFrame{
 			
 			getContentPane().removeAll(); 
 			getContentPane().repaint();
-			setBounds(100, 100, 700, 300);
+			setBounds(100, 100, 700, 500);
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			//error="";
 			//success ="";
@@ -2924,7 +2925,7 @@ public class FlexiBookPage extends JFrame{
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			//error="";
 			//success ="";
-			setBounds(100, 100, 700, 300);
+			setBounds(100, 100, 700, 500);
 			JButton customerUpdateButton;
 			oldCustomerUsernameLabel = new JLabel();
 			oldCustomerUsernameLabel.setText("Old Username :");
@@ -3034,7 +3035,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshUpdateCustomerAccount() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		if(!error.equals("")) {
 			message.setForeground(Color.RED);
@@ -3056,7 +3057,7 @@ public class FlexiBookPage extends JFrame{
 		}
 	}
 	private void refreshUpdateOwnerAccount() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		if(!error.equals("")) {
 			message.setForeground(Color.RED);

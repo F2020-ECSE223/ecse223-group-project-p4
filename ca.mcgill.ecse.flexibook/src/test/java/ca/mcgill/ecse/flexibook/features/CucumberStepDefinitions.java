@@ -1408,7 +1408,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			String string2, String string3, String string4, String string5) {
 		exception = false;
 		try {
-			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), string3, Time.valueOf(string4 + ":00"), Time.valueOf(string5 + ":00"), flexiBook);
+			FlexiBookController.updateBusinessHour(string, string2, string3, string4, string5);
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
@@ -1436,7 +1436,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	public void the_user_tries_to_remove_the_business_hour_starting_at(String string, String string2) {
 		exception = false;
 		try {
-			FlexiBookController.updateBusinessHour(string, Time.valueOf(string2 + ":00"), null, null, null, flexiBook);
+			FlexiBookController.updateBusinessHour(string, string2, "", "", "");
 			//FlexiBookPersistence.save(flexiBook);
 		} catch (InvalidInputException e) {
 			exception = true;
