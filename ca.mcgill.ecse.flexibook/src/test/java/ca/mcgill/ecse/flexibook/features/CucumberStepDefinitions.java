@@ -217,18 +217,23 @@ public class CucumberStepDefinitions {
 			case "Monday":
 				businessHour = new BusinessHour(DayOfWeek.Monday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 			case "Tuesday":
 				businessHour = new BusinessHour(DayOfWeek.Tuesday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 			case "Wednesday":
 				businessHour = new BusinessHour(DayOfWeek.Wednesday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 			case "Thursday":
 				businessHour = new BusinessHour(DayOfWeek.Thursday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 			case "Friday":
 				businessHour = new BusinessHour(DayOfWeek.Friday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 
 			}
 

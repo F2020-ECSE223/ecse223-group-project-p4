@@ -10,6 +10,7 @@ import java.util.*;
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.*;
 import ca.mcgill.ecse.flexibook.model.Appointment.AppointmentStatus;
+import ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek;
 import ca.mcgill.ecse223.flexibook.persistence.FlexiBookPersistence;
 
 public class FlexiBookController {
@@ -766,7 +767,6 @@ public class FlexiBookController {
 			}
 		}
 
-		String d = startDate.toString();
 		// check time slot not in the weekend
 		Calendar c = Calendar.getInstance();
 		c.setTime(startDate);
@@ -774,18 +774,45 @@ public class FlexiBookController {
 		if (dayOfWeek == 6 || dayOfWeek == 7) {
 			return false;
 		}
-
+		
+		DayOfWeek day = null; 
+		switch(dayOfWeek) {
+		case 1:
+			day = DayOfWeek.Monday;
+			break;
+		case 2:
+			day = DayOfWeek.Tuesday;
+			break;
+		case 3:
+			day = DayOfWeek.Wednesday;
+			break;
+		case 4:
+			day = DayOfWeek.Thursday;
+			break;
+		case 5:
+			day = DayOfWeek.Friday;
+			break;
+		}
+		
+		boolean outsideHours = true;
 		// check timeslot within busness hours
 		for (int i = 0; i < flexiBook.getBusiness().getBusinessHours().size(); i++) { // for each day
-
+			
 			BusinessHour thisHour = flexiBook.getBusiness().getBusinessHours().get(i);
-			long start = thisHour.getStartTime().getTime();
-			long end = thisHour.getEndTime().getTime();
-
-			if (!(startTime >= start && endTime <= end)) {
-				return false;
+			if(thisHour.getDayOfWeek() == day) {
+				long start = thisHour.getStartTime().getTime();
+				long end = thisHour.getEndTime().getTime();
+				
+				if (startTime >= start && endTime <= end) {
+					outsideHours = false;
+					break;
+				}
 			}
 
+		}
+		
+		if(outsideHours) {
+			return false;
 		}
 
 		
@@ -793,9 +820,9 @@ public class FlexiBookController {
 		if(Integer.parseInt(startDate.toString().substring(0, 4))<=2019){
 			return false;
 		}
-//		// check time slot not in the past
-//				
-		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate) && startTimeApp.before(todaysTime)  ){
+		
+		// check time slot not in the past		
+		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate) && startTimeApp.before(todaysTime)){
 			return false;
 
 		}
@@ -2320,18 +2347,34 @@ public class FlexiBookController {
 		
 		try {
 			
-			if (username.equals("owner") && password.equals("owner")) {
-				if(flexiBook.getOwner() == null) {			//first time
-					createUser(username, password, flexiBook);
-					return;
-				}
-				else{	//not first time
-					FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
-					return;
-				}
-				
-			}
 			
+			if(flexiBook.getOwner()==null) {
+				if (username.equals("owner") && password.equals("owner")) {
+					if(flexiBook.getOwner() == null) {			//first time
+						createUser(username, password, flexiBook);
+						return;
+					}
+			}
+			}
+				else {
+					if(flexiBook.getOwner().getPassword().equals(password)) {
+						FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
+						return;
+						
+					}
+				}
+//			if (username.equals("owner") && password.equals("owner")) {
+//				if(flexiBook.getOwner() == null) {			//first time
+//					createUser(username, password, flexiBook);
+//					return;
+//				}
+//				else{	//not first time
+//					FlexiBookApplication.setCurrentUser(flexiBook.getOwner());
+//					return;
+//				}
+//				
+//			
+//			}
 			List<Customer> customerList = flexiBook.getCustomers();
 			for (int i = 0; i < customerList.size(); i++) {
 				customer = customerList.get(i);
@@ -2685,7 +2728,7 @@ public class FlexiBookController {
 			User customer = null;
 			for (int i = 0; i < customerList.size(); i++) {
 				customer = customerList.get(i);
-				if (customer.getUsername().equals(newUname)) {
+				if (customer.getUsername().equals(newUname) && !customer.getUsername().equals(oldUname)) {
 					throw new InvalidInputException("Username not available");
 				}
 			}
@@ -2696,7 +2739,7 @@ public class FlexiBookController {
 			//}
 
 			if (user.equals(FlexiBookApplication.getCurrentUser())) {
-				if (user.getUsername().equals(oldUname) && oldUname != newUname) {
+				if (user.getUsername().equals(oldUname) ) {
 					user.setUsername(newUname);
 					user.setPassword(newPword);
 				}
