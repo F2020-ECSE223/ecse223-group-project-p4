@@ -1160,30 +1160,6 @@ public class FlexiBookController {
 		FlexiBookPersistence.save(flexiBook);
 		return serviceExists;
 	}
-	
-//	private static boolean stringValidation(String name, String duration, String downtimeDuration,
-//			String downtimeStart) throws InvalidInputException {
-//		
-//		boolean valid = true; 
-//		
-//		if (name == null || name.length() == 0) {
-//			throw new InvalidInputException("Please enter a name."); 
-//		}
-//		
-//		if (duration == null || duration.length() == 0) {
-//			throw new InvalidInputException("Please enter a duration."); 
-//		}
-//		
-//		if (downtimeDuration == null || downtimeDuration.length() == 0) {
-//			throw new InvalidInputException("Please enter a downtime duration."); 
-//		}
-//		
-//		if (downtimeStart == null || downtimeStart.length() == 0) {
-//			throw new InvalidInputException("Please enter a downtime start time."); 
-//		}
-//		return valid; 
-//		
-//	}
 
 	// ****************************ADD
 	// SERVICE**********************************************
