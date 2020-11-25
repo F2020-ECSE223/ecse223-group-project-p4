@@ -34,6 +34,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
+import ca.mcgill.ecse.flexibook.model.Customer;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
@@ -236,7 +237,7 @@ public class FlexiBookPage extends JFrame{
        
         getContentPane().setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-        setBounds(100, 100, 700, 300);
+        setBounds(300, 300, 700, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
@@ -312,6 +313,7 @@ public class FlexiBookPage extends JFrame{
                 groupLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(groupLayout.createSequentialGroup()
                                 .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                                 .addComponent(errorMessage, GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
                                         .addGroup(groupLayout.createSequentialGroup()
                                                 .addGap(145)
                                                 .addComponent(lblLogin)
@@ -350,15 +352,15 @@ public class FlexiBookPage extends JFrame{
 
                                                                 .addComponent(passwordSignup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                         .addComponent(signup, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(groupLayout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addComponent(errorMessage, GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)))
-                                )
+//                                        .addGroup(groupLayout.createSequentialGroup()
+//                                                .addContainerGap()
+//                                                .addComponent(errorMessage, GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)))
+                               ) )
         );
         groupLayout.setVerticalGroup(
                 groupLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(groupLayout.createSequentialGroup()
-                                .addGap(14)
+                        		.addGap(14)
                                 .addComponent(lblWelcomeToBlock, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
@@ -464,7 +466,7 @@ public class FlexiBookPage extends JFrame{
 	private void initOwnerMenu() {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 
 		//I added this to test the UI, will delete after if everything is working fine -- Sneha
 	
@@ -594,7 +596,7 @@ public class FlexiBookPage extends JFrame{
 		
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		appBookingButton = new JButton();
 		appBookingButton.setText("Appoinment booking");
@@ -687,7 +689,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().repaint();
 
 		//refreshDataForAppointmentBooking();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 400);
 
 		// elements for error message
 		message = new JLabel();
@@ -1094,7 +1096,7 @@ public class FlexiBookPage extends JFrame{
 	private void initBusinessInfoPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		JButton setupBusinessInfoButton = new JButton();
 		setupBusinessInfoButton.setText("Setup Business Info");
@@ -1158,7 +1160,7 @@ public class FlexiBookPage extends JFrame{
 		
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JLabel businessNameLabel = new JLabel();
@@ -1296,7 +1298,7 @@ public class FlexiBookPage extends JFrame{
 	}
 
 	private void refreshSetupBusinessInfoPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 
 		if (error != null) {
 			message.setText(error);
@@ -1321,7 +1323,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().removeAll();
 		getContentPane().repaint();
 
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -1429,7 +1431,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshAddVacationPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 
 		if (error != null) {
 			message.setText(error);
@@ -1453,7 +1455,7 @@ public class FlexiBookPage extends JFrame{
 	private void initAddHolidayPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JLabel startHolidayDateLabel = new JLabel();
@@ -1560,7 +1562,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshAddHolidayPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -1583,7 +1585,7 @@ public class FlexiBookPage extends JFrame{
 	private void initAddBusinessHourPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JLabel addBusinessHourDayLabel = new JLabel();
@@ -1680,7 +1682,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshAddBusinessHourPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -1702,7 +1704,7 @@ public class FlexiBookPage extends JFrame{
 	private void initUpdateBusinessInfoPage() {
 		getContentPane().removeAll();
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JLabel businessNameLabel = new JLabel();
@@ -1838,7 +1840,7 @@ public class FlexiBookPage extends JFrame{
 
 	private void refreshUpdateBusinessInfoPage() {
 		
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		if (error != null) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -1880,7 +1882,7 @@ public class FlexiBookPage extends JFrame{
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		error= "";
 		success = "";
@@ -1970,7 +1972,7 @@ public class FlexiBookPage extends JFrame{
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		serviceNameLabel.setText("Service Name");
@@ -2142,7 +2144,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().repaint();
 
 		//getContentPane().setSize(dim);
-		setBounds(100, 100, 1000, 300);
+		setBounds(100, 100, 1000, 500);
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -2250,7 +2252,7 @@ public class FlexiBookPage extends JFrame{
 	private void updateServiceButtonPressed (ActionEvent evt) {
 		error = "";
 		success = ""; 
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		int selectedService = updateExistingService.getSelectedIndex();
 		
 		if (selectedService < 0) {
@@ -2346,7 +2348,7 @@ public class FlexiBookPage extends JFrame{
 
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		//page components
@@ -2424,7 +2426,7 @@ public class FlexiBookPage extends JFrame{
 	private void deleteServiceButtonPressed (ActionEvent evt) {
 		error = "";
 		success = ""; 
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		int selectedService = deleteExistingService.getSelectedIndex(); 
 		if (selectedService < 0) {
 			error = "Please select a service to delete."; 
@@ -2451,7 +2453,7 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private void refreshServicePage() {
 		
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		if (error != null && error.length() > 0) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -2515,7 +2517,7 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
 		
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		error="";
 		success ="";
 		
@@ -2530,19 +2532,8 @@ public class FlexiBookPage extends JFrame{
 		appointmentList = new JComboBox<String>(new String[0]); 
 		appointmentListLabel = new JLabel();
 		appointmentListLabel.setText("Choose an appointment:");
-		appointmentDateLabel = new JLabel();
-		appointmentDateLabel.setText("Choose a date:");
 		
-		SqlDateModel model = new SqlDateModel();
-		Properties properties = new Properties();
-		properties.put("text.today", "Today");
-		properties.put("text.month", "Month");
-		properties.put("text.year", "Year");
 
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
-		appointmentDatePicker = new JDatePickerImpl(datePanel , new DateLabelFormatter());
-		
-		
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -2552,16 +2543,18 @@ public class FlexiBookPage extends JFrame{
 				layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
 
-					.addGap(140)
+					.addGap(50)
+					
+					
 					.addGroup(layout.createParallelGroup()
+							
 							.addComponent(message)
-							.addComponent(appointmentDateLabel)
 							.addComponent(appointmentListLabel))	
 
 					.addGroup(layout.createParallelGroup()
 																
-							.addComponent(appointmentDatePicker)
-							.addComponent(appointmentList,10,20,30)
+							
+							.addComponent(appointmentList)
 							.addComponent(startAppointmentButton)	
 							.addComponent(endAppointmentButton)
 							.addComponent(noShowButton)
@@ -2575,21 +2568,20 @@ public class FlexiBookPage extends JFrame{
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
-		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appointmentDatePicker,backToMenuButton});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 //		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		//layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
-		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appointmentDatePicker,backToMenuButton});
+		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 //		
 		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup()
+				
+				.addGroup(layout.createSequentialGroup()
 						.addGap(30)
 						.addComponent(message))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(appointmentDateLabel)
-						.addComponent(appointmentDatePicker))
+				
 				.addGroup(layout.createParallelGroup()
 						.addComponent(appointmentListLabel)
 						.addComponent(appointmentList))						
@@ -2638,7 +2630,9 @@ public class FlexiBookPage extends JFrame{
 				message.setText("");
 		
 			}
+
 		});
+		refreshAppointmentStatusPage();
 	//pack();
 		
 	}
@@ -2653,30 +2647,28 @@ public class FlexiBookPage extends JFrame{
 			if(selectedAppointment == -1) {
 				error = "Please enter an appointment";
 			}
-			if(appointmentDatePicker.getModel().getValue()== null) {
-				error = "Please enter a date";
-			}
-			if(error.isEmpty()) {
+//
+		if(error.equals("")) {
 			try {
-				int day = appointmentDatePicker.getModel().getDay();
-				int month = appointmentDatePicker.getModel().getMonth();
-				int year = appointmentDatePicker.getModel().getYear();
-				String fullDate = year+"-"+month+"-"+day;
-			//	Date date = Date.valueOf(fullDate);
-			for(TOAppointment appointment: existingAppointments) {
-				if(appointment.getStartDate().toString().equals(fullDate)) {
-					appointmentWithSpecificDate.add(appointment);
+
+				
+				ArrayList<TOAppointment> ar = new ArrayList<TOAppointment>();
+				for(Customer cust : FlexiBookApplication.getFlexiBook().getCustomers()) {
+				for(TOAppointment app : FlexiBookController.getCustomerAppointments(cust.getUsername())) {
+					ar.add(app);
 				}
-			}
-			FlexiBookController.startAppointment(appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(),
-					appointmentWithSpecificDate.get(selectedAppointment).getStartTime(),
-					appointmentWithSpecificDate.get(selectedAppointment).getStartDate(),
+				}
+				TOAppointment  toap = ar.get(selectedAppointment);
+			FlexiBookController.startAppointment(toap.getCustomerName(),
+					toap.getStartTime(),
+					toap.getStartDate(),
 					FlexiBookApplication.getSystemDate(),
 					FlexiBookApplication.getSystemTime());
-			success = "You have successfully started the appointment " + appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer" + appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
-
+			success = "You have successfully started the appointment " + toap.getService() + " with the customer " +toap.getCustomerName();
+				
 			}
 			catch(InvalidInputException e) {
+				message.setText("");
 				error += e.getMessage();
 			}
 			}
@@ -2695,31 +2687,26 @@ public class FlexiBookPage extends JFrame{
 		if(selectedAppointment == -1) {
 			error = "Please enter an appointment";
 		}
-		if(appointmentDatePicker.getModel().getValue()== null) {
-			error = "Please enter a date";
-		}
-		if(error.isEmpty()) {
+//		
+		if(error.equals("")) {
 		try {
-			
-			int day = appointmentDatePicker.getModel().getDay();
-			int month = appointmentDatePicker.getModel().getMonth();
-			int year = appointmentDatePicker.getModel().getYear();
-			String fullDate = year+"-"+month+"-"+day;
-
-		for(TOAppointment appointment: existingAppointments) {
-			if(appointment.getStartDate().toString().equals(fullDate)) {
-				appointmentWithSpecificDate.add(appointment);
+			ArrayList<TOAppointment> ar = new ArrayList<TOAppointment>();
+			for(Customer cust : FlexiBookApplication.getFlexiBook().getCustomers()) {
+			for(TOAppointment app : FlexiBookController.getCustomerAppointments(cust.getUsername())) {
+				ar.add(app);
 			}
-		}
-		FlexiBookController.endAppointment(appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(),
-				appointmentWithSpecificDate.get(selectedAppointment).getStartTime(),
-				appointmentWithSpecificDate.get(selectedAppointment).getStartDate(),
+			}
+			TOAppointment  toap = ar.get(selectedAppointment);
+		FlexiBookController.endAppointment(toap.getCustomerName(),
+				toap.getStartTime(),
+				toap.getStartDate(),
 				FlexiBookApplication.getSystemDate(),
 				FlexiBookApplication.getSystemTime());
-		success = "You have successfully ended the appointment " + appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer" + appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
+		success = "You have successfully ended the appointment " + toap.getService() + " with the customer " + toap.getCustomerName();
 
 		}
 		catch(InvalidInputException e) {
+			message.setText("");
 			error += e.getMessage();
 		}
 		}
@@ -2739,38 +2726,36 @@ public class FlexiBookPage extends JFrame{
 		if(selectedAppointment == -1) {
 			error = "Please enter an appointment";
 		}
-		if(appointmentDatePicker.getModel().getValue()== null) {
-			error = "Please enter a date";
-		}
-		if(error.isEmpty()) {
+		
+		if(error.equals("")) {
 		try {
-			int day = appointmentDatePicker.getModel().getDay();
-			int month = appointmentDatePicker.getModel().getMonth();
-			int year = appointmentDatePicker.getModel().getYear();
-			String fullDate = year+"-"+month+"-"+day;
-//			Date date = Date.valueOf(fullDate);
-		for(TOAppointment appointment: existingAppointments) {
-			if(appointment.getStartDate().toString().equals(fullDate)) {
-				appointmentWithSpecificDate.add(appointment);
+			ArrayList<TOAppointment> ar = new ArrayList<TOAppointment>();
+			for(Customer cust : FlexiBookApplication.getFlexiBook().getCustomers()) {
+			for(TOAppointment app : FlexiBookController.getCustomerAppointments(cust.getUsername())) {
+				ar.add(app);
 			}
-		}
-		FlexiBookController.registerNoShow(appointmentWithSpecificDate.get(selectedAppointment).getCustomerName(), 
-				appointmentWithSpecificDate.get(selectedAppointment).getStartDate().toString(),
-				appointmentWithSpecificDate.get(selectedAppointment).getStartTime().toString(),
+			}
+			TOAppointment  toap = ar.get(selectedAppointment);
+			
+		FlexiBookController.registerNoShow(toap.getCustomerName(), 
+				toap.getStartDate().toString(),
+				toap.getStartTime().toString(),
 				FlexiBookApplication.getSystemDate(),
 				FlexiBookApplication.getSystemTime());
-		success = "You have successfully registered a no show for the appointment " + appointmentWithSpecificDate.get(selectedAppointment).getService() + "with the customer" + appointmentWithSpecificDate.get(selectedAppointment).getCustomerName();
+		success = "You have successfully registered a no show for the appointment " + toap.getService() + " with the customer " + toap.getCustomerName();
 				
 		}
 		catch(InvalidInputException e) {
+		
 			error += e.getMessage();
 		}
 		}
 		refreshAppointmentStatusPage();
+		
 	}
 	
 	private void refreshAppointmentStatusPage() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 	
 		if(!error.equals("")) {
 			message.setText(error);
@@ -2781,9 +2766,23 @@ public class FlexiBookPage extends JFrame{
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 		}
-		if(error.equals("") || error.length()==0) {
+		if(appointmentList!=null) {
 			appointmentList.removeAllItems();
 		}
+		
+		error="";
+		success="";
+		for(Customer user : FlexiBookApplication.getFlexiBook().getCustomers()) {
+			
+			for(TOAppointment app : FlexiBookController.getCustomerAppointments(user.getUsername())) {
+				String fullInfo = app.getCustomerName() + "|" + app.getService() + "|" + app.getStartDate() +"|"+ app.getStartTime()+".";
+				appointmentList.addItem(fullInfo);
+			}
+
+		}
+		appointmentList.setSelectedIndex(-1);
+
+		
 		//pack();
 	}
 	
@@ -2796,7 +2795,7 @@ public class FlexiBookPage extends JFrame{
 			
 			getContentPane().removeAll(); 
 			getContentPane().repaint();
-			setBounds(100, 100, 700, 300);
+			setBounds(100, 100, 700, 500);
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			//error="";
 			//success ="";
@@ -2906,7 +2905,7 @@ public class FlexiBookPage extends JFrame{
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			//error="";
 			//success ="";
-			setBounds(100, 100, 700, 300);
+			setBounds(100, 100, 700, 500);
 			JButton customerUpdateButton;
 			oldCustomerUsernameLabel = new JLabel();
 			oldCustomerUsernameLabel.setText("Old Username :");
@@ -3016,7 +3015,7 @@ public class FlexiBookPage extends JFrame{
 	}
 	
 	private void refreshUpdateCustomerAccount() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		if(!error.equals("")) {
 			message.setForeground(Color.RED);
@@ -3038,7 +3037,7 @@ public class FlexiBookPage extends JFrame{
 		}
 	}
 	private void refreshUpdateOwnerAccount() {
-		setBounds(100, 100, 700, 300);
+		setBounds(100, 100, 700, 500);
 		
 		if(!error.equals("")) {
 			message.setForeground(Color.RED);
