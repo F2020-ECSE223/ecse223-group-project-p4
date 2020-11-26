@@ -173,16 +173,20 @@ public class FlexiBookPage extends JFrame{
 	
 
 	//addVacationSlot
-	private JTextField startVacationDate = new JTextField();
+//	private JTextField startVacationDate = new JTextField();
 	private JTextField startVacationTime = new JTextField();
-	private JTextField endVacationDate = new JTextField();
+//	private JTextField endVacationDate = new JTextField();
 	private JTextField endVacationTime = new JTextField();
+	private JDatePickerImpl pickStartVacDate;
+	private JDatePickerImpl pickEndVacDate;
 	
 	//addHolidaySlot
-	private JTextField startHolidayDate = new JTextField();
+//	private JTextField startHolidayDate = new JTextField();
 	private JTextField startHolidayTime = new JTextField();
-	private JTextField endHolidayDate = new JTextField();
+//	private JTextField endHolidayDate = new JTextField();
 	private JTextField endHolidayTime = new JTextField();
+	private JDatePickerImpl pickStartHolDate;
+	private JDatePickerImpl pickEndHolDate;
 	
 	//addBusinessHour
 	private JTextField addBusinessHourDay = new JTextField();
@@ -1477,7 +1481,23 @@ public class FlexiBookPage extends JFrame{
 		JButton addVacationBackButton = new JButton();
 		JButton addVacationAddButton = new JButton();
 
-
+		LocalDate now = LocalDate.now();
+		Properties pO = new Properties();
+		pO.put("text.today", "Today");
+		pO.put("text.month", "Month");
+		pO.put("text.year", "Year");
+		
+		SqlDateModel overviewModelStartVac = new SqlDateModel();
+		overviewModelStartVac.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelStartVac.setSelected(true);
+		JDatePanelImpl overviewDatePanelStartVac = new JDatePanelImpl(overviewModelStartVac, pO);
+		pickStartVacDate = new JDatePickerImpl(overviewDatePanelStartVac, new DateLabelFormatter());
+		
+		SqlDateModel overviewModelEndVac = new SqlDateModel();
+		overviewModelEndVac.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelEndVac.setSelected(true);
+		JDatePanelImpl overviewDatePanelEndVac = new JDatePanelImpl(overviewModelEndVac, pO);
+		pickEndVacDate = new JDatePickerImpl(overviewDatePanelEndVac, new DateLabelFormatter());
 
 		startVacationDateLabel.setText("Start Date");
 		startVacationTimeLabel.setText("Start Time");
@@ -1503,16 +1523,16 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(addVacationBackButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
-						.addComponent(startVacationDate)
+						.addComponent(pickStartVacDate)
 						.addComponent(startVacationTime)
-						.addComponent(endVacationDate)
+						.addComponent(pickEndVacDate)
 						.addComponent(endVacationTime)
 						.addComponent(addVacationAddButton))
 				);
 		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startVacationDateLabel, startVacationTimeLabel, endVacationDateLabel, endVacationTimeLabel});
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startVacationDate, startVacationTime, endVacationDate, endVacationTime});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addVacationBackButton, addVacationAddButton, startVacationDate, startVacationTime, endVacationDate, endVacationTime});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {pickStartVacDate, startVacationTime, pickEndVacDate, endVacationTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addVacationBackButton, addVacationAddButton, pickStartVacDate, startVacationTime, pickEndVacDate, endVacationTime});
 
 
 		layout.setVerticalGroup(
@@ -1521,13 +1541,13 @@ public class FlexiBookPage extends JFrame{
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(startVacationDateLabel)
-						.addComponent(startVacationDate))
+						.addComponent(pickStartVacDate))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(startVacationTimeLabel)
 						.addComponent(startVacationTime))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(endVacationDateLabel)
-						.addComponent(endVacationDate))
+						.addComponent(pickEndVacDate))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(endVacationTimeLabel)
 						.addComponent(endVacationTime))
@@ -1562,9 +1582,18 @@ public class FlexiBookPage extends JFrame{
 		error = null;
 		success = null;
 		try {
-			String startDate = startVacationDate.getText();
+			
+			int year = pickStartVacDate.getModel().getYear();
+			int month = pickStartVacDate.getModel().getMonth()+1;
+			int day = pickStartVacDate.getModel().getDay();
+			String startDate = year +"-"+month+"-" +day;
+			
+			year = pickEndVacDate.getModel().getYear();
+			month = pickEndVacDate.getModel().getMonth()+1;
+			day = pickEndVacDate.getModel().getDay();
+			String endDate = year +"-"+month+"-" +day;
+			
 			String startTime = startVacationTime.getText();
-			String endDate = endVacationDate.getText();
 			String endTime = endVacationTime.getText();
 			FlexiBookController.addVacationSlot(startDate, startTime, endDate, endTime);
 			success = "Vacation slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at " + endTime + " added"; 
@@ -1590,9 +1619,9 @@ public class FlexiBookPage extends JFrame{
 
 		}
 
-		startVacationDate.setText("");
+//		startVacationDate.setText("");
 		startVacationTime.setText("");
-		endVacationDate.setText("");
+//		endVacationDate.setText("");
 		endVacationTime.setText("");
 
 //		pack();
@@ -1612,7 +1641,23 @@ public class FlexiBookPage extends JFrame{
 		JButton addHolidayBackButton = new JButton();
 		JButton addHolidayAddButton = new JButton();
 
-
+		LocalDate now = LocalDate.now();
+		Properties pO = new Properties();
+		pO.put("text.today", "Today");
+		pO.put("text.month", "Month");
+		pO.put("text.year", "Year");
+		
+		SqlDateModel overviewModelStartHol = new SqlDateModel();
+		overviewModelStartHol.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelStartHol.setSelected(true);
+		JDatePanelImpl overviewDatePanelStartHol = new JDatePanelImpl(overviewModelStartHol, pO);
+		pickStartHolDate = new JDatePickerImpl(overviewDatePanelStartHol, new DateLabelFormatter());
+		
+		SqlDateModel overviewModelEndHol = new SqlDateModel();
+		overviewModelEndHol.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelEndHol.setSelected(true);
+		JDatePanelImpl overviewDatePanelEndHol = new JDatePanelImpl(overviewModelEndHol, pO);
+		pickEndHolDate = new JDatePickerImpl(overviewDatePanelEndHol, new DateLabelFormatter());
 
 		startHolidayDateLabel.setText("Start Date");
 		startHolidayTimeLabel.setText("Start Time");
@@ -1638,16 +1683,16 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(addHolidayBackButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
-						.addComponent(startHolidayDate)
+						.addComponent(pickStartHolDate)
 						.addComponent(startHolidayTime)
-						.addComponent(endHolidayDate)
+						.addComponent(pickEndHolDate)
 						.addComponent(endHolidayTime)
 						.addComponent(addHolidayAddButton))
 				);
 		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startHolidayDateLabel, startHolidayTimeLabel, endHolidayDateLabel, endHolidayTimeLabel});
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addHolidayBackButton, addHolidayAddButton, startHolidayDate, startHolidayTime, endHolidayDate, endHolidayTime});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {pickStartHolDate, startHolidayTime, pickEndHolDate, endHolidayTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addHolidayBackButton, addHolidayAddButton, pickStartHolDate, startHolidayTime, pickEndHolDate, endHolidayTime});
 
 
 		layout.setVerticalGroup(
@@ -1656,13 +1701,13 @@ public class FlexiBookPage extends JFrame{
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(startHolidayDateLabel)
-						.addComponent(startHolidayDate))
+						.addComponent(pickStartHolDate))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(startHolidayTimeLabel)
 						.addComponent(startHolidayTime))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(endHolidayDateLabel)
-						.addComponent(endHolidayDate))
+						.addComponent(pickEndHolDate))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(endHolidayTimeLabel)
 						.addComponent(endHolidayTime))
@@ -1697,9 +1742,18 @@ public class FlexiBookPage extends JFrame{
 		error = null;
 		success = null;
 		try {
-			String startDate = startHolidayDate.getText();
+
+			int year = pickStartVacDate.getModel().getYear();
+			int month = pickStartVacDate.getModel().getMonth()+1;
+			int day = pickStartVacDate.getModel().getDay();
+			String startDate = year +"-"+month+"-" +day;
+			
+			year = pickEndVacDate.getModel().getYear();
+			month = pickEndVacDate.getModel().getMonth()+1;
+			day = pickEndVacDate.getModel().getDay();
+			String endDate = year +"-"+month+"-" +day;
+			
 			String startTime = startHolidayTime.getText();
-			String endDate = endHolidayDate.getText();
 			String endTime = endHolidayTime.getText();
 			FlexiBookController.addHolidaySlot(startDate, startTime, endDate, endTime);
 			success = "Holiday slot starting on " + startDate + " at " + startTime + " ending on " + endDate + " at " + endTime + " added"; 
@@ -1724,9 +1778,9 @@ public class FlexiBookPage extends JFrame{
 
 		}
 
-		startHolidayDate.setText("");
+//		startHolidayDate.setText("");
 		startHolidayTime.setText("");
-		endHolidayDate.setText("");
+//		endHolidayDate.setText("");
 		endHolidayTime.setText("");
 
 		pack();
