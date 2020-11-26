@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.peer.SystemTrayPeer;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
@@ -40,6 +39,7 @@ import ca.mcgill.ecse.flexibook.model.Customer;
 import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
 import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
+import ca.mcgill.ecse223.flexibook.controller.TOBusiness;
 import ca.mcgill.ecse223.flexibook.controller.TOService;
 
 public class FlexiBookPage extends JFrame{
@@ -188,6 +188,8 @@ public class FlexiBookPage extends JFrame{
 	private JTextField addBusinessHourDay = new JTextField();
 	private JTextField addBusinessHourStart = new JTextField();
 	private JTextField addBusinessHourEnd = new JTextField();
+	private String days[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+	private JComboBox selectBusinessHourDay = new JComboBox<String>(days);
 	
 	//updateBusinessInfo
 	private JTextField updateBusinessName = new JTextField();
@@ -1127,6 +1129,8 @@ public class FlexiBookPage extends JFrame{
 		setupBusinessInfoButton.setText("Setup Business Info");
 		JButton updateBusinessInfoButton = new JButton();
 		updateBusinessInfoButton.setText("Update Business Info");
+		JButton businessInfoViewButton = new JButton();
+		businessInfoViewButton.setText("View Business Info");
 		JButton businessInfoBackButton = new JButton();
 		businessInfoBackButton.setText("Back");
 
@@ -1139,14 +1143,14 @@ public class FlexiBookPage extends JFrame{
 				layout.createSequentialGroup()
 				.addGap(250)
 				.addGroup(layout.createParallelGroup()
-						
 						.addComponent(setupBusinessInfoButton)
 						.addComponent(updateBusinessInfoButton)
+						.addComponent(businessInfoViewButton)
 						.addComponent(businessInfoBackButton))
 				);
 
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton, businessInfoViewButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {setupBusinessInfoButton, updateBusinessInfoButton, businessInfoBackButton, businessInfoViewButton});
 
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
@@ -1155,6 +1159,8 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(setupBusinessInfoButton)
 						.addGap(15)
 						.addComponent(updateBusinessInfoButton)
+						.addGap(15)
+						.addComponent(businessInfoViewButton)
 						.addGap(15)
 						.addComponent(businessInfoBackButton))
 				);
@@ -1178,10 +1184,115 @@ public class FlexiBookPage extends JFrame{
 				initOwnerMenu();
 			}
 		});
+		
+		businessInfoViewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initViewBusinessInfoPage();
+			}
+		});
 
 	//	pack();
 	}
+	
+	private void initViewBusinessInfoPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+		setBounds(350,150,700,500);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+		JLabel businessNameLabel = new JLabel();
+		JLabel businessAddressLabel = new JLabel();
+		JLabel businessEmailLabel = new JLabel();
+		JLabel businessPhoneLabel = new JLabel();
+		
+		JLabel businessName = new JLabel();
+		JLabel businessAddress = new JLabel();
+		JLabel businessEmail = new JLabel();
+		JLabel businessPhone = new JLabel();
+		
+		JButton viewBInfBackButton = new JButton();
+		JButton viewBInfViewBHButton = new JButton();
+		
+		businessNameLabel.setText("Business Name:");
+		businessAddressLabel.setText("Business Address:");
+		businessEmailLabel.setText("Business Email:");
+		businessPhoneLabel.setText("Business Phone Number:");
+		
+		viewBInfBackButton.setText("Back");
+		viewBInfViewBHButton.setText("View Business Hours");
+		
+		TOBusiness b = FlexiBookController.getBusiness();
+		if (b == null) {
+			businessName.setText("N/A");
+			businessAddress.setText("N/A");
+			businessEmail.setText("N/A");
+			businessPhone.setText("N/A");
+		} else {
+			businessName.setText(b.getName());
+			businessAddress.setText(b.getAddress());
+			businessEmail.setText(b.getEmail());
+			businessPhone.setText(b.getPhoneNumber());
+		}
+		
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGap(190)
+				
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessNameLabel)
+						.addComponent(businessAddressLabel)
+						.addComponent(businessEmailLabel)
+						.addComponent(businessPhoneLabel)
+						.addComponent(viewBInfViewBHButton))
+				.addGroup(layout.createParallelGroup()
+						//.addComponent(message)
+						.addComponent(businessName)
+						.addComponent(businessAddress)
+						.addComponent(businessEmail)
+						.addComponent(businessPhone)
+						.addComponent(viewBInfBackButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessNameLabel, businessAddressLabel, businessEmailLabel, businessPhoneLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {businessName, businessAddress, businessEmail, businessPhone});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {viewBInfBackButton, viewBInfViewBHButton, businessName, businessAddress, businessEmail, businessPhone});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addGap(25)
+				.addGroup(layout.createParallelGroup()
+						
+						.addComponent(businessNameLabel)
+						.addComponent(businessName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessAddressLabel)
+						.addComponent(businessAddress))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessEmailLabel)
+						.addComponent(businessEmail))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(businessPhoneLabel)
+						.addComponent(businessPhone))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(viewBInfViewBHButton)
+						.addComponent(viewBInfBackButton))
+				);
+		
+
+		
+		viewBInfBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initBusinessInfoPage();
+			}
+		});
+	}
+	
 	private void initSetupBusinessInfoPage() {
 		
 		getContentPane().removeAll();
@@ -1656,15 +1767,16 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(addBusinessHourBackButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
-						.addComponent(addBusinessHourDay)
+						//.addComponent(addBusinessHourDay)
+						.addComponent(selectBusinessHourDay)
 						.addComponent(addBusinessHourStart)
 						.addComponent(addBusinessHourEnd)
 						.addComponent(addBusinessHourAddButton))
 				);
 		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addBusinessHourDayLabel, addBusinessHourStartLabel, addBusinessHourEndLabel});
-		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addBusinessHourBackButton, addBusinessHourAddButton, addBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {selectBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addBusinessHourBackButton, addBusinessHourAddButton, selectBusinessHourDay, addBusinessHourStart, addBusinessHourEnd});
 
 
 		layout.setVerticalGroup(
@@ -1673,7 +1785,8 @@ public class FlexiBookPage extends JFrame{
 				.addComponent(message)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(addBusinessHourDayLabel)
-						.addComponent(addBusinessHourDay))
+						//.addComponent(addBusinessHourDay))
+						.addComponent(selectBusinessHourDay))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(addBusinessHourStartLabel)
 						.addComponent(addBusinessHourStart))
@@ -1700,9 +1813,9 @@ public class FlexiBookPage extends JFrame{
 		addBusinessHourAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addBusinessHourButtonPressed(e);
-				message.setText("");
-				error = "";
-				success = "";
+//				message.setText("");
+//				error = "";
+//				success = "";
 			}
 		});
 
@@ -1713,7 +1826,7 @@ public class FlexiBookPage extends JFrame{
 		error = null;
 		success = null;
 		try {
-			String day = addBusinessHourDay.getText();
+			String day = (String) selectBusinessHourDay.getSelectedItem();
 			String startTime = addBusinessHourStart.getText();
 			String endTime = addBusinessHourEnd.getText();
 			FlexiBookController.addBusinessHour(day, startTime, endTime);
@@ -1739,7 +1852,6 @@ public class FlexiBookPage extends JFrame{
 
 		}
 
-		addBusinessHourDay.setText("");
 		addBusinessHourStart.setText("");
 		addBusinessHourEnd.setText("");
 

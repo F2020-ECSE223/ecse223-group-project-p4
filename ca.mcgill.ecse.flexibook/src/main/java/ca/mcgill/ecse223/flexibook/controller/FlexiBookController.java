@@ -2350,6 +2350,18 @@ public class FlexiBookController {
 
 		return result;
 	}
+	
+	public static TOBusiness getBusiness() {
+		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+		TOBusiness t = null;
+		if (fb.hasBusiness()) {
+			Business b = fb.getBusiness();
+			t = new TOBusiness(b.getName(), b.getAddress(), b.getPhoneNumber(), b.getEmail());
+			return t;
+		} else {
+			return null;
+		}
+	}
 /////////////////////////////////////////////////////////LOGIN, LOGOUT AND VIEW APPOINTMENT CALENDAR//////////////////////////////////////////////////////////////////
 
 	private static Date InvalidFormat;
