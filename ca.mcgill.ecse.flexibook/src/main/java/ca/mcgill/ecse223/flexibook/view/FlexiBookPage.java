@@ -3173,6 +3173,7 @@ public class FlexiBookPage extends JFrame{
 				public void actionPerformed(ActionEvent e) {
 					message.setText("");
 					deleteAccount();
+					String username1 = FlexiBookApplication.getCurrentUser().getUsername();
 					initializeLoginPage();
 					
 					
