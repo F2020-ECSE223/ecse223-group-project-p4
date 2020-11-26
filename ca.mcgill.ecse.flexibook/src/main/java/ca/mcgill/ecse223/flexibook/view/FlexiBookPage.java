@@ -198,8 +198,8 @@ public class FlexiBookPage extends JFrame{
 	//Update owner account
 	
 	private JTextField newOwnerPassword = new JTextField();
-	private JTextField oldOwnerUsername = new JTextField();
-	private JLabel oldOwnerUsernameLabel;
+//	private JTextField oldOwnerUsername = new JTextField();
+//	private JLabel oldOwnerUsernameLabel;
 	
 	private JLabel newOwnerPasswordLabel;
 	private JButton updateOwnerButton;
@@ -3002,8 +3002,8 @@ public class FlexiBookPage extends JFrame{
 			//success ="";
 			
 			
-			oldOwnerUsernameLabel = new JLabel();
-			oldOwnerUsernameLabel.setText("Owner Username :");
+//			oldOwnerUsernameLabel = new JLabel();
+//			oldOwnerUsernameLabel.setText("Owner Username :");
 			newOwnerPasswordLabel = new JLabel();
 			newOwnerPasswordLabel.setText("New Password :");
 			newOwnerPassword = new JPasswordField();
@@ -3023,11 +3023,11 @@ public class FlexiBookPage extends JFrame{
 					.addGap(190)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(message)
-								.addComponent(oldOwnerUsernameLabel)
+//						        .addComponent(oldOwnerUsernameLabel)
 								.addComponent(newOwnerPasswordLabel))
 						.addGroup(layout.createParallelGroup()
 								.addComponent(message)
-								.addComponent(oldOwnerUsername)
+//								.addComponent(oldOwnerUsername)
 								.addComponent(newOwnerPassword)
 								.addComponent(ownerUpdateButton)
 								.addComponent(backOwnerButton))
@@ -3036,9 +3036,9 @@ public class FlexiBookPage extends JFrame{
 
 			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
 			layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
-			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {oldOwnerUsernameLabel,newOwnerPasswordLabel});
-			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {oldOwnerUsername,newOwnerPassword, ownerUpdateButton, backOwnerButton});
-			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {oldOwnerUsername,newOwnerPassword, ownerUpdateButton, backOwnerButton});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {newOwnerPasswordLabel});
+			layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {newOwnerPassword, ownerUpdateButton, backOwnerButton});
+			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {newOwnerPassword, ownerUpdateButton, backOwnerButton});
 
 
 
@@ -3047,9 +3047,9 @@ public class FlexiBookPage extends JFrame{
 					layout.createSequentialGroup()
 					.addGap(40)
 					.addComponent(message)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(oldOwnerUsernameLabel)
-							.addComponent(oldOwnerUsername))
+					//.addGroup(layout.createParallelGroup()
+							//.addComponent(oldOwnerUsernameLabel))
+							///.addComponent(oldOwnerUsername))
 					.addGroup(layout.createParallelGroup()
 							.addComponent(newOwnerPasswordLabel)
 							.addComponent(newOwnerPassword))
@@ -3075,13 +3075,13 @@ public class FlexiBookPage extends JFrame{
 	}
 			
 		private void updatePasswordOwner(ActionEvent evt) {		
-				    String username = oldOwnerUsername.getText();
+//				    String username = oldOwnerUsername.getText();
 				    String password = newOwnerPassword.getText();
 				    error="";
 				    success="";
-				    if (!username.equals("owner")) {
-				    	error = "The username should be 'owner'";
-				    }
+//				    if (!username.equals("owner")) {
+//				    	error = "The username should be 'owner'";
+//				    }
 				    if(password.equals("")) {
 				    	error = "Please enter a password.";
 				    }
@@ -3276,7 +3276,7 @@ public class FlexiBookPage extends JFrame{
 			
 		}
 		if(error.equals("")) {
-			oldOwnerUsername.setText("");
+			//oldOwnerUsername.setText("");
 			newOwnerPassword.setText("");
 			
 		
