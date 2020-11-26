@@ -211,6 +211,13 @@ public class FlexiBookPage extends JFrame{
 	private String days[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 	private JComboBox selectBusinessHourDay = new JComboBox<String>(days);
 	
+	//updateBusinessHour
+	private JTextField updateBusinessHourOldStart = new JTextField();
+	private JTextField updateBusinessHourNewStart = new JTextField();
+	private JTextField updateBusinessHourNewEnd = new JTextField();
+	private JComboBox selectOldBusinessHourDay = new JComboBox<String>(days);
+	private JComboBox selectNewBusinessHourDay = new JComboBox<String>(days);
+	
 	//updateBusinessInfo
 	private JTextField updateBusinessName = new JTextField();
 	private JTextField updateBusinessAddress = new JTextField();
@@ -2046,7 +2053,7 @@ public class FlexiBookPage extends JFrame{
 		businessInfoUpdateBusinessHourButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				message.setText("");
-				//initAddBusinessHourPage();
+				initUpdateBusinessHourPage();
 			}
 		});
 
@@ -2062,7 +2069,7 @@ public class FlexiBookPage extends JFrame{
 			String phoneNumber = updateBusinessPhone.getText();
 			String email = updateBusinessEmail.getText();
 			FlexiBookController.updateBusinessInfo(name, address, phoneNumber, email);
-			success = "The " + name + " is added successfully"; 
+			success = "Update Successful"; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2463,6 +2470,147 @@ public class FlexiBookPage extends JFrame{
 		newEndHolidayTime.setText("");
 
 //		pack();
+	}
+	
+	private void initUpdateBusinessHourPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+		setBounds(350,150,700,500);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel updateBusinessHourOldDayLabel = new JLabel();
+		JLabel updateBusinessHourOldStartLabel = new JLabel();
+		JLabel updateBusinessHourNewDayLabel = new JLabel();
+		JLabel updateBusinessHourNewStartLabel = new JLabel();
+		JLabel updateBusinessHourNewEndLabel = new JLabel();
+		
+		JButton updateBusinessHourBackButton = new JButton();
+		JButton updateBusinessHourUpdateButton = new JButton();
+
+		updateBusinessHourOldDayLabel.setText("Current Day");
+		updateBusinessHourOldStartLabel.setText("Current Start Time");
+		updateBusinessHourNewDayLabel.setText("New Day");
+		updateBusinessHourNewStartLabel.setText("New Start Time");
+		updateBusinessHourNewEndLabel.setText("New End Time");
+		updateBusinessHourBackButton.setText("Back");
+		updateBusinessHourUpdateButton.setText("Update Business Hour");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGap(190)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(updateBusinessHourOldDayLabel)
+						.addComponent(updateBusinessHourOldStartLabel)
+						.addComponent(updateBusinessHourNewDayLabel)
+						.addComponent(updateBusinessHourNewStartLabel)
+						.addComponent(updateBusinessHourNewEndLabel)
+						.addComponent(updateBusinessHourBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(selectOldBusinessHourDay)
+						.addComponent(updateBusinessHourOldStart)
+						.addComponent(selectNewBusinessHourDay)
+						.addComponent(updateBusinessHourNewStart)
+						.addComponent(updateBusinessHourNewEnd)
+						.addComponent(updateBusinessHourUpdateButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {updateBusinessHourOldDayLabel, updateBusinessHourOldStartLabel, updateBusinessHourNewDayLabel, updateBusinessHourNewStartLabel, updateBusinessHourNewEndLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {selectOldBusinessHourDay, updateBusinessHourOldStart, selectNewBusinessHourDay, updateBusinessHourNewStart, updateBusinessHourNewEnd});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {updateBusinessHourBackButton, updateBusinessHourUpdateButton, selectOldBusinessHourDay, updateBusinessHourOldStart, selectNewBusinessHourDay, updateBusinessHourNewStart, updateBusinessHourNewEnd});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addGap(35)
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateBusinessHourOldDayLabel)
+						.addComponent(selectOldBusinessHourDay))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateBusinessHourOldStartLabel)
+						.addComponent(updateBusinessHourOldStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateBusinessHourNewDayLabel)
+						.addComponent(selectNewBusinessHourDay))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateBusinessHourNewStartLabel)
+						.addComponent(updateBusinessHourNewStart))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateBusinessHourNewEndLabel)
+						.addComponent(updateBusinessHourNewEnd))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateBusinessHourBackButton)
+						.addComponent(updateBusinessHourUpdateButton))
+				
+				);
+		
+
+		
+		updateBusinessHourBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initUpdateBusinessInfoPage();
+				message.setText("");
+				error = "";
+				success = "";
+			}
+		});
+		
+		updateBusinessHourUpdateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateBusinessHourButtonPressed(e);
+//				message.setText("");
+//				error = "";
+//				success = "";
+			}
+		});
+
+		//pack();
+	}
+	
+	private void updateBusinessHourButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			String oldDay = (String) selectOldBusinessHourDay.getSelectedItem();
+			String newDay = (String) selectNewBusinessHourDay.getSelectedItem();
+			String oldStartTime = updateBusinessHourOldStart.getText();
+			String newStartTime = updateBusinessHourNewStart.getText();
+			String newEndTime = updateBusinessHourNewEnd.getText();
+			FlexiBookController.updateBusinessHour(oldDay, oldStartTime, newDay, newStartTime, newEndTime);
+			success = "Success";
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshUpdateBusinessHourPage();
+
+	}
+	
+	private void refreshUpdateBusinessHourPage() {
+		setBounds(350,150,700,500);
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+
+		updateBusinessHourOldStart.setText("");
+		updateBusinessHourNewStart.setText("");
+		updateBusinessHourNewEnd.setText("");
+
+		//pack();
 	}
 	
 

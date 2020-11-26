@@ -1687,6 +1687,10 @@ public class FlexiBookController {
 			if (!checkBusinessOwner()) {
 				throw new InvalidInputException("No permission to update business information");
 			}
+			
+			if (name.equals("") && address.equals("") && phoneNumber.equals("") && email.equals("")) {
+				throw new InvalidInputException("Nothing to update");
+			}
 
 			if (name != null && !name.equals("")) {
 				b.setName(name);
