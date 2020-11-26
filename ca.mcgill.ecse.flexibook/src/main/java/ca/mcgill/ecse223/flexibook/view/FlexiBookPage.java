@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.peer.SystemTrayPeer;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -154,7 +155,11 @@ public class FlexiBookPage extends JFrame{
 	private JDatePickerImpl appointmentDatePicker;
 	private JLabel appointmentDateLabel;
 	private ArrayList<TOAppointment> appointmentWithSpecificDate = new ArrayList<TOAppointment>();
-
+	private JButton datePickerButon;
+	private JButton datePickerButtonInPage;
+	private JButton backDatePickerButton;
+	
+	
 	//appointment data
 	ArrayList<String> availableServices = new ArrayList<>();
 	ArrayList<TOAppointment> existingAppointments = new ArrayList<>();
@@ -226,7 +231,7 @@ public class FlexiBookPage extends JFrame{
 		FlexiBookApplication.getFlexiBook().delete();
 		
 		initializeLoginPage();
-	
+	setTitle("FlexiBook System P04");
 	}
 	
 	
@@ -567,7 +572,7 @@ public class FlexiBookPage extends JFrame{
 
 		manageAppointmentStatusButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				managedAppointmentStatus(e);
+				chooseDatePage(e);
 			}
 		});
 		
@@ -2649,7 +2654,7 @@ public class FlexiBookPage extends JFrame{
 		backToMenuButton.addActionListener(new ActionListener(){ 
 			
 			public void actionPerformed(ActionEvent e) {
-				initOwnerMenu();
+				chooseDatePage(evt);
 				message.setText("");
 		
 			}
@@ -2792,13 +2797,23 @@ public class FlexiBookPage extends JFrame{
 		if(appointmentList!=null) {
 			appointmentList.removeAllItems();
 		}
+		
+		
+		
+		int year = appointmentDatePicker.getModel().getYear();
+		int month = appointmentDatePicker.getModel().getMonth()+1;
+		int day = appointmentDatePicker.getModel().getDay();
+		
+		String fulldate = year +"-"+month+"-" +day;
+		Date dateOfPicker = Date.valueOf(fulldate);
 		ArrayList <String> appInOrderOfDate = new ArrayList<String>();
 		error="";
 		success="";
 		for(Customer user : FlexiBookApplication.getFlexiBook().getCustomers()) {
 			
 			for(TOAppointment app : FlexiBookController.getCustomerAppointments(user.getUsername())) {
-				String fullInfo = app.getStartDate() + "|" + app.getStartTime()  + "|" + app.getService() +"|"+ app.getCustomerName()+".";
+				if(app.getStartDate().equals(dateOfPicker.toString())){
+				String fullInfo = app.getStartTime()  + "|" + app.getService() +"|"+ app.getCustomerName()+".";
 				
 				if(appInOrderOfDate.isEmpty()) {
 					appInOrderOfDate.add(fullInfo);
@@ -2809,15 +2824,15 @@ public class FlexiBookPage extends JFrame{
 					
 						}
 					}
-					
+			}
 				}
 				for (String str : appInOrderOfDate) {
 					appointmentList.addItem(str);
 				}
 			
 
-		
-		appointmentList.setSelectedIndex(-1);
+//		appointmentDatePicker
+//				appointmentList.setSelectedIndex(-1);
 
 		
 		//pack();
@@ -2828,12 +2843,12 @@ public class FlexiBookPage extends JFrame{
 	 */
 	private static ArrayList<String> sortArray (ArrayList<String> list) {
 		for(int i=0 ; i<list.size()-1; i++) {
-			String inputDate = list.get(i).substring(0, 10);
-			Date dateFirst = Date.valueOf(inputDate);
-			String nextInput = list.get(i+1).substring(0, 10);
-			Date dateNext = Date.valueOf(nextInput);
+			String inputTime = list.get(i).substring(0, 5);
+			Time timeFirst = Time.valueOf(inputTime+":00");
+			String nextInput = list.get(i+1).substring(0, 5);
+			Time timeNext = Time.valueOf(nextInput+":00");
 			
-			if(dateNext.before(dateFirst)) {
+			if(timeNext.before(timeFirst)) {
 				String temp = list.get(i+1);
 				list.set(i+1, list.get(i));
 				list.set(i, temp);
@@ -2844,6 +2859,114 @@ public class FlexiBookPage extends JFrame{
 		
 		return list;
 		
+	}
+	
+	private void chooseDatePage(ActionEvent evt) {
+		
+		error = "";
+		success = ""; 
+
+		getContentPane().removeAll(); 
+		getContentPane().repaint();
+		setBounds(100, 100, 700, 500);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+
+		
+		
+		datePickerButtonInPage = new JButton();
+		datePickerButtonInPage.setText("Manage appointments of this day");
+		appointmentDateLabel = new JLabel();
+		appointmentDateLabel.setText("Choose a day:");
+		SqlDateModel overviewModel = new SqlDateModel();
+		LocalDate now = LocalDate.now();
+		overviewModel.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModel.setSelected(true);
+		Properties pO = new Properties();
+		pO.put("text.today", "Today");
+		pO.put("text.month", "Month");
+		pO.put("text.year", "Year");
+		JDatePanelImpl overviewDatePanel = new JDatePanelImpl(overviewModel, pO);
+		appointmentDatePicker = new JDatePickerImpl(overviewDatePanel, new DateLabelFormatter());
+		backDatePickerButton = new JButton();
+		backDatePickerButton.setText("Back");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+				layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+
+					.addGap(50)
+					
+					
+					.addGroup(layout.createParallelGroup()
+							
+							.addComponent(message)
+							.addComponent(appointmentDateLabel)	)
+
+					.addGroup(layout.createParallelGroup()
+																
+							
+							.addComponent(appointmentDatePicker)
+							
+							.addComponent(datePickerButtonInPage)
+							.addComponent(backDatePickerButton))
+
+							
+
+						)	
+					
+				);
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentDateLabel,appointmentDateLabel,datePickerButtonInPage,backDatePickerButton});
+	//	layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+//		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+		//layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentDateLabel,appointmentDateLabel,datePickerButtonInPage,backDatePickerButton});
+		//layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+//		
+		
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				
+				.addGroup(layout.createSequentialGroup()
+						.addGap(30)
+						.addComponent(message))
+				
+				.addGroup(layout.createParallelGroup()
+						.addComponent(appointmentDateLabel)
+						.addComponent(appointmentDatePicker))						
+				.addGroup(layout.createParallelGroup()
+						
+				
+						.addComponent(datePickerButtonInPage))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(backDatePickerButton))
+					
+				);
+		 
+		
+		datePickerButtonInPage.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				managedAppointmentStatus(e);		
+			}
+		});
+		backDatePickerButton.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				initOwnerMenu();		
+			}
+		});
+		
+		refreshAppointmentStatusPage();
 	}
 	
 	/**
