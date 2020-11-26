@@ -228,10 +228,10 @@ public class FlexiBookPage extends JFrame{
 	
 
 	public FlexiBookPage() {
-		FlexiBookApplication.getFlexiBook().delete();
+		//FlexiBookApplication.getFlexiBook().delete();
 		
 		initializeLoginPage();
-	setTitle("FlexiBook System P04");
+		setTitle("FlexiBook System P04");
 	}
 	
 	
@@ -255,8 +255,14 @@ public class FlexiBookPage extends JFrame{
 
         getContentPane().add(panel, BorderLayout.NORTH);
 
-
-        JLabel lblWelcomeToBlock = new JLabel("Welcome to FlexiBook");
+        JLabel lblWelcomeToBlock;
+        String businessName = FlexiBookApplication.getFlexiBook().getBusiness().getName();
+        if(businessName == null) {
+        	lblWelcomeToBlock = new JLabel("Welcome to FlexiBook");
+        }else {
+        	lblWelcomeToBlock = new JLabel("Welcome to " + businessName);
+        }
+        
         lblWelcomeToBlock.setBackground(Color.BLACK);
         lblWelcomeToBlock.setFont(new Font("Lucida Grande", Font.BOLD, 20));
         lblWelcomeToBlock.setHorizontalAlignment(SwingConstants.CENTER);
@@ -299,7 +305,6 @@ public class FlexiBookPage extends JFrame{
         errorMessage.setForeground(Color.RED);
 
         JButton login = new JButton("Login");
-
         JButton signup = new JButton("Sign Up");
 
         login.addActionListener(new ActionListener() {
@@ -689,7 +694,7 @@ public class FlexiBookPage extends JFrame{
 
 	/**
 	 * @author Shaswata
-	 * @param evt
+	 *
 	 */
 	private void initAppointmentBookingPage() {
 
@@ -904,7 +909,7 @@ public class FlexiBookPage extends JFrame{
 
 	/**
 	 * @author Shaswata
-	 * @param evt
+	 * 
 	 */
 	private void refreshDataForAppointmentBooking() {
 
@@ -1014,8 +1019,21 @@ public class FlexiBookPage extends JFrame{
 			String sTime = existingAppointments.get(selectedAppointment).getStartTime().substring(0,5);
 			Date startDate = Date.valueOf(existingAppointments.get(selectedAppointment).getStartDate());
 			String sDate = existingAppointments.get(selectedAppointment).getStartDate();
-			String newStartTime = updateAppNewTime.getText();
-			String newStartDate = updateAppNewDate.getText();
+			
+			String newStartTime;
+			if(updateAppNewTime.getText().equals("hh:mm")) {
+				newStartTime = "";
+			}else {
+				newStartTime = updateAppNewTime.getText();
+			}
+			
+			String newStartDate;
+			if(updateAppNewDate.getText().equals("yyyy-mm-dd")) {
+				newStartDate = "";
+			}else {
+				newStartDate = updateAppNewDate.getText();
+			}
+			
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			Time currentTime = FlexiBookApplication.getSystemTime();
 			int selectedService = updateAppServiceList.getSelectedIndex();
@@ -1026,7 +1044,7 @@ public class FlexiBookPage extends JFrame{
 				if(!newStartDate.equals("") && !newStartTime.equals("")) {		// updating to a new time slot
 					FlexiBookController.updateAppointmentTime(username, newStartTime, newStartDate, startTime, startDate, todaysDate, currentTime);
 					FlexiBookController.cancelAndBookNewService(username,  newService, null, newStartTime, newStartDate, todaysDate, currentTime);
-					success = "Appointment updated to  " + newStartDate + " at " + startTime + " for service " + newService; 
+					success = "Appointment updated to  " + newStartDate + " at " + startTime + " for new service " + newService; 
 				}else {		// not updating to a new time slot
 					FlexiBookController.cancelAndBookNewService(username, newService, null, sTime, sDate, todaysDate, currentTime);
 					success = "Appointment updated to new service " + newService; 
