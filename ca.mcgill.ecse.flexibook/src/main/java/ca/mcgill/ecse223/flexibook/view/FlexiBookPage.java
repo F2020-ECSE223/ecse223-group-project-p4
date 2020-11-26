@@ -1218,6 +1218,7 @@ public class FlexiBookPage extends JFrame{
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
 				.addGap(190)
+				
 				.addGroup(layout.createParallelGroup()
 						.addComponent(message)
 						.addComponent(businessNameLabel)
@@ -1228,7 +1229,7 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(businessInfoAddHolidayButton)
 						.addComponent(businessInfoAddBusinessHourButton))
 				.addGroup(layout.createParallelGroup()
-						.addComponent(message)
+						//.addComponent(message)
 						.addComponent(setBusinessName)
 						.addComponent(setBusinessAddress)
 						.addComponent(setBusinessEmail)
@@ -1270,33 +1271,38 @@ public class FlexiBookPage extends JFrame{
 				);
 		
 
-		lblWelcomeToBlock = new JLabel("Welcome to " + setBusinessName.getText());
+		
 		businessInfoBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initBusinessInfoPage();
 			}
 		});
 
 		businessInfoSetInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				setInfoButtonPressed(e);
 			}
 		});
 		
 		businessInfoAddVacationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initAddVacationPage();
 			}
 		});
 		
 		businessInfoAddHolidayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initAddHolidayPage();
 			}
 		});
 		
 		businessInfoAddBusinessHourButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initAddBusinessHourPage();
 			}
 		});
@@ -1315,7 +1321,7 @@ public class FlexiBookPage extends JFrame{
 			String phoneNumber = setBusinessPhone.getText();
 			String email = setBusinessEmail.getText();
 			FlexiBookController.setupBusinessInfo(name, address, phoneNumber, email);
-			success = "There is a Business named " + name + " at " + address + " with phone number: " + phoneNumber +" and email: " + email; 
+			success = "The " + name + " is added successfully"; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1336,7 +1342,7 @@ public class FlexiBookPage extends JFrame{
 			message.setForeground(Color.GREEN);
 
 		}
-		
+		setBusinessName.setText(""	);
 		setBusinessAddress.setText("");
 		setBusinessPhone.setText("");
 		setBusinessEmail.setText("");
