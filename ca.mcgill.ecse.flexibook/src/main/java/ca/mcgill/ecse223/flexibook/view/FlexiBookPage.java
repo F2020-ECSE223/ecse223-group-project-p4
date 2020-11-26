@@ -258,11 +258,11 @@ public class FlexiBookPage extends JFrame{
         getContentPane().add(panel, BorderLayout.NORTH);
 
         
-      
-        if(setBusinessName.getText() == null  || setBusinessName.getText().length() == 0) {
+        TOBusiness b = FlexiBookController.getBusiness();
+        if(b.getName() == null  ) {
         	lblWelcomeToBlock = new JLabel("Welcome to FlexiBook");
         }else {
-        	lblWelcomeToBlock = new JLabel("Welcome to " + setBusinessName.getText());
+        	lblWelcomeToBlock = new JLabel("Welcome to " + b.getName());
         }
         
         lblWelcomeToBlock.setBackground(Color.BLACK);
@@ -1432,7 +1432,7 @@ public class FlexiBookPage extends JFrame{
 			String phoneNumber = setBusinessPhone.getText();
 			String email = setBusinessEmail.getText();
 			FlexiBookController.setupBusinessInfo(name, address, phoneNumber, email);
-			success = "The " + name + " is added successfully"; 
+			success = "The business " + name + " is setted successfully"; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1992,7 +1992,6 @@ public class FlexiBookPage extends JFrame{
 			String phoneNumber = updateBusinessPhone.getText();
 			String email = updateBusinessEmail.getText();
 			FlexiBookController.updateBusinessInfo(name, address, phoneNumber, email);
-			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
