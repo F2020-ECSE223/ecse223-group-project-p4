@@ -2172,17 +2172,28 @@ public class FlexiBookController {
 		
 		FlexiBook fb = FlexiBookApplication.getFlexiBook();
 		
-		Date sD = Date.valueOf(startDate);
-		Time sT = Time.valueOf(startTime + ":00");
+		Date sD;
+		Time sT;
+		try {
+			sD = Date.valueOf(startDate);
+			sT = Time.valueOf(startTime + ":00");
+		} catch (IllegalArgumentException e) {
+			throw new InvalidInputException("Wrong input format");
+		}
+		
 		Date new_sD = null;
 		Time new_sT = null;
 		Date new_eD = null;
 		Time new_eT = null;
 		if (new_startDate != null && new_startTime != null && new_endDate != null && new_endTime != null) {
-			new_sD = Date.valueOf(new_startDate);
-			new_sT = Time.valueOf(new_startTime + ":00");
-			new_eD = Date.valueOf(new_endDate);
-			new_eT = Time.valueOf(new_endTime + ":00");
+			try {
+				new_sD = Date.valueOf(new_startDate);
+				new_sT = Time.valueOf(new_startTime + ":00");
+				new_eD = Date.valueOf(new_endDate);
+				new_eT = Time.valueOf(new_endTime + ":00");
+			} catch (IllegalArgumentException e) {
+				throw new InvalidInputException("Wrong input format");
+			}
 		}
 		
 		

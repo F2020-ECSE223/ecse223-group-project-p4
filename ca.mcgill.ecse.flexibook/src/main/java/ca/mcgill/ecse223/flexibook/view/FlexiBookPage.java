@@ -180,6 +180,14 @@ public class FlexiBookPage extends JFrame{
 	private JDatePickerImpl pickStartVacDate;
 	private JDatePickerImpl pickEndVacDate;
 	
+	//updateVacation
+	private JDatePickerImpl pickOldStartVacDate;
+	private JTextField oldStartVacationTime = new JTextField();
+	private JTextField newStartVacationTime = new JTextField();
+	private JTextField newEndVacationTime = new JTextField();
+	private JDatePickerImpl pickNewStartVacDate;
+	private JDatePickerImpl pickNewEndVacDate;
+	
 	//addHolidaySlot
 //	private JTextField startHolidayDate = new JTextField();
 	private JTextField startHolidayTime = new JTextField();
@@ -187,6 +195,14 @@ public class FlexiBookPage extends JFrame{
 	private JTextField endHolidayTime = new JTextField();
 	private JDatePickerImpl pickStartHolDate;
 	private JDatePickerImpl pickEndHolDate;
+	
+	//updateHoliday
+	private JDatePickerImpl pickOldStartHolDate;
+	private JTextField oldStartHolidayTime = new JTextField();
+	private JTextField newStartHolidayTime = new JTextField();
+	private JTextField newEndHolidayTime = new JTextField();
+	private JDatePickerImpl pickNewStartHolDate;
+	private JDatePickerImpl pickNewEndHolDate;
 	
 	//addBusinessHour
 	private JTextField addBusinessHourDay = new JTextField();
@@ -2016,7 +2032,7 @@ public class FlexiBookPage extends JFrame{
 		businessInfoUpdateVacationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				message.setText("");
-				initAddVacationPage();
+				initUpdateVacationPage();
 			}
 		});
 		
@@ -2046,7 +2062,7 @@ public class FlexiBookPage extends JFrame{
 			String phoneNumber = updateBusinessPhone.getText();
 			String email = updateBusinessEmail.getText();
 			FlexiBookController.updateBusinessInfo(name, address, phoneNumber, email);
-			success = "There is a Business named " + name + " at " + address + "with phone number: " + phoneNumber +" and email: " + email; 
+			success = "The " + name + " is added successfully"; 
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2074,6 +2090,194 @@ public class FlexiBookPage extends JFrame{
 
 		//pack();
 	}
+	
+	private void initUpdateVacationPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+
+		setBounds(350,150,700,500);
+		
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel oldStartVacationDateLabel = new JLabel();
+		JLabel oldStartVacationTimeLabel = new JLabel();
+		JLabel newStartVacationDateLabel = new JLabel();
+		JLabel newStartVacationTimeLabel = new JLabel();
+		JLabel newEndVacationDateLabel = new JLabel();
+		JLabel newEndVacationTimeLabel = new JLabel();
+		
+		JButton updateVacationBackButton = new JButton();
+		JButton updateVacationUpdateButton = new JButton();
+
+		LocalDate now = LocalDate.now();
+		Properties pO = new Properties();
+		pO.put("text.today", "Today");
+		pO.put("text.month", "Month");
+		pO.put("text.year", "Year");
+		
+		SqlDateModel overviewModelOldStartVac = new SqlDateModel();
+		overviewModelOldStartVac.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelOldStartVac.setSelected(true);
+		JDatePanelImpl overviewDatePanelOldStartVac = new JDatePanelImpl(overviewModelOldStartVac, pO);
+		pickOldStartVacDate = new JDatePickerImpl(overviewDatePanelOldStartVac, new DateLabelFormatter());
+		
+		SqlDateModel overviewModelNewStartVac = new SqlDateModel();
+		overviewModelNewStartVac.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelNewStartVac.setSelected(true);
+		JDatePanelImpl overviewDatePanelNewStartVac = new JDatePanelImpl(overviewModelNewStartVac, pO);
+		pickNewStartVacDate = new JDatePickerImpl(overviewDatePanelNewStartVac, new DateLabelFormatter());
+		
+		SqlDateModel overviewModelNewEndVac = new SqlDateModel();
+		overviewModelNewEndVac.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelNewEndVac.setSelected(true);
+		JDatePanelImpl overviewDatePanelNewEndVac = new JDatePanelImpl(overviewModelNewEndVac, pO);
+		pickNewEndVacDate = new JDatePickerImpl(overviewDatePanelNewEndVac, new DateLabelFormatter());
+
+		oldStartVacationDateLabel.setText("Current Start Date");
+		oldStartVacationTimeLabel.setText("Current Start Time");
+		newStartVacationDateLabel.setText("New Start Date");
+		newStartVacationTimeLabel.setText("New Start Time");
+		newEndVacationDateLabel.setText("New End Date");
+		newEndVacationTimeLabel.setText("New End Time");
+		updateVacationBackButton.setText("Back");
+		updateVacationUpdateButton.setText("Update Vacation Slot");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGap(190)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(oldStartVacationDateLabel)
+						.addComponent(oldStartVacationTimeLabel)
+						.addComponent(newStartVacationDateLabel)
+						.addComponent(newStartVacationTimeLabel)
+						.addComponent(newEndVacationDateLabel)
+						.addComponent(newEndVacationTimeLabel)
+						.addComponent(updateVacationBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(pickOldStartVacDate)
+						.addComponent(oldStartVacationTime)
+						.addComponent(pickNewStartVacDate)
+						.addComponent(newStartVacationTime)
+						.addComponent(pickNewEndVacDate)
+						.addComponent(newEndVacationTime)
+						.addComponent(updateVacationUpdateButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {oldStartVacationDateLabel, oldStartVacationTimeLabel, newStartVacationDateLabel, newStartVacationTimeLabel, newEndVacationDateLabel, newEndVacationTimeLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {pickOldStartVacDate, oldStartVacationTime, pickNewStartVacDate, newStartVacationTime, pickNewEndVacDate, newEndVacationTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {updateVacationBackButton, updateVacationUpdateButton, pickOldStartVacDate, oldStartVacationTime, pickNewStartVacDate, newStartVacationTime, pickNewEndVacDate, newEndVacationTime});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addGap(35)
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(oldStartVacationDateLabel)
+						.addComponent(pickOldStartVacDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(oldStartVacationTimeLabel)
+						.addComponent(oldStartVacationTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newStartVacationDateLabel)
+						.addComponent(pickNewStartVacDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newStartVacationTimeLabel)
+						.addComponent(newStartVacationTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newEndVacationDateLabel)
+						.addComponent(pickNewEndVacDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newEndVacationTimeLabel)
+						.addComponent(newEndVacationTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateVacationBackButton)
+						.addComponent(updateVacationUpdateButton))
+				
+				);
+		
+
+		
+		updateVacationBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initUpdateBusinessInfoPage();
+				message.setText("");
+			}
+		});
+		
+		updateVacationUpdateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateVacationButtonPressed(e);
+				error = "";
+				success = "";
+				message.setText("");
+			}
+		});
+
+	//	pack();
+	}
+	
+	private void updateVacationButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			
+			int year = pickOldStartVacDate.getModel().getYear();
+			int month = pickOldStartVacDate.getModel().getMonth()+1;
+			int day = pickOldStartVacDate.getModel().getDay();
+			String oldStartDate = year +"-"+month+"-" +day;
+			
+			year = pickNewStartVacDate.getModel().getYear();
+			month = pickNewStartVacDate.getModel().getMonth()+1;
+			day = pickNewStartVacDate.getModel().getDay();
+			String newStartDate = year +"-"+month+"-" +day;
+			
+			year = pickNewEndVacDate.getModel().getYear();
+			month = pickNewEndVacDate.getModel().getMonth()+1;
+			day = pickNewEndVacDate.getModel().getDay();
+			String newEndDate = year +"-"+month+"-" +day;
+			
+			String oldStartTime = oldStartVacationTime.getText();
+			String newStartTime = newStartVacationTime.getText();
+			String newEndTime = newEndVacationTime.getText();
+			FlexiBookController.updateVacation(oldStartDate, oldStartTime, newStartDate, newStartTime, newEndDate, newEndTime);
+			success = "Success"; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshUpdateVacationPage();
+
+	}
+	
+	private void refreshUpdateVacationPage() {
+		setBounds(350,150,700,500);
+
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+		
+		oldStartVacationTime.setText("");
+		newStartVacationTime.setText("");
+		newEndVacationTime.setText("");
+
+//		pack();
+	}
+	
 
 
 
