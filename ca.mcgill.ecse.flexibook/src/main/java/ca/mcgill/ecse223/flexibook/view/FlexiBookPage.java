@@ -2039,14 +2039,14 @@ public class FlexiBookPage extends JFrame{
 		businessInfoUpdateHolidayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				message.setText("");
-				initAddHolidayPage();
+				initUpdateHolidayPage();
 			}
 		});
 		
 		businessInfoUpdateBusinessHourButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				message.setText("");
-				initAddBusinessHourPage();
+				//initAddBusinessHourPage();
 			}
 		});
 
@@ -2274,6 +2274,193 @@ public class FlexiBookPage extends JFrame{
 		oldStartVacationTime.setText("");
 		newStartVacationTime.setText("");
 		newEndVacationTime.setText("");
+
+//		pack();
+	}
+	
+	private void initUpdateHolidayPage() {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+
+		setBounds(350,150,700,500);
+		
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JLabel oldStartHolidayDateLabel = new JLabel();
+		JLabel oldStartHolidayTimeLabel = new JLabel();
+		JLabel newStartHolidayDateLabel = new JLabel();
+		JLabel newStartHolidayTimeLabel = new JLabel();
+		JLabel newEndHolidayDateLabel = new JLabel();
+		JLabel newEndHolidayTimeLabel = new JLabel();
+		
+		JButton updateHolidayBackButton = new JButton();
+		JButton updateHolidayUpdateButton = new JButton();
+
+		LocalDate now = LocalDate.now();
+		Properties pO = new Properties();
+		pO.put("text.today", "Today");
+		pO.put("text.month", "Month");
+		pO.put("text.year", "Year");
+		
+		SqlDateModel overviewModelOldStartHol = new SqlDateModel();
+		overviewModelOldStartHol.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelOldStartHol.setSelected(true);
+		JDatePanelImpl overviewDatePanelOldStartHol = new JDatePanelImpl(overviewModelOldStartHol, pO);
+		pickOldStartHolDate = new JDatePickerImpl(overviewDatePanelOldStartHol, new DateLabelFormatter());
+		
+		SqlDateModel overviewModelNewStartHol = new SqlDateModel();
+		overviewModelNewStartHol.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelNewStartHol.setSelected(true);
+		JDatePanelImpl overviewDatePanelNewStartHol = new JDatePanelImpl(overviewModelNewStartHol, pO);
+		pickNewStartHolDate = new JDatePickerImpl(overviewDatePanelNewStartHol, new DateLabelFormatter());
+		
+		SqlDateModel overviewModelNewEndHol = new SqlDateModel();
+		overviewModelNewEndHol.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModelNewEndHol.setSelected(true);
+		JDatePanelImpl overviewDatePanelNewEndHol = new JDatePanelImpl(overviewModelNewEndHol, pO);
+		pickNewEndHolDate = new JDatePickerImpl(overviewDatePanelNewEndHol, new DateLabelFormatter());
+
+		oldStartHolidayDateLabel.setText("Current Start Date");
+		oldStartHolidayTimeLabel.setText("Current Start Time");
+		newStartHolidayDateLabel.setText("New Start Date");
+		newStartHolidayTimeLabel.setText("New Start Time");
+		newEndHolidayDateLabel.setText("New End Date");
+		newEndHolidayTimeLabel.setText("New End Time");
+		updateHolidayBackButton.setText("Back");
+		updateHolidayUpdateButton.setText("Update Holiday Slot");
+
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGap(190)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(oldStartHolidayDateLabel)
+						.addComponent(oldStartHolidayTimeLabel)
+						.addComponent(newStartHolidayDateLabel)
+						.addComponent(newStartHolidayTimeLabel)
+						.addComponent(newEndHolidayDateLabel)
+						.addComponent(newEndHolidayTimeLabel)
+						.addComponent(updateHolidayBackButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(message)
+						.addComponent(pickOldStartHolDate)
+						.addComponent(oldStartHolidayTime)
+						.addComponent(pickNewStartHolDate)
+						.addComponent(newStartHolidayTime)
+						.addComponent(pickNewEndHolDate)
+						.addComponent(newEndHolidayTime)
+						.addComponent(updateHolidayUpdateButton))
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {oldStartHolidayDateLabel, oldStartHolidayTimeLabel, newStartHolidayDateLabel, newStartHolidayTimeLabel, newEndHolidayDateLabel, newEndHolidayTimeLabel});
+		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {pickOldStartHolDate, oldStartHolidayTime, pickNewStartHolDate, newStartHolidayTime, pickNewEndHolDate, newEndHolidayTime});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {updateHolidayBackButton, updateHolidayUpdateButton, pickOldStartHolDate, oldStartHolidayTime, pickNewStartHolDate, newStartHolidayTime, pickNewEndHolDate, newEndHolidayTime});
+
+
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addGap(35)
+				.addComponent(message)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(oldStartHolidayDateLabel)
+						.addComponent(pickOldStartHolDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(oldStartHolidayTimeLabel)
+						.addComponent(oldStartHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newStartHolidayDateLabel)
+						.addComponent(pickNewStartHolDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newStartHolidayTimeLabel)
+						.addComponent(newStartHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newEndHolidayDateLabel)
+						.addComponent(pickNewEndHolDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(newEndHolidayTimeLabel)
+						.addComponent(newEndHolidayTime))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(updateHolidayBackButton)
+						.addComponent(updateHolidayUpdateButton))
+				
+				);
+		
+
+		
+		updateHolidayBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initUpdateBusinessInfoPage();
+				message.setText("");
+			}
+		});
+		
+		updateHolidayUpdateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateHolidayButtonPressed(e);
+				error = "";
+				success = "";
+				message.setText("");
+			}
+		});
+
+	//	pack();
+	}
+	
+	private void updateHolidayButtonPressed(ActionEvent evt) {
+		error = null;
+		success = null;
+		try {
+			
+			int year = pickOldStartHolDate.getModel().getYear();
+			int month = pickOldStartHolDate.getModel().getMonth()+1;
+			int day = pickOldStartHolDate.getModel().getDay();
+			String oldStartDate = year +"-"+month+"-" +day;
+			
+			year = pickNewStartHolDate.getModel().getYear();
+			month = pickNewStartHolDate.getModel().getMonth()+1;
+			day = pickNewStartHolDate.getModel().getDay();
+			String newStartDate = year +"-"+month+"-" +day;
+			
+			year = pickNewEndHolDate.getModel().getYear();
+			month = pickNewEndHolDate.getModel().getMonth()+1;
+			day = pickNewEndHolDate.getModel().getDay();
+			String newEndDate = year +"-"+month+"-" +day;
+			
+			String oldStartTime = oldStartHolidayTime.getText();
+			String newStartTime = newStartHolidayTime.getText();
+			String newEndTime = newEndHolidayTime.getText();
+			FlexiBookController.updateHoliday(oldStartDate, oldStartTime, newStartDate, newStartTime, newEndDate, newEndTime);
+			success = "Success"; 
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+		refreshUpdateHolidayPage();
+
+	}
+	
+	private void refreshUpdateHolidayPage() {
+		setBounds(350,150,700,500);
+
+		if (error != null) {
+			message.setText(error);
+			message.setForeground(Color.RED);
+
+		}
+		else if (success != null) {
+			message.setText(success);
+			message.setForeground(Color.GREEN);
+
+		}
+		
+		oldStartHolidayTime.setText("");
+		newStartHolidayTime.setText("");
+		newEndHolidayTime.setText("");
 
 //		pack();
 	}
