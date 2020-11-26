@@ -231,8 +231,19 @@ public class FlexiBookPage extends JFrame{
     private JTextField usernameSignup;
     JLabel lblWelcomeToBlock;
   
+	//view business info
+    JLabel businessNameLabel = new JLabel();
+	JLabel businessAddressLabel = new JLabel();
+	JLabel businessEmailLabel = new JLabel();
+	JLabel businessPhoneLabel = new JLabel();
 	
-
+	JLabel businessName = new JLabel();
+	JLabel businessAddress = new JLabel();
+	JLabel businessEmail = new JLabel();
+	JLabel businessPhone = new JLabel();
+	
+	JButton viewBInfBackButton = new JButton();
+	JButton viewBInfViewBHButton = new JButton();
 	public FlexiBookPage() {
 		//FlexiBookApplication.getFlexiBook().delete();
 		
@@ -262,11 +273,14 @@ public class FlexiBookPage extends JFrame{
         getContentPane().add(panel, BorderLayout.NORTH);
 
         
-        TOBusiness b = FlexiBookController.getBusiness();
-        if(b.getName() == null  ) {
+//        TOBusiness b = FlexiBookController.getBusiness();
+//       b.setName("FlexiBook");
+        if(businessName.getText() =="N/A" ) {
         	lblWelcomeToBlock = new JLabel("Welcome to FlexiBook");
-        }else {
-        	lblWelcomeToBlock = new JLabel("Welcome to " + b.getName());
+//        
+        }
+        else {
+        	lblWelcomeToBlock = new JLabel("Welcome to " + businessName.getText());
         }
         
         lblWelcomeToBlock.setBackground(Color.BLACK);
@@ -1204,18 +1218,7 @@ public class FlexiBookPage extends JFrame{
 		setBounds(350,150,700,500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		JLabel businessNameLabel = new JLabel();
-		JLabel businessAddressLabel = new JLabel();
-		JLabel businessEmailLabel = new JLabel();
-		JLabel businessPhoneLabel = new JLabel();
 		
-		JLabel businessName = new JLabel();
-		JLabel businessAddress = new JLabel();
-		JLabel businessEmail = new JLabel();
-		JLabel businessPhone = new JLabel();
-		
-		JButton viewBInfBackButton = new JButton();
-		JButton viewBInfViewBHButton = new JButton();
 		
 		businessNameLabel.setText("Business Name:");
 		businessAddressLabel.setText("Business Address:");
@@ -2697,7 +2700,6 @@ public class FlexiBookPage extends JFrame{
 			updateServiceDowntimeStartCheckBox.setSelected(false);
 			updateServiceNameCheckBox.setSelected(false);
 
-			
 
 			existingServices = new HashMap<Integer, TOService>();
 			updateExistingService.removeAllItems();
@@ -2730,6 +2732,7 @@ public class FlexiBookPage extends JFrame{
 	private void managedAppointmentStatus(ActionEvent evt) {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+
 		
 		setBounds(350,150,700,500);
 		error="";
@@ -2846,6 +2849,10 @@ public class FlexiBookPage extends JFrame{
 			}
 
 		});
+		
+		
+		
+	
 		refreshAppointmentStatusPage();
 	//pack();
 		
@@ -2968,9 +2975,11 @@ public class FlexiBookPage extends JFrame{
 		
 	}
 	
+	
 	private void refreshAppointmentStatusPage() {
 		setBounds(350,150,700,500);
 	
+		
 		if(!error.equals("")) {
 			message.setText(error);
 			message.setForeground(Color.RED);
@@ -2995,10 +3004,12 @@ public class FlexiBookPage extends JFrame{
 		ArrayList <String> appInOrderOfDate = new ArrayList<String>();
 		error="";
 		success="";
+		
 		for(Customer user : FlexiBookApplication.getFlexiBook().getCustomers()) {
 			
 			for(TOAppointment app : FlexiBookController.getCustomerAppointments(user.getUsername())) {
 				if(app.getStartDate().equals(dateOfPicker.toString())){
+					
 				String fullInfo = app.getStartTime()  + "|" + app.getService() +"|"+ app.getCustomerName()+".";
 				
 				if(appInOrderOfDate.isEmpty()) {
@@ -3010,15 +3021,16 @@ public class FlexiBookPage extends JFrame{
 					
 						}
 					}
+				
 			}
+			
 				}
+	
 				for (String str : appInOrderOfDate) {
 					appointmentList.addItem(str);
 				}
 			
-
-//		appointmentDatePicker
-//				appointmentList.setSelectedIndex(-1);
+				appointmentList.setSelectedIndex(-1);
 
 		
 		//pack();
