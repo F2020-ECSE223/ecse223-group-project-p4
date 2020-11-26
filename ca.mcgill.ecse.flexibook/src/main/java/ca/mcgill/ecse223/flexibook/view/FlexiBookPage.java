@@ -223,7 +223,7 @@ public class FlexiBookPage extends JFrame{
     private JLabel errorMessage;
     private JTextField passwordSignup;
     private JTextField usernameSignup;
-    
+    JLabel lblWelcomeToBlock;
   
 	
 
@@ -255,12 +255,12 @@ public class FlexiBookPage extends JFrame{
 
         getContentPane().add(panel, BorderLayout.NORTH);
 
-        JLabel lblWelcomeToBlock;
-        String businessName = FlexiBookApplication.getFlexiBook().getBusiness().getName();
-        if(businessName == null) {
+        
+      //  String businessName = FlexiBookApplication.getFlexiBook().getBusiness().getName();
+        if(setBusinessName.getText() == null  || setBusinessName.getText().length() == 0) {
         	lblWelcomeToBlock = new JLabel("Welcome to FlexiBook");
         }else {
-        	lblWelcomeToBlock = new JLabel("Welcome to " + businessName);
+        	lblWelcomeToBlock = new JLabel("Welcome to " + setBusinessName.getText());
         }
         
         lblWelcomeToBlock.setBackground(Color.BLACK);
@@ -1271,7 +1271,7 @@ public class FlexiBookPage extends JFrame{
 				);
 		
 
-		
+		lblWelcomeToBlock = new JLabel("Welcome to " + setBusinessName.getText());
 		businessInfoBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initBusinessInfoPage();
@@ -1337,8 +1337,7 @@ public class FlexiBookPage extends JFrame{
 			message.setForeground(Color.GREEN);
 
 		}
-
-		setBusinessName.setText("");
+		
 		setBusinessAddress.setText("");
 		setBusinessPhone.setText("");
 		setBusinessEmail.setText("");
