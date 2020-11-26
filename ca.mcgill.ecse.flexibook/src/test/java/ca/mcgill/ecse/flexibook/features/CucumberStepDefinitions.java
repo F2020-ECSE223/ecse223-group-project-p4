@@ -22,6 +22,8 @@ import java.util.Map;
 //import java.util.List;
 //import java.util.Map;
 
+
+
 import ca.mcgill.ecse.flexibook.model.*;
 import ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek;
 import ca.mcgill.ecse223.flexibook.controller.*;
@@ -2254,8 +2256,17 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			for(int i = 1; i<8; i++){
 				date = new Date(date.getTime() + i*MILLIS_IN_A_DAY);
 
-				FlexiBookController.viewDailyTimeSlotAvailable(String.valueOf(date));
-				FlexiBookController.viewDailyTimeSlotUnavailable(String.valueOf(date));
+				if(string.equals("Owner")) {
+
+					FlexiBookController.getUnavailableTimeSlots(String.valueOf(date));
+					FlexiBookController.getAvailableTimeSlots(String.valueOf(date));
+				}
+				else{
+					FlexiBookController.getAvailableTimeSlots(String.valueOf(date));
+				}
+
+				//FlexiBookController.viewDailyTimeSlotAvailable(String.valueOf(date));
+				//FlexiBookController.viewDailyTimeSlotUnavailable(String.valueOf(date));
 			}
 
 		}catch (InvalidInputException e) {
@@ -2266,17 +2277,23 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
 	@Then("the following slots shall be unavailable:")
-	public void the_following_slots_shall_be_unavailable(String string, io.cucumber.datatable.DataTable dataTable) {
+	public void the_following_slots_shall_be_unavailable(io.cucumber.datatable.DataTable dataTable) {
+		TOTimeSlot unavailable = null;
+		List<TOTimeSlot> uats = null;
 
-		unavailableTS = dataTable.asMaps(String.class, String.class);
 		try {
-			List<TOTimeSlot> uats = FlexiBookController.getUnavailableTimeSlots(string);
-			assertEquals(uats, unavailableTS);
+			List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+			for (Map<String, String> columns : rows) {
+				unavailable = new TOTimeSlot(Date.valueOf(columns.get("startDate")),
+						Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
+						Time.valueOf(columns.get("endTime") + ":00"));
+				uats = FlexiBookController.getUnavailableTimeSlots("startDate");
+			}
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
-
-		}
+		assertEquals(unavailable, uats);
+	}
 
 
 
@@ -2284,16 +2301,22 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 
 
 	@Then("the following slots shall be available:")
-	public void the_following_slots_shall_be_available(String string, io.cucumber.datatable.DataTable dataTable) {
+	public void the_following_slots_shall_be_available(io.cucumber.datatable.DataTable dataTable) {
+		TOTimeSlot available = null;
+		List<TOTimeSlot> uats = null;
 
-		availableTS = dataTable.asMaps(String.class, String.class);
 		try {
-			List<TOTimeSlot> uats = FlexiBookController.getAvailableTimeSlots(string);
-			assertEquals(uats, availableTS);
+			List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+			for (Map<String, String> columns : rows) {
+				available = new TOTimeSlot(Date.valueOf(columns.get("startDate")),
+						Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
+						Time.valueOf(columns.get("endTime") + ":00"));
+				 uats = FlexiBookController.getAvailableTimeSlots("startDate");
+			}
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
-
+		assertEquals(available, uats);
 	}
 
 
@@ -2306,8 +2329,16 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@When("{string} requests the appointment calendar for the day of {string}")
 	public void requests_the_appointment_calendar_for_the_day_of(String string, String string2) {
 		try{
-				FlexiBookController.viewDailyTimeSlotAvailable(string2);
-				FlexiBookController.viewDailyTimeSlotUnavailable(string2);
+			if(string.equals("Owner")) {
+
+				FlexiBookController.getUnavailableTimeSlots(string2);
+				FlexiBookController.getAvailableTimeSlots(string2);
+			}
+			else{
+				FlexiBookController.getAvailableTimeSlots(string2);
+			}
+				//FlexiBookController.viewDailyTimeSlotAvailable(string2);
+				//FlexiBookController.viewDailyTimeSlotUnavailable(string2);
 		}catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
