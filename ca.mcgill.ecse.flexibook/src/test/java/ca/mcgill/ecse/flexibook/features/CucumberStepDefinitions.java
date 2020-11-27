@@ -2253,8 +2253,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	
 	///////////////////////////// VIEW APPOINTMENT CALENDER ////////////////////////////////////////////
 	
-	List<TOTimeSlot> availableSlots = Collections.emptyList();
-	List<TOTimeSlot> unavailableSlots = Collections.emptyList();
+	ArrayList<TOTimeSlot> availableSlots = new ArrayList<TOTimeSlot>();
+	ArrayList<TOTimeSlot> unavailableSlots = new ArrayList<TOTimeSlot>();
 	
 	/**
 	 * @author Venkata Satyanarayana Chivatam
@@ -2265,8 +2265,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@When("{string} requests the appointment calendar for the week starting on {string}")
 	public void requests_the_appointment_calendar_for_the_week_starting_on(String string, String string2) {
 		try{
-			availableSlots = FlexiBookController.getAvailableTimeSlotForWeek(string2);
-			unavailableSlots = FlexiBookController.getUnavailableTimeSlotForWeek(string2);
+			availableSlots = (ArrayList<TOTimeSlot>) FlexiBookController.getAvailableTimeSlotForWeek(string2);
+			unavailableSlots = (ArrayList<TOTimeSlot>) FlexiBookController.getUnavailableTimeSlotForWeek(string2);
 		}catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2292,7 +2292,7 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 					}
 				}
 			}
-			assertEquals(true, unavailable);
+			assertEquals(true, present);
 	
 	}
 
@@ -2331,8 +2331,8 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	public void requests_the_appointment_calendar_for_the_day_of(String string, String string2) {
 		try{
 			
-			unavailableSlots = FlexiBookController.getUnavailableTimeSlots(string2);
-			availableSlots = FlexiBookController.getAvailableTimeSlots(string2);
+			unavailableSlots = (ArrayList<TOTimeSlot>) FlexiBookController.getUnavailableTimeSlots(string2);
+			availableSlots = (ArrayList<TOTimeSlot>) FlexiBookController.getAvailableTimeSlots(string2);
 			
 		}catch (InvalidInputException e) {
 			error = e.getMessage();

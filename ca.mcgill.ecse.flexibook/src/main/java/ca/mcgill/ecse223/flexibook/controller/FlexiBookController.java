@@ -2644,17 +2644,16 @@ public class FlexiBookController {
 	
 
 	public static List<TOTimeSlot> getUnavailableTimeSlotForWeek(String sdate) throws InvalidInputException{
-		List<TOTimeSlot> unavailable = Collections.emptyList();
+		ArrayList<TOTimeSlot> unavailable = new ArrayList<>();
 		
 		try {
 			Date date = Date.valueOf(sdate);
 			for(int i = 1; i<8; i++){
 				date = new Date(date.getTime() + i*MILLIS_IN_A_DAY);
 				List<TOTimeSlot> thisUnavailable = getUnavailableTimeSlots(date.toString());
-				for (int j = 0; i < thisUnavailable.size(); j++) {
-					unavailable.add(thisUnavailable.get(j));
+					unavailable.add(thisUnavailable.get(i));
 				}
-			}
+			
 			return unavailable;
 		} catch(RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
@@ -2664,14 +2663,14 @@ public class FlexiBookController {
 	}
 	
 	public static List<TOTimeSlot> getAvailableTimeSlotForWeek(String sdate) throws InvalidInputException{
-		List<TOTimeSlot> available = Collections.emptyList();
+		ArrayList<TOTimeSlot> available = new ArrayList<>();
 		
 		try {
 			Date date = Date.valueOf(sdate);
 			for(int i = 1; i<8; i++){
 				date = new Date(date.getTime() + i*MILLIS_IN_A_DAY);
 				List<TOTimeSlot> thisAvailable = getAvailableTimeSlots(date.toString());
-				for (int k = 0; k < thisAvailable.size(); k++) {
+				for (int k = 0; k < thisAvailable.size()-1; k++) {
 					available.add(thisAvailable.get(k));
 				}
 			}
