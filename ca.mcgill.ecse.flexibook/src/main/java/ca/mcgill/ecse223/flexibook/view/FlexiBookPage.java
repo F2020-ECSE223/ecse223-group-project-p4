@@ -27,8 +27,10 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -158,7 +160,9 @@ public class FlexiBookPage extends JFrame{
 	private JButton datePickerButon;
 	private JButton datePickerButtonInPage;
 	private JButton backDatePickerButton;
-	
+	private JTable overviewTableOfAppointmentStatus;
+	private JLabel appOverviewLabelOfAppointmentStatus;
+	private String[][] rowDataStatus;
 	
 	//appointment data
 	ArrayList<String> availableServices = new ArrayList<>();
@@ -260,6 +264,24 @@ public class FlexiBookPage extends JFrame{
 	
 	JButton viewBInfBackButton = new JButton();
 	JButton viewBInfViewBHButton = new JButton();
+	
+	
+	 // Variables declaration - do not modify
+    private javax.swing.JButton jButton1;
+    private com.toedter.calendar.JCalendar jCalendar1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JList<String> jList2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private JButton back;
+    // End of variables declaration
 	public FlexiBookPage() {
 		//FlexiBookApplication.getFlexiBook().delete();
 		
@@ -284,7 +306,7 @@ public class FlexiBookPage extends JFrame{
         JPanel panel = new JPanel();
 
         panel.setBackground(Color.RED);
-        panel.setPreferredSize(new Dimension(0000, 0000));
+        panel.setPreferredSize(new Dimension(1000, 1000));
 
         getContentPane().add(panel, BorderLayout.NORTH);
 
@@ -2479,7 +2501,7 @@ public class FlexiBookPage extends JFrame{
 
 
 	private void viewCalenderActionPerformed(ActionEvent evt) {
-		//initViewAppCalenderPage();
+		initComponents();
 	}
 
 
@@ -3126,6 +3148,8 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
 
+		Date ced= FlexiBookApplication.getSystemDate();
+		Time dube= FlexiBookApplication.getSystemTime();
 		
 		setBounds(350,150,700,500);
 		error="";
@@ -3143,6 +3167,13 @@ public class FlexiBookPage extends JFrame{
 		appointmentListLabel = new JLabel();
 		appointmentListLabel.setText("Choose an appointment:");
 		
+		rowDataStatus = new String[0][3];
+	
+		appOverviewLabelOfAppointmentStatus = new JLabel();
+		appOverviewLabelOfAppointmentStatus.setText("Appointments that have started:");
+		String[] columnNames = { "Start Time", "Customer", "Service" };
+		overviewTableOfAppointmentStatus = new JTable(rowDataStatus, columnNames);
+		JScrollPane appointmentStatusTable = new JScrollPane(overviewTableOfAppointmentStatus);
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -3159,7 +3190,8 @@ public class FlexiBookPage extends JFrame{
 					.addGroup(layout.createParallelGroup()
 							
 							.addComponent(message)
-							.addComponent(appointmentListLabel))	
+							.addComponent(appointmentListLabel)
+							.addComponent(appOverviewLabelOfAppointmentStatus))	
 
 					.addGroup(layout.createParallelGroup()
 																
@@ -3168,8 +3200,13 @@ public class FlexiBookPage extends JFrame{
 							.addComponent(startAppointmentButton)	
 							.addComponent(endAppointmentButton)
 							.addComponent(noShowButton)
-							.addComponent(backToMenuButton))	
-
+							
+							.addComponent(appointmentStatusTable,10,40,40)
+							
+							//.addComponent(appointmentStatusTable,200,200,400)
+							
+							.addComponent(backToMenuButton)	
+							)
 							
 
 						)	
@@ -3178,30 +3215,31 @@ public class FlexiBookPage extends JFrame{
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
-		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appOverviewLabelOfAppointmentStatus,appointmentStatusTable,backToMenuButton});
 //		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		//layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
-		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
-//		
+		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appOverviewLabelOfAppointmentStatus,appointmentStatusTable,backToMenuButton});
+		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {});
 		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 				
 				.addGroup(layout.createSequentialGroup()
 						.addGap(30)
-						.addComponent(message))
-				
+						.addComponent(message))				
 				.addGroup(layout.createParallelGroup()
 						.addComponent(appointmentListLabel)
 						.addComponent(appointmentList))						
-				.addGroup(layout.createParallelGroup()
-						
+				.addGroup(layout.createParallelGroup()						
 						.addComponent(startAppointmentButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(endAppointmentButton)	)
 				.addGroup(layout.createParallelGroup()		
 						.addComponent(noShowButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(appOverviewLabelOfAppointmentStatus)
+						.addComponent(appointmentStatusTable,10,40,40))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(backToMenuButton))
 
@@ -3278,6 +3316,10 @@ public class FlexiBookPage extends JFrame{
 					toap.getStartDate(),
 					FlexiBookApplication.getSystemDate(),
 					FlexiBookApplication.getSystemTime());
+			
+//			rowDataStatus[0][1]= toap.getStartTime();
+//			rowDataStatus[0][2]= toap.getCustomerName();
+//			rowDataStatus[0][3]= toap.getService();
 			success = "You have successfully started the appointment " + toap.getService() + " with the customer " +toap.getCustomerName();
 				
 			}
@@ -3397,12 +3439,12 @@ public class FlexiBookPage extends JFrame{
 		ArrayList <String> appInOrderOfDate = new ArrayList<String>();
 		error="";
 		success="";
-		
+		boolean flag = false;
 		for(Customer user : FlexiBookApplication.getFlexiBook().getCustomers()) {
 			
 			for(TOAppointment app : FlexiBookController.getCustomerAppointments(user.getUsername())) {
 				if(app.getStartDate().equals(dateOfPicker.toString())){
-					
+					flag = true;
 				String fullInfo = app.getStartTime()  + "|" + app.getService() +"|"+ app.getCustomerName()+".";
 				
 				if(appInOrderOfDate.isEmpty()) {
@@ -3422,9 +3464,9 @@ public class FlexiBookPage extends JFrame{
 				for (String str : appInOrderOfDate) {
 					appointmentList.addItem(str);
 				}
-			
+			if(flag) {
 				appointmentList.setSelectedIndex(-1);
-
+			}
 		
 		//pack();
 	}
@@ -3856,5 +3898,181 @@ public class FlexiBookPage extends JFrame{
 			
 		}
 	}
+	/**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private void initComponents() {
+    	setBounds(350,150,700,500);
+
+    	getContentPane().removeAll();
+    	getContentPane().repaint();
+    	
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jCalendar1 = new com.toedter.calendar.JCalendar();
+        jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jList2 = new javax.swing.JList<>();
+        jLabel3 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(51, 51, 255));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 51));
+
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        jLabel1.setText("FlexiBook");
+
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jLabel4.setText("View Appointment Calendar");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(118, 118, 118))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(94, 94, 94)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4)
+                                .addContainerGap(27, Short.MAX_VALUE))
+        );
+
+        jCalendar1.setBorder(javax.swing.BorderFactory.createRaisedBevelBorder());
+
+        jButton1.setText("Back");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                initOwnerMenu();
+            }
+        });
+
+        jLabel2.setText("View available timeSlots");
+
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(jList1);
+
+        jScrollPane3.setViewportView(jScrollPane2);
+
+        jList2.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(jList2);
+
+        jScrollPane5.setViewportView(jScrollPane4);
+
+        jLabel3.setText("View unavailable timeSlots");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(10, 10, 10)
+                                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane3)
+                                        .addComponent(jScrollPane5)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(0, 18, Short.MAX_VALUE)))
+                                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                        .addComponent(jCalendar1, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1))
+        );
+
+       // pack();
+    }// </editor-fold>
+
+   
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FlexiBookPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FlexiBookPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FlexiBookPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FlexiBookPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        
+        
+        //</editor-fold>
+
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new viewAppointment().setVisible(true);
+//            }
+//        });
+    }
 	
 }

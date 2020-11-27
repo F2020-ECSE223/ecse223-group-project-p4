@@ -2284,10 +2284,10 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		try {
 			List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 			for (Map<String, String> columns : rows) {
-				unavailable = new TOTimeSlot(Date.valueOf(columns.get("startDate")),
-						Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
+				unavailable = new TOTimeSlot(Date.valueOf(columns.get("date")),
+						Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("date")),
 						Time.valueOf(columns.get("endTime") + ":00"));
-				uats = FlexiBookController.getUnavailableTimeSlots("startDate");
+				uats = FlexiBookController.getUnavailableTimeSlots(columns.get("date"));
 			}
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
