@@ -3501,13 +3501,6 @@ public class FlexiBookPage extends JFrame{
 			try {
 
 				
-				ArrayList<TOAppointment> ar = new ArrayList<TOAppointment>();
-				for(Customer cust : FlexiBookApplication.getFlexiBook().getCustomers()) {
-				for(TOAppointment app : FlexiBookController.getCustomerAppointments(cust.getUsername())) {
-					ar.add(app);
-				}
-				}
-				TOAppointment  toap = ar.get(selectedAppointment);
 			FlexiBookController.startAppointment(toap.getCustomerName(),
 					toap.getStartTime(),
 					toap.getStartDate(),
@@ -3543,13 +3536,13 @@ public class FlexiBookPage extends JFrame{
 //		
 		if(error.equals("")) {
 		try {
-			ArrayList<TOAppointment> ar = new ArrayList<TOAppointment>();
-			for(Customer cust : FlexiBookApplication.getFlexiBook().getCustomers()) {
-			for(TOAppointment app : FlexiBookController.getCustomerAppointments(cust.getUsername())) {
-				ar.add(app);
-			}
-			}
-			TOAppointment  toap = ar.get(selectedAppointment);
+//			ArrayList<TOAppointment> ar = new ArrayList<TOAppointment>();
+//			for(Customer cust : FlexiBookApplication.getFlexiBook().getCustomers()) {
+//			for(TOAppointment app : FlexiBookController.getCustomerAppointments(cust.getUsername())) {
+//				ar.add(app);
+//			}
+//			}
+//			TOAppointment  toap = ar.get(selectedAppointment);
 		FlexiBookController.endAppointment(toap.getCustomerName(),
 				toap.getStartTime(),
 				toap.getStartDate(),
@@ -3582,14 +3575,14 @@ public class FlexiBookPage extends JFrame{
 		
 		if(error.equals("")) {
 		try {
-			ArrayList<TOAppointment> ar = new ArrayList<TOAppointment>();
-			for(Customer cust : FlexiBookApplication.getFlexiBook().getCustomers()) {
-			for(TOAppointment app : FlexiBookController.getCustomerAppointments(cust.getUsername())) {
-				ar.add(app);
-			}
-			}
-			TOAppointment  toap = ar.get(selectedAppointment);
-			
+//			ArrayList<TOAppointment> ar = new ArrayList<TOAppointment>();
+//			for(Customer cust : FlexiBookApplication.getFlexiBook().getCustomers()) {
+//			for(TOAppointment app : FlexiBookController.getCustomerAppointments(cust.getUsername())) {
+//				ar.add(app);
+//			}
+//			}
+//			TOAppointment  toap = ar.get(selectedAppointment);
+//			
 		FlexiBookController.registerNoShow(toap.getCustomerName(), 
 				toap.getStartDate().toString(),
 				toap.getStartTime().toString(),
@@ -3612,7 +3605,7 @@ public class FlexiBookPage extends JFrame{
 	 *
 	 * @author yasminamatta
 	 */
-	
+	TOAppointment toap;
 	private void refreshAppointmentStatusPage() {
 		setBounds(350,150,700,500);
 	
@@ -3646,12 +3639,19 @@ public class FlexiBookPage extends JFrame{
 			
 		for(TOAppointment app : FlexiBookController.getAppointmentsWithDate(chosenDate)) {
 			if(app.getStartDate().equals(dateOfPicker.toString())){
+				toap = app;
 				flag = true;
 				String fullInfo = app.getStartTime()  + " | " + app.getService() +" | " + app.getCustomerName()+".";
-				appointmentList.addItem(fullInfo);
+				appInOrderOfDate.add(fullInfo);
+				appInOrderOfDate = sortArray(appInOrderOfDate);
+				
+				
 			}
 				
 		}	
+		for(String a : appInOrderOfDate) {
+			appointmentList.addItem(a);
+		}
 		
 		if(flag) {
 			appointmentList.setSelectedIndex(-1);
