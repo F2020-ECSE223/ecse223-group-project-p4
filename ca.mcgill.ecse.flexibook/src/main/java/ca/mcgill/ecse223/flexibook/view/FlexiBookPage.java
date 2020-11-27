@@ -295,7 +295,7 @@ public class FlexiBookPage extends JFrame{
 
 	// End of variables declaration
 	public FlexiBookPage() {
-		//FlexiBookApplication.getFlexiBook().delete();
+		FlexiBookApplication.getFlexiBook().delete();
 		
 		initializeLoginPage();
 		setTitle("FlexiBook System P04");
@@ -1836,17 +1836,18 @@ public class FlexiBookPage extends JFrame{
 	
 	private void addHolidayButtonPressed(ActionEvent evt) {
 		error = null;
+		setBounds(350,150,700,500);
 		success = null;
 		try {
 
-			int year = pickStartVacDate.getModel().getYear();
-			int month = pickStartVacDate.getModel().getMonth()+1;
-			int day = pickStartVacDate.getModel().getDay();
+			int year = pickStartHolDate.getModel().getYear();
+			int month = pickStartHolDate.getModel().getMonth()+1;
+			int day = pickStartHolDate.getModel().getDay();
 			String startDate = year +"-"+month+"-" +day;
 			
-			year = pickEndVacDate.getModel().getYear();
-			month = pickEndVacDate.getModel().getMonth()+1;
-			day = pickEndVacDate.getModel().getDay();
+			year = pickEndHolDate.getModel().getYear();
+			month = pickEndHolDate.getModel().getMonth()+1;
+			day = pickEndHolDate.getModel().getDay();
 			String endDate = year +"-"+month+"-" +day;
 			
 			String startTime = startHolidayTime.getText();
@@ -1879,7 +1880,7 @@ public class FlexiBookPage extends JFrame{
 //		endHolidayDate.setText("");
 		endHolidayTime.setText("");
 
-		pack();
+		//pack();
 	}
 	
 	private void initAddBusinessHourPage() {
@@ -2868,6 +2869,7 @@ public class FlexiBookPage extends JFrame{
 
 		addServiceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				addServiceButtonPressed(e);
 			}
 
@@ -4181,11 +4183,11 @@ public class FlexiBookPage extends JFrame{
 		jCalendar1.setBorder(javax.swing.BorderFactory.createRaisedBevelBorder());
 
 		jButton1.setText("Back");
-		jButton1.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButton1ActionPerformed(evt);
-			}
-		});
+//		jButton1.addActionListener(new java.awt.event.ActionListener() {
+//			public void actionPerformed(java.awt.event.ActionEvent evt) {
+//				jButton1ActionPerformed(evt);
+//			}
+//		});
 
 		jLabel2.setText("View available timeSlots");
 
@@ -4207,11 +4209,11 @@ public class FlexiBookPage extends JFrame{
 
 		jScrollPane5.setViewportView(jScrollPane4);
 
-		jLabel3.setText("View unavailable timeSlots");
+		jLabel3.setText("View unavailable slots");
 
-		jButton2.setText("get week view");
+		jButton2.setText("Week view");
 
-		jButton3.setText("get day view");
+		jButton3.setText("Day view");
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -4261,11 +4263,30 @@ public class FlexiBookPage extends JFrame{
 										.addComponent(jButton3)))
 		);
 
-		pack();
-	}// </editor-fold>
+		//pack();
+	// </editor-fold>
 
-	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-		initOwnerMenu();
+	
+		jButton2.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			weekViewPageActionPerformed(e);
+		
+		}
+	});
+	
+	jButton1.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			message.setText("");
+			initCustomerMenu();
+			
+		}
+	});
 	}
-
+	
+	private void weekViewPageActionPerformed(ActionEvent evt) {
+		getContentPane().removeAll();
+		getContentPane().repaint();
+		setBounds(350,150,700,500);
+		
+	}
 	}
