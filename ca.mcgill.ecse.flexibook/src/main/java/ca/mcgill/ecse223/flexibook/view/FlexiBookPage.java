@@ -290,7 +290,7 @@ public class FlexiBookPage extends JFrame{
     private JButton back;
     // End of variables declaration
 	public FlexiBookPage() {
-		//FlexiBookApplication.getFlexiBook().delete();
+		FlexiBookApplication.getFlexiBook().delete();
 		
 		initializeLoginPage();
 		setTitle("FlexiBook System P04");
