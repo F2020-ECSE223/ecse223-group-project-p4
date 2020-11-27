@@ -770,7 +770,6 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
 
-		//refreshDataForAppointmentBooking();
 		setBounds(100, 100, 700, 400);
 
 		
@@ -810,8 +809,9 @@ public class FlexiBookPage extends JFrame{
 		updateAppDateList = new JComboBox<String>(new String[0]);
 		updateAppNewTime = new JTextField();
 		updateAppNewTime.setText("hh:mm");
-//		updateAppNewDate = new JTextField();
-//		updateAppNewDate.setText("yyyy-mm-dd");
+
+		updateAppNewDate = new JDatePickerImpl(overviewDatePanel, new DateLabelFormatter());
+
 		updateAppServiceList = new JComboBox<String>(new String[0]);
 		updateAppDateLabel = new JLabel();
 		updateAppDateLabel.setText("Appointment at: ");
@@ -1076,9 +1076,12 @@ public class FlexiBookPage extends JFrame{
 			String startTime = makeAppTime.getText();
 			
 			int year = makeAppDate.getModel().getYear();
+
 			int month = makeAppDate.getModel().getMonth()+1;
+
 			int day = makeAppDate.getModel().getDay();
-			String startDate  = year +"-" +month +"-"+ day;
+			String startDate  = year + "-" + month + "-" + day;
+			System.out.println(startDate);
 //			Date start = Date.valueOf(startDate);
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			Time currentTime = FlexiBookApplication.getSystemTime();
@@ -1092,8 +1095,6 @@ public class FlexiBookPage extends JFrame{
 
 		//refresh data
 		refreshDataForAppointmentBooking();
-		error="";
-		success="";
 		initAppointmentBookingPage();
 
 	}
@@ -1127,22 +1128,23 @@ public class FlexiBookPage extends JFrame{
 			}else {
 				newStartTime = updateAppNewTime.getText();
 			}
+
 			LocalDate now = LocalDate.now();
 			String newStartDate;
 			int year1 = now.getYear();
 			int month1 = now.getMonthValue() - 1;
 			int day1 = now.getDayOfMonth();
 			String date = year1+"-"+month1+"-"+day1;
-			if(updateAppNewDate.getModel().getValue().equals(date)) {
+			if(updateAppNewDate.getModel().getValue().equals(date)){
 				newStartDate = "";
 			}else {
 				 int year =updateAppNewDate.getModel().getYear();
-				 int month = updateAppNewDate.getModel().getMonth();
+				 int month = updateAppNewDate.getModel().getMonth()+1;
 				 int day = updateAppNewDate.getModel().getDay();
 				 
 				 newStartDate = year +"-"+month+"-"+day;
 			}
-			
+
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			Time currentTime = FlexiBookApplication.getSystemTime();
 			int selectedService = updateAppServiceList.getSelectedIndex();
@@ -3332,7 +3334,8 @@ public class FlexiBookPage extends JFrame{
 		//pack();
 	}
 	
-	
+	private Date chosenDate = null;
+	private ArrayList<TOAppointment> appointmentsOnDay = new ArrayList<>();
 
 	/**
 	 * @author yasminamatta
@@ -3341,6 +3344,8 @@ public class FlexiBookPage extends JFrame{
 	private void managedAppointmentStatus(ActionEvent evt) {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+		
+		refreshAppointmentStatusPage();
 
 		Date ced= FlexiBookApplication.getSystemDate();
 		Time dube= FlexiBookApplication.getSystemTime();
@@ -3475,8 +3480,6 @@ public class FlexiBookPage extends JFrame{
 
 		});
 		
-		
-		
 	
 		refreshAppointmentStatusPage();
 	//pack();
@@ -3603,7 +3606,10 @@ public class FlexiBookPage extends JFrame{
 		refreshAppointmentStatusPage();
 		
 	}
+	
+	  
 	/**
+	 *
 	 * @author yasminamatta
 	 */
 	
@@ -3620,51 +3626,36 @@ public class FlexiBookPage extends JFrame{
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 		}
-		if(appointmentList!=null) {
+		
+		if(appointmentList != null) {
 			appointmentList.removeAllItems();
+		} else {
+			appointmentList = new JComboBox<String>(new String[0]);
 		}
-		
-		
 		
 		int year = appointmentDatePicker.getModel().getYear();
 		int month = appointmentDatePicker.getModel().getMonth()+1;
 		int day = appointmentDatePicker.getModel().getDay();
 		
-		String fulldate = year +"-"+month+"-" +day;
+		String fulldate = year + "-" + month + "-" + day;
 		Date dateOfPicker = Date.valueOf(fulldate);
 		ArrayList <String> appInOrderOfDate = new ArrayList<String>();
 		error="";
 		success="";
 		boolean flag = false;
-		for(Customer user : FlexiBookApplication.getFlexiBook().getCustomers()) {
 			
-			for(TOAppointment app : FlexiBookController.getCustomerAppointments(user.getUsername())) {
-				if(app.getStartDate().equals(dateOfPicker.toString())){
-					flag = true;
-				String fullInfo = app.getStartTime()  + "|" + app.getService() +"|"+ app.getCustomerName()+".";
-				
-//				if(appInOrderOfDate.isEmpty()) {
-					appInOrderOfDate.add(fullInfo);
-//				}
-//				else {
-//						appInOrderOfDate.add(fullInfo);
-//						appInOrderOfDate = sortArray(appInOrderOfDate);
-//					
-//						}
-					}
-				
-				
+		for(TOAppointment app : FlexiBookController.getAppointmentsWithDate(chosenDate)) {
+			if(app.getStartDate().equals(dateOfPicker.toString())){
+				flag = true;
+				String fullInfo = app.getStartTime()  + " | " + app.getService() +" | " + app.getCustomerName()+".";
+				appointmentList.addItem(fullInfo);
 			}
-			
-			
-				}
-	
-				for (String str : appInOrderOfDate) {
-					appointmentList.addItem(str);
-				}
-			if(flag) {
-				appointmentList.setSelectedIndex(-1);
-			}
+				
+		}	
+		
+		if(flag) {
+			appointmentList.setSelectedIndex(-1);
+		}
 		
 		//pack();
 	}
@@ -3783,16 +3774,15 @@ public class FlexiBookPage extends JFrame{
 		 
 		
 		datePickerButtonInPage.addActionListener(new ActionListener(){ 
-			
 			public void actionPerformed(ActionEvent e) {
-				
+				chosenDate = Date.valueOf(appointmentDatePicker.getJFormattedTextField().getText());
+				appointmentDatePicker.getJFormattedTextField().setText("");
 				managedAppointmentStatus(e);		
 			}
 		});
+		
 		backDatePickerButton.addActionListener(new ActionListener(){ 
-			
 			public void actionPerformed(ActionEvent e) {
-				
 				initOwnerMenu();		
 			}
 		});

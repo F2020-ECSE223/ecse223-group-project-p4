@@ -103,8 +103,7 @@ public class FlexiBookController {
 //		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 //			throw new InvalidInputException("The appoi")
 //		}
-		if (appointment.getTimeSlot().getStartDate().after(todaysDate)
-				||(appointment.getTimeSlot().getStartDate().equals(todaysDate) && appointment.getTimeSlot().getStartTime().after(currentTime))) {
+		if (appointment.getTimeSlot().getStartDate().after(todaysDate) || (appointment.getTimeSlot().getStartDate().equals(todaysDate) && appointment.getTimeSlot().getStartTime().after(currentTime))) {
 			throw new InvalidInputException("You cannot register a no show for an appointment that did not start.");
 		}
 
@@ -243,6 +242,25 @@ public class FlexiBookController {
 	
 	
 	
+	public static ArrayList<TOAppointment> getAppointmentsWithDate(Date thisDate){
+		
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		ArrayList<TOAppointment> appointmentList = new ArrayList<>();
+		
+		for(Appointment appointment : flexiBook.getAppointments()) {
+			if(appointment.getTimeSlot().getStartDate().equals(thisDate)) {
+				String name = appointment.getCustomer().getUsername();
+				String date = appointment.getTimeSlot().getStartDate().toString();
+				String time = appointment.getTimeSlot().getStartTime().toString();
+				String service = appointment.getBookableService().getName();
+				TOAppointment thisAppointment = new TOAppointment(name, service, time, date);
+				appointmentList.add(thisAppointment);
+			}
+		}
+		return appointmentList;
+	}
+
+	
 	public static ArrayList<TOAppointment> getCustomerAppointments(String username){
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Customer customer = findCustomerByName(username, flexiBook);
@@ -258,7 +276,6 @@ public class FlexiBookController {
 		
 		return appointmentList;
 	}
-
 		
 
 
@@ -827,7 +844,6 @@ public class FlexiBookController {
 		
 		// check time slot not in the past		
 		if ( startDate.before(todaysDate) && startTimeApp.before(todaysTime)){
-			System.out.println("Here 1");
 			return false;
 		}
 		
@@ -835,7 +851,6 @@ public class FlexiBookController {
 		//check if start time of the appointment is before todays time
 		if(startDate.equals(todaysDate) && startTimeApp.after(todaysTime)) {
 			if(make == false) {			//not making appointment
-				System.out.println("Here 2");
 				return false;
 			}
 		}
