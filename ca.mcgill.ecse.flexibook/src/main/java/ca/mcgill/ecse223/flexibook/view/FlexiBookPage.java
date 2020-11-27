@@ -75,7 +75,7 @@ public class FlexiBookPage extends JFrame{
 
 	//make appointment
 	private JTextField makeAppTime;
-	private JTextField makeAppDate;
+	private JDatePickerImpl makeAppDate;
 	private JComboBox<String> makeAppServiceList;
 	private JLabel makeAppTimeLabel;
 	private JLabel makeAppDateLabel;
@@ -160,9 +160,9 @@ public class FlexiBookPage extends JFrame{
 	private JButton datePickerButon;
 	private JButton datePickerButtonInPage;
 	private JButton backDatePickerButton;
-	private JTable overviewTableOfAppointmentStatus;
-	private JLabel appOverviewLabelOfAppointmentStatus;
-	private String[][] rowDataStatus;
+//	private JTable overviewTableOfAppointmentStatus;
+//	private JLabel appOverviewLabelOfAppointmentStatus;
+//	private String[][] rowDataStatus;
 	
 	//appointment data
 	ArrayList<String> availableServices = new ArrayList<>();
@@ -774,11 +774,21 @@ public class FlexiBookPage extends JFrame{
 		makeAppBackButton = new JButton();
 		makeAppBackButton.setText("Back");
 
+		SqlDateModel overviewModel = new SqlDateModel();
+		LocalDate now = LocalDate.now();
+		overviewModel.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModel.setSelected(true);
+		Properties pO = new Properties();
+		pO.put("text.today", "Today");
+		pO.put("text.month", "Month");
+		pO.put("text.year", "Year");
+		JDatePanelImpl overviewDatePanel = new JDatePanelImpl(overviewModel, pO);
+		makeAppDate = new JDatePickerImpl(overviewDatePanel, new DateLabelFormatter());
 		//elements for make appointment
 		makeAppTime = new JTextField();
 		makeAppTime.setText("hh:mm");
-		makeAppDate = new JTextField();
-		makeAppDate.setText("yyyy-mm-dd");
+//		makeAppDate = new JTextField();
+//		makeAppDate.setText("yyyy-mm-dd");
 		makeAppServiceList = new JComboBox<String>(new String[0]);
 		makeAppTimeLabel = new JLabel();
 		makeAppTimeLabel.setText("Appointment Time: ");
@@ -1046,7 +1056,12 @@ public class FlexiBookPage extends JFrame{
 			String mainServiceName = availableServices.get(selectedService);
 
 			String startTime = makeAppTime.getText();
-			String startDate = makeAppDate.getText();
+			
+			int year = makeAppDate.getModel().getYear();
+			int month = makeAppDate.getModel().getMonth();
+			int day = makeAppDate.getModel().getDay();
+			String startDate  = year +"-" +month +"-"+ day;
+//			Date start = Date.valueOf(startDate);
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			Time currentTime = FlexiBookApplication.getSystemTime();
 
@@ -1059,6 +1074,8 @@ public class FlexiBookPage extends JFrame{
 
 		//refresh data
 		refreshDataForAppointmentBooking();
+		error="";
+		success="";
 		initAppointmentBookingPage();
 
 	}
@@ -3316,14 +3333,14 @@ public class FlexiBookPage extends JFrame{
 		appointmentList = new JComboBox<String>(new String[0]); 
 		appointmentListLabel = new JLabel();
 		appointmentListLabel.setText("Choose an appointment:");
-		
-		rowDataStatus = new String[0][3];
-	
-		appOverviewLabelOfAppointmentStatus = new JLabel();
-		appOverviewLabelOfAppointmentStatus.setText("Appointments that have started:");
-		String[] columnNames = { "Start Time", "Customer", "Service" };
-		overviewTableOfAppointmentStatus = new JTable(rowDataStatus, columnNames);
-		JScrollPane appointmentStatusTable = new JScrollPane(overviewTableOfAppointmentStatus);
+//		
+//		rowDataStatus = new String[0][3];
+//	
+//		appOverviewLabelOfAppointmentStatus = new JLabel();
+//		appOverviewLabelOfAppointmentStatus.setText("Appointments that have started:");
+//		String[] columnNames = { "Start Time", "Customer", "Service" };
+//		overviewTableOfAppointmentStatus = new JTable(rowDataStatus, columnNames);
+//		JScrollPane appointmentStatusTable = new JScrollPane(overviewTableOfAppointmentStatus);
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -3341,8 +3358,8 @@ public class FlexiBookPage extends JFrame{
 							
 							.addComponent(message)
 							.addComponent(appointmentListLabel)
-							.addComponent(appOverviewLabelOfAppointmentStatus))	
-
+							//.addComponent(appOverviewLabelOfAppointmentStatus))	
+)
 					.addGroup(layout.createParallelGroup()
 																
 							
@@ -3351,7 +3368,7 @@ public class FlexiBookPage extends JFrame{
 							.addComponent(endAppointmentButton)
 							.addComponent(noShowButton)
 							
-							.addComponent(appointmentStatusTable,10,40,40)
+							//.addComponent(appointmentStatusTable,10,40,40)
 							
 							//.addComponent(appointmentStatusTable,200,200,400)
 							
@@ -3365,11 +3382,11 @@ public class FlexiBookPage extends JFrame{
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
-		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appOverviewLabelOfAppointmentStatus,appointmentStatusTable,backToMenuButton});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 //		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		//layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
-		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appOverviewLabelOfAppointmentStatus,appointmentStatusTable,backToMenuButton});
+		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {});
 		
 		layout.setVerticalGroup(
@@ -3387,9 +3404,9 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(endAppointmentButton)	)
 				.addGroup(layout.createParallelGroup()		
 						.addComponent(noShowButton))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(appOverviewLabelOfAppointmentStatus)
-						.addComponent(appointmentStatusTable,10,40,40))
+//				.addGroup(layout.createParallelGroup()
+//						.addComponent(appOverviewLabelOfAppointmentStatus)
+//						.addComponent(appointmentStatusTable,10,40,40))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(backToMenuButton))
 
