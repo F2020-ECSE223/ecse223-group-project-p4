@@ -32,9 +32,11 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
+
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
+
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.Customer;
@@ -85,7 +87,7 @@ public class FlexiBookPage extends JFrame{
 	//update appointment
 	private JComboBox<String> updateAppDateList;
 	private JTextField updateAppNewTime;
-	private JTextField updateAppNewDate;
+	private JDatePickerImpl updateAppNewDate;
 	private JComboBox<String> updateAppServiceList;
 	private JLabel updateAppDateLabel;
 	private JLabel updateAppNewTimeLabel;
@@ -293,7 +295,7 @@ public class FlexiBookPage extends JFrame{
 
 	// End of variables declaration
 	public FlexiBookPage() {
-		FlexiBookApplication.getFlexiBook().delete();
+		//FlexiBookApplication.getFlexiBook().delete();
 		
 		initializeLoginPage();
 		setTitle("FlexiBook System P04");
@@ -771,6 +773,8 @@ public class FlexiBookPage extends JFrame{
 		//refreshDataForAppointmentBooking();
 		setBounds(100, 100, 700, 400);
 
+		
+	
 		// elements for error message
 		message = new JLabel();
 		makeAppBackButton = new JButton();
@@ -779,6 +783,7 @@ public class FlexiBookPage extends JFrame{
 		SqlDateModel overviewModel = new SqlDateModel();
 		LocalDate now = LocalDate.now();
 		overviewModel.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		
 		overviewModel.setSelected(true);
 		Properties pO = new Properties();
 		pO.put("text.today", "Today");
@@ -805,8 +810,8 @@ public class FlexiBookPage extends JFrame{
 		updateAppDateList = new JComboBox<String>(new String[0]);
 		updateAppNewTime = new JTextField();
 		updateAppNewTime.setText("hh:mm");
-		updateAppNewDate = new JTextField();
-		updateAppNewDate.setText("yyyy-mm-dd");
+//		updateAppNewDate = new JTextField();
+//		updateAppNewDate.setText("yyyy-mm-dd");
 		updateAppServiceList = new JComboBox<String>(new String[0]);
 		updateAppDateLabel = new JLabel();
 		updateAppDateLabel.setText("Appointment at: ");
@@ -818,7 +823,18 @@ public class FlexiBookPage extends JFrame{
 		updateAppServiceLabel.setText("New Service: ");
 		updateAppButton = new JButton();
 		updateAppButton.setText("Update Appointment");
-
+		
+		SqlDateModel overviewModel1 = new SqlDateModel();
+		LocalDate rn = LocalDate.now();
+		overviewModel1.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModel1.setSelected(true);
+		Properties p1 = new Properties();
+		p1.put("text.today", "Today");
+		p1.put("text.month", "Month");
+		p1.put("text.year", "Year");
+		JDatePanelImpl overviewDatePanel1 = new JDatePanelImpl(overviewModel1, p1);
+		updateAppNewDate = new JDatePickerImpl(overviewDatePanel1, new DateLabelFormatter());
+//		updateAppNewDate.getModel().setValue(null);
 		//elements for cancel appointment
 		cancelAppDateList = new JComboBox<String>(new String[0]);
 		cancelAppDateLabel = new JLabel();
@@ -1060,7 +1076,7 @@ public class FlexiBookPage extends JFrame{
 			String startTime = makeAppTime.getText();
 			
 			int year = makeAppDate.getModel().getYear();
-			int month = makeAppDate.getModel().getMonth();
+			int month = makeAppDate.getModel().getMonth()+1;
 			int day = makeAppDate.getModel().getDay();
 			String startDate  = year +"-" +month +"-"+ day;
 //			Date start = Date.valueOf(startDate);
@@ -1111,12 +1127,20 @@ public class FlexiBookPage extends JFrame{
 			}else {
 				newStartTime = updateAppNewTime.getText();
 			}
-			
+			LocalDate now = LocalDate.now();
 			String newStartDate;
-			if(updateAppNewDate.getText().equals("yyyy-mm-dd")) {
+			int year1 = now.getYear();
+			int month1 = now.getMonthValue() - 1;
+			int day1 = now.getDayOfMonth();
+			String date = year1+"-"+month1+"-"+day1;
+			if(updateAppNewDate.getModel().getValue().equals(date)) {
 				newStartDate = "";
 			}else {
-				newStartDate = updateAppNewDate.getText();
+				 int year =updateAppNewDate.getModel().getYear();
+				 int month = updateAppNewDate.getModel().getMonth();
+				 int day = updateAppNewDate.getModel().getDay();
+				 
+				 newStartDate = year +"-"+month+"-"+day;
 			}
 			
 			Date todaysDate = FlexiBookApplication.getSystemDate();
