@@ -835,6 +835,7 @@ public class FlexiBookPage extends JFrame{
 
 		makeAppBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message.setText("");
 				initCustomerMenu();
 			}
 		});
@@ -2082,7 +2083,7 @@ public class FlexiBookPage extends JFrame{
 			}
 		});
 
-		//pack();
+	
 	}
 	
 	private void updateInfoButtonPressed(ActionEvent evt) {
@@ -3449,7 +3450,7 @@ public class FlexiBookPage extends JFrame{
 			if(selectedAppointment == -1) {
 				error = "Please enter an appointment";
 			}
-//
+
 		if(error.equals("")) {
 			try {
 
@@ -3470,7 +3471,7 @@ public class FlexiBookPage extends JFrame{
 //			rowDataStatus[0][1]= toap.getStartTime();
 //			rowDataStatus[0][2]= toap.getCustomerName();
 //			rowDataStatus[0][3]= toap.getService();
-			success = "You have successfully started the appointment " + toap.getService() + " with the customer " +toap.getCustomerName();
+			success = "The appointment with the customer " +toap.getCustomerName() + " have started";
 				
 			}
 			catch(InvalidInputException e) {
@@ -3508,7 +3509,7 @@ public class FlexiBookPage extends JFrame{
 				toap.getStartDate(),
 				FlexiBookApplication.getSystemDate(),
 				FlexiBookApplication.getSystemTime());
-		success = "You have successfully ended the appointment " + toap.getService() + " with the customer " + toap.getCustomerName();
+		success = "The appointment with the customer " + toap.getCustomerName() + " have ended."  ;
 
 		}
 		catch(InvalidInputException e) {
@@ -3559,7 +3560,9 @@ public class FlexiBookPage extends JFrame{
 		refreshAppointmentStatusPage();
 		
 	}
-	
+	/**
+	 * @author yasminamatta
+	 */
 	
 	private void refreshAppointmentStatusPage() {
 		setBounds(350,150,700,500);
@@ -3597,17 +3600,19 @@ public class FlexiBookPage extends JFrame{
 					flag = true;
 				String fullInfo = app.getStartTime()  + "|" + app.getService() +"|"+ app.getCustomerName()+".";
 				
-				if(appInOrderOfDate.isEmpty()) {
+//				if(appInOrderOfDate.isEmpty()) {
 					appInOrderOfDate.add(fullInfo);
-				}
-				else {
-						appInOrderOfDate.add(fullInfo);
-						appInOrderOfDate = sortArray(appInOrderOfDate);
-					
-						}
+//				}
+//				else {
+//						appInOrderOfDate.add(fullInfo);
+//						appInOrderOfDate = sortArray(appInOrderOfDate);
+//					
+//						}
 					}
 				
+				
 			}
+			
 			
 				}
 	
