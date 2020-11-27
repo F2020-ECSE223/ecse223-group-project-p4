@@ -2211,6 +2211,9 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		Date cDate = Date.valueOf(string.substring(0, 10));
 		Time cTime = Time.valueOf(string.substring(11, 16) + ":00");
 
+		try {
+		
+		
 		List<Appointment> appointmentList = flexiBook.getAppointments();
 		for (int i = 0; i < appointmentList.size(); i++) {
 			Appointment thisAppointment = appointmentList.get(i);
@@ -2224,7 +2227,10 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 		}
 		FlexiBookPersistence.save(flexiBook);
 	}
-
+		catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+	}	
 	/**
 	 * @author Shaswata Bhattacharyya
 	 * @param string

@@ -57,7 +57,9 @@ public class FlexiBookController {
 		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked) && !appointment.getAppointmentStatus().equals(AppointmentStatus.InProgress)) {
 			throw new InvalidInputException("The appointment is not Booked");
 		}
-
+		if(appointment.getAppointmentStatus().equals(AppointmentStatus.InProgress)) {
+	throw new InvalidInputException("The appointment is in progress");
+		}
 		if (appointment.getTimeSlot().getStartDate().before(systemDate)
 				||(appointment.getTimeSlot().getStartDate().equals(systemDate) && appointment.getTimeSlot().getStartTime().after(systemTime))) {
 		throw new InvalidInputException("You cannot start an appointment before its start time");
@@ -95,7 +97,9 @@ public class FlexiBookController {
 			}
 		}
 	
-
+		if(appointment.getAppointmentStatus().equals(AppointmentStatus.InProgress)) {
+			throw new InvalidInputException("The appointment is in progress.");
+		}
 //		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 //			throw new InvalidInputException("The appoi")
 //		}
@@ -827,7 +831,8 @@ public class FlexiBookController {
 			return false;
 
 		}
-		if(!(startDate.after(todaysDate))&& startTimeApp.after(todaysTime)) {
+		//check if start time of the appointment is before todays time
+		if(startDate.equals(todaysDate)&& startTimeApp.after(todaysTime)) {
 			return false;
 		}
 		
