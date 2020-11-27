@@ -11,38 +11,21 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
+import ca.mcgill.ecse223.flexibook.controller.*;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.Customer;
-import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
-import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
-import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
-import ca.mcgill.ecse223.flexibook.controller.TOBusiness;
-import ca.mcgill.ecse223.flexibook.controller.TOService;
 
 public class FlexiBookPage extends JFrame{
 
@@ -4056,6 +4039,7 @@ public class FlexiBookPage extends JFrame{
 		}
 	}
 
+	Date givenDate;
 
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">
 	private void initCalenderComponents() {
@@ -4120,6 +4104,7 @@ public class FlexiBookPage extends JFrame{
 
 		jCalendar1.setBorder(javax.swing.BorderFactory.createRaisedBevelBorder());
 
+
 		jButton1.setText("Back");
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4150,8 +4135,18 @@ public class FlexiBookPage extends JFrame{
 		jLabel3.setText("View unavailable timeSlots");
 
 		jButton2.setText("get week view");
+		jButton2.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				jButton2ActionPerformed(evt);
+			}
+		});
 
 		jButton3.setText("get day view");
+		jButton3.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				jButton3ActionPerformed(evt);
+			}
+		});
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -4206,6 +4201,27 @@ public class FlexiBookPage extends JFrame{
 
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
 		initOwnerMenu();
+	}
+	private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+		initOwnerMenu();
+	}
+	private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+		getDailyview();
+	}
+
+	private void getDailyview(){
+		try {
+			DefaultListModel<String> model = new DefaultListModel<>();
+			JList<String> list = new JList<>( model );
+			List<TOTimeSlot> availableToTs = FlexiBookController.getAvailableTimeSlots(String.valueOf(jCalendar1.getDate()));
+			for(TOTimeSlot avaTs : availableToTs){
+				String aTs = avaTs.getStartDate()+" - "+avaTs.getEndTime();
+				model.addElement(aTs);
+				jList1.setModel(model);
+			}
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
 	}
 
 	}
