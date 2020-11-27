@@ -311,9 +311,8 @@ public class FlexiBookPage extends JFrame{
 		initializeLoginPage();
 		setTitle("FlexiBook System P04");
 		
-		Time time = FlexiBookApplication.getSystemTime();
-		
-		Time time2=FlexiBookApplication.getSystemTime();
+		//Time time = FlexiBookApplication.getSystemTime();
+		//Time time2=FlexiBookApplication.getSystemTime();
 	}
 	
 	
@@ -3280,7 +3279,6 @@ public class FlexiBookPage extends JFrame{
 			try {
 				FlexiBookController.deleteService(existingServices.get(selectedService).getServiceName());
 				success = "Service " + existingServices.get(selectedService).getServiceName() + " deleted successfully" ;
-
 			}
 			catch (InvalidInputException e){
 				error = e.getMessage();

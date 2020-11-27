@@ -44,7 +44,7 @@ public class FlexiBookApplication {
                 setSystemTime(dateTime.substring(11, 19));
             	
                 //date and time for testing
-                //setSystemDate("2020-12-04");
+                //setSystemDate("2020-11-30");
                 //setSystemTime("14:00:00");
     
                 new FlexiBookPage().setVisible(true);
