@@ -103,8 +103,7 @@ public class FlexiBookController {
 //		if (!appointment.getAppointmentStatus().equals(AppointmentStatus.Booked)) {
 //			throw new InvalidInputException("The appoi")
 //		}
-		if (appointment.getTimeSlot().getStartDate().after(todaysDate)
-				||(appointment.getTimeSlot().getStartDate().equals(todaysDate) && appointment.getTimeSlot().getStartTime().after(currentTime))) {
+		if (appointment.getTimeSlot().getStartDate().after(todaysDate) || (appointment.getTimeSlot().getStartDate().equals(todaysDate) && appointment.getTimeSlot().getStartTime().after(currentTime))) {
 			throw new InvalidInputException("You cannot register a no show for an appointment that did not start.");
 		}
 
@@ -243,6 +242,25 @@ public class FlexiBookController {
 	
 	
 	
+	public static ArrayList<TOAppointment> getAppointmentsWithDate(Date thisDate){
+		
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		ArrayList<TOAppointment> appointmentList = new ArrayList<>();
+		
+		for(Appointment appointment : flexiBook.getAppointments()) {
+			if(appointment.getTimeSlot().getStartDate().equals(thisDate)) {
+				String name = appointment.getCustomer().getUsername();
+				String date = appointment.getTimeSlot().getStartDate().toString();
+				String time = appointment.getTimeSlot().getStartTime().toString();
+				String service = appointment.getBookableService().getName();
+				TOAppointment thisAppointment = new TOAppointment(name, service, time, date);
+				appointmentList.add(thisAppointment);
+			}
+		}
+		return appointmentList;
+	}
+
+	
 	public static ArrayList<TOAppointment> getCustomerAppointments(String username){
 		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Customer customer = findCustomerByName(username, flexiBook);
@@ -258,7 +276,6 @@ public class FlexiBookController {
 		
 		return appointmentList;
 	}
-
 		
 
 
@@ -341,9 +358,8 @@ public class FlexiBookController {
 			
 
 			// check if the appointment is within valid business hours
-			if (checkDateAndTime(timeSlot, null, flexiBook, todaysDate, todaysTime) == false) {
-				throw new InvalidInputException("There are no available slots for " + mainServiceName + " on "
-						+ startDate.toString() + " at " + startTime.toString());
+			if (checkDateAndTime(timeSlot, null, flexiBook, todaysDate, todaysTime, true) == false) {
+				throw new InvalidInputException("There are no available slots for " + mainServiceName + " on " + startDate.toString() + " at " + startTime.toString());
 			} else {
 
 				Appointment appointment = new Appointment(customer, thisService, timeSlot, flexiBook);
@@ -501,7 +517,7 @@ public class FlexiBookController {
 
 				newTimeSlot = getTimeSlot(oldtime, oldDate.toString(), duration, flexiBook);
 
-				if (checkDateAndTime(newTimeSlot, appointment, flexiBook, todaysDate, todaysTime) == false) {
+				if (checkDateAndTime(newTimeSlot, appointment, flexiBook, todaysDate, todaysTime, false) == false) {
 					return "unsuccessful";
 				} else {
 
@@ -618,7 +634,7 @@ public class FlexiBookController {
 
 				}
 
-				if (checkDateAndTime(newTimeSlot, appointment, flexiBook, todaysDate, todaysTime) == false) {
+				if (checkDateAndTime(newTimeSlot, appointment, flexiBook, todaysDate, todaysTime, false) == false) {
 					return "unsuccessful";
 				} else {
 					appointment.modifyAppointmentTime(todaysDate, newTimeSlot);
@@ -727,8 +743,7 @@ public class FlexiBookController {
 	 * @param appointment
 	 * @return true if valid time slot, false otherwise
 	 */
-	private static boolean checkDateAndTime(TimeSlot timeSlot, Appointment appointment, FlexiBook flexiBook,
-			Date todaysDate, Time todaysTime) {
+	private static boolean checkDateAndTime(TimeSlot timeSlot, Appointment appointment, FlexiBook flexiBook, Date todaysDate, Time todaysTime, boolean make) {
 
 		List<Appointment> existingAppointments = flexiBook.getAppointments();
 		Time startTimeApp = timeSlot.getStartTime();
@@ -821,20 +836,25 @@ public class FlexiBookController {
 		}
 
 		
-		// checking if is in 2019
-		if(Integer.parseInt(startDate.toString().substring(0, 4))<=2019){
+		// checking if is not in past year
+		if(Integer.parseInt(startDate.toString().substring(0, 4)) <= Integer.parseInt(todaysDate.toString().substring(0, 4))-1 ){
 			return false;
 		}
 		
+		
 		// check time slot not in the past		
-		if ( startDate.before(todaysDate) && !startDate.equals(todaysDate) && startTimeApp.before(todaysTime)){
+		if ( startDate.before(todaysDate) && startTimeApp.before(todaysTime)){
 			return false;
-
 		}
+		
+		
 		//check if start time of the appointment is before todays time
-		if(startDate.equals(todaysDate)&& startTimeApp.after(todaysTime)) {
-			return false;
+		if(startDate.equals(todaysDate) && startTimeApp.after(todaysTime)) {
+			if(make == false) {			//not making appointment
+				return false;
+			}
 		}
+		
 		
 		Appointment thisAppointment;
 		Service thisService = null;
@@ -2571,7 +2591,7 @@ public class FlexiBookController {
 			for(int i = 0; i < flexiBook.getAppointments().size(); i++){
 				if(flexiBook.getAppointment(i).getTimeSlot().getStartDate().equals(givenUATS) && flexiBook.getAppointment(i).getTimeSlot().getEndDate().equals(givenUATS)) {
 					//check if the given date is is holiday, vacation, weekend, past date, or if any appointment was overlapping
-					if (!checkDateAndTime(unavailableTimeSlot, flexiBook.getAppointment(i), flexiBook, flexiBook.getAppointment(i).getTimeSlot().getStartDate(), flexiBook.getAppointment(i).getTimeSlot().getStartTime())) {
+					if (!checkDateAndTime(unavailableTimeSlot, flexiBook.getAppointment(i), flexiBook, flexiBook.getAppointment(i).getTimeSlot().getStartDate(), flexiBook.getAppointment(i).getTimeSlot().getStartTime(), false)) {
 						//check if the appointment service has any downtime
 						if (FlexiBookController.getServices().get(i).getDowntimeDur()!=0) {
 							//consider the downtime and divide the timelots accordingly
@@ -2624,17 +2644,16 @@ public class FlexiBookController {
 	
 
 	public static List<TOTimeSlot> getUnavailableTimeSlotForWeek(String sdate) throws InvalidInputException{
-		List<TOTimeSlot> unavailable = Collections.emptyList();
+		ArrayList<TOTimeSlot> unavailable = new ArrayList<>();
 		
 		try {
 			Date date = Date.valueOf(sdate);
 			for(int i = 1; i<8; i++){
 				date = new Date(date.getTime() + i*MILLIS_IN_A_DAY);
 				List<TOTimeSlot> thisUnavailable = getUnavailableTimeSlots(date.toString());
-				for (int j = 0; i < thisUnavailable.size(); j++) {
-					unavailable.add(thisUnavailable.get(j));
+					unavailable.add(thisUnavailable.get(i));
 				}
-			}
+			
 			return unavailable;
 		} catch(RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
@@ -2644,14 +2663,14 @@ public class FlexiBookController {
 	}
 	
 	public static List<TOTimeSlot> getAvailableTimeSlotForWeek(String sdate) throws InvalidInputException{
-		List<TOTimeSlot> available = Collections.emptyList();
+		ArrayList<TOTimeSlot> available = new ArrayList<>();
 		
 		try {
 			Date date = Date.valueOf(sdate);
 			for(int i = 1; i<8; i++){
 				date = new Date(date.getTime() + i*MILLIS_IN_A_DAY);
 				List<TOTimeSlot> thisAvailable = getAvailableTimeSlots(date.toString());
-				for (int k = 0; k < thisAvailable.size(); k++) {
+				for (int k = 0; k < thisAvailable.size()-1; k++) {
 					available.add(thisAvailable.get(k));
 				}
 			}
@@ -2675,7 +2694,7 @@ public class FlexiBookController {
 		for(TimeSlot availableTimeSlot : FlexiBookApplication.getFlexiBook().getTimeSlots()){
 			for(int i = 0; i < flexiBook.getAppointments().size(); i++){
 				if(flexiBook.getAppointment(i).getTimeSlot().getStartDate().equals(givenDate)) {
-					if (checkDateAndTime(availableTimeSlot, flexiBook.getAppointment(i), flexiBook, flexiBook.getAppointment(i).getTimeSlot().getStartDate(), flexiBook.getAppointment(i).getTimeSlot().getStartTime())) {
+					if (checkDateAndTime(availableTimeSlot, flexiBook.getAppointment(i), flexiBook, flexiBook.getAppointment(i).getTimeSlot().getStartDate(), flexiBook.getAppointment(i).getTimeSlot().getStartTime(), false)) {
 						if (FlexiBookController.getServices().get(i).getDowntimeDur()!=0) {
 							
 							if(flexiBook.getAppointment(i).getBookableService() instanceof Service) {

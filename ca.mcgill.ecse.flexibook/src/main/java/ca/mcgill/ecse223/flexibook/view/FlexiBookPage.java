@@ -11,21 +11,40 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
 
-import javax.swing.*;
+import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
-import ca.mcgill.ecse223.flexibook.controller.*;
+
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
+
 import ca.mcgill.ecse.flexibook.application.FlexiBookApplication;
 import ca.mcgill.ecse.flexibook.model.Customer;
+import ca.mcgill.ecse223.flexibook.controller.FlexiBookController;
+import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
+import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
+import ca.mcgill.ecse223.flexibook.controller.TOBusiness;
+import ca.mcgill.ecse223.flexibook.controller.TOService;
 
 public class FlexiBookPage extends JFrame{
 
@@ -58,7 +77,7 @@ public class FlexiBookPage extends JFrame{
 
 	//make appointment
 	private JTextField makeAppTime;
-	private JTextField makeAppDate;
+	private JDatePickerImpl makeAppDate;
 	private JComboBox<String> makeAppServiceList;
 	private JLabel makeAppTimeLabel;
 	private JLabel makeAppDateLabel;
@@ -68,7 +87,7 @@ public class FlexiBookPage extends JFrame{
 	//update appointment
 	private JComboBox<String> updateAppDateList;
 	private JTextField updateAppNewTime;
-	private JTextField updateAppNewDate;
+	private JDatePickerImpl updateAppNewDate;
 	private JComboBox<String> updateAppServiceList;
 	private JLabel updateAppDateLabel;
 	private JLabel updateAppNewTimeLabel;
@@ -143,9 +162,9 @@ public class FlexiBookPage extends JFrame{
 	private JButton datePickerButon;
 	private JButton datePickerButtonInPage;
 	private JButton backDatePickerButton;
-	private JTable overviewTableOfAppointmentStatus;
-	private JLabel appOverviewLabelOfAppointmentStatus;
-	private String[][] rowDataStatus;
+//	private JTable overviewTableOfAppointmentStatus;
+//	private JLabel appOverviewLabelOfAppointmentStatus;
+//	private String[][] rowDataStatus;
 	
 	//appointment data
 	ArrayList<String> availableServices = new ArrayList<>();
@@ -276,7 +295,7 @@ public class FlexiBookPage extends JFrame{
 
 	// End of variables declaration
 	public FlexiBookPage() {
-		FlexiBookApplication.getFlexiBook().delete();
+		//FlexiBookApplication.getFlexiBook().delete();
 		
 		initializeLoginPage();
 		setTitle("FlexiBook System P04");
@@ -751,19 +770,31 @@ public class FlexiBookPage extends JFrame{
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
 
-		//refreshDataForAppointmentBooking();
 		setBounds(100, 100, 700, 400);
 
+		
+	
 		// elements for error message
 		message = new JLabel();
 		makeAppBackButton = new JButton();
 		makeAppBackButton.setText("Back");
 
+		SqlDateModel overviewModel = new SqlDateModel();
+		LocalDate now = LocalDate.now();
+		overviewModel.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		
+		overviewModel.setSelected(true);
+		Properties pO = new Properties();
+		pO.put("text.today", "Today");
+		pO.put("text.month", "Month");
+		pO.put("text.year", "Year");
+		JDatePanelImpl overviewDatePanel = new JDatePanelImpl(overviewModel, pO);
+		makeAppDate = new JDatePickerImpl(overviewDatePanel, new DateLabelFormatter());
 		//elements for make appointment
 		makeAppTime = new JTextField();
 		makeAppTime.setText("hh:mm");
-		makeAppDate = new JTextField();
-		makeAppDate.setText("yyyy-mm-dd");
+//		makeAppDate = new JTextField();
+//		makeAppDate.setText("yyyy-mm-dd");
 		makeAppServiceList = new JComboBox<String>(new String[0]);
 		makeAppTimeLabel = new JLabel();
 		makeAppTimeLabel.setText("Appointment Time: ");
@@ -778,8 +809,9 @@ public class FlexiBookPage extends JFrame{
 		updateAppDateList = new JComboBox<String>(new String[0]);
 		updateAppNewTime = new JTextField();
 		updateAppNewTime.setText("hh:mm");
-		updateAppNewDate = new JTextField();
-		updateAppNewDate.setText("yyyy-mm-dd");
+
+		updateAppNewDate = new JDatePickerImpl(overviewDatePanel, new DateLabelFormatter());
+
 		updateAppServiceList = new JComboBox<String>(new String[0]);
 		updateAppDateLabel = new JLabel();
 		updateAppDateLabel.setText("Appointment at: ");
@@ -791,7 +823,18 @@ public class FlexiBookPage extends JFrame{
 		updateAppServiceLabel.setText("New Service: ");
 		updateAppButton = new JButton();
 		updateAppButton.setText("Update Appointment");
-
+		
+		SqlDateModel overviewModel1 = new SqlDateModel();
+		LocalDate rn = LocalDate.now();
+		overviewModel1.setDate(now.getYear(), now.getMonthValue() - 1, now.getDayOfMonth());
+		overviewModel1.setSelected(true);
+		Properties p1 = new Properties();
+		p1.put("text.today", "Today");
+		p1.put("text.month", "Month");
+		p1.put("text.year", "Year");
+		JDatePanelImpl overviewDatePanel1 = new JDatePanelImpl(overviewModel1, p1);
+		updateAppNewDate = new JDatePickerImpl(overviewDatePanel1, new DateLabelFormatter());
+//		updateAppNewDate.getModel().setValue(null);
 		//elements for cancel appointment
 		cancelAppDateList = new JComboBox<String>(new String[0]);
 		cancelAppDateLabel = new JLabel();
@@ -1031,7 +1074,15 @@ public class FlexiBookPage extends JFrame{
 			String mainServiceName = availableServices.get(selectedService);
 
 			String startTime = makeAppTime.getText();
-			String startDate = makeAppDate.getText();
+			
+			int year = makeAppDate.getModel().getYear();
+
+			int month = makeAppDate.getModel().getMonth()+1;
+
+			int day = makeAppDate.getModel().getDay();
+			String startDate  = year + "-" + month + "-" + day;
+			System.out.println(startDate);
+//			Date start = Date.valueOf(startDate);
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			Time currentTime = FlexiBookApplication.getSystemTime();
 
@@ -1077,14 +1128,23 @@ public class FlexiBookPage extends JFrame{
 			}else {
 				newStartTime = updateAppNewTime.getText();
 			}
-			
+
+			LocalDate now = LocalDate.now();
 			String newStartDate;
-			if(updateAppNewDate.getText().equals("yyyy-mm-dd")) {
+			int year1 = now.getYear();
+			int month1 = now.getMonthValue() - 1;
+			int day1 = now.getDayOfMonth();
+			String date = year1+"-"+month1+"-"+day1;
+			if(updateAppNewDate.getModel().getValue().equals(date)){
 				newStartDate = "";
 			}else {
-				newStartDate = updateAppNewDate.getText();
+				 int year =updateAppNewDate.getModel().getYear();
+				 int month = updateAppNewDate.getModel().getMonth()+1;
+				 int day = updateAppNewDate.getModel().getDay();
+				 
+				 newStartDate = year +"-"+month+"-"+day;
 			}
-			
+
 			Date todaysDate = FlexiBookApplication.getSystemDate();
 			Time currentTime = FlexiBookApplication.getSystemTime();
 			int selectedService = updateAppServiceList.getSelectedIndex();
@@ -3274,7 +3334,8 @@ public class FlexiBookPage extends JFrame{
 		//pack();
 	}
 	
-	
+	private Date chosenDate = null;
+	private ArrayList<TOAppointment> appointmentsOnDay = new ArrayList<>();
 
 	/**
 	 * @author yasminamatta
@@ -3283,6 +3344,8 @@ public class FlexiBookPage extends JFrame{
 	private void managedAppointmentStatus(ActionEvent evt) {
 		getContentPane().removeAll(); 
 		getContentPane().repaint();
+		
+		refreshAppointmentStatusPage();
 
 		Date ced= FlexiBookApplication.getSystemDate();
 		Time dube= FlexiBookApplication.getSystemTime();
@@ -3302,14 +3365,14 @@ public class FlexiBookPage extends JFrame{
 		appointmentList = new JComboBox<String>(new String[0]); 
 		appointmentListLabel = new JLabel();
 		appointmentListLabel.setText("Choose an appointment:");
-		
-		rowDataStatus = new String[0][3];
-	
-		appOverviewLabelOfAppointmentStatus = new JLabel();
-		appOverviewLabelOfAppointmentStatus.setText("Appointments that have started:");
-		String[] columnNames = { "Start Time", "Customer", "Service" };
-		overviewTableOfAppointmentStatus = new JTable(rowDataStatus, columnNames);
-		JScrollPane appointmentStatusTable = new JScrollPane(overviewTableOfAppointmentStatus);
+//		
+//		rowDataStatus = new String[0][3];
+//	
+//		appOverviewLabelOfAppointmentStatus = new JLabel();
+//		appOverviewLabelOfAppointmentStatus.setText("Appointments that have started:");
+//		String[] columnNames = { "Start Time", "Customer", "Service" };
+//		overviewTableOfAppointmentStatus = new JTable(rowDataStatus, columnNames);
+//		JScrollPane appointmentStatusTable = new JScrollPane(overviewTableOfAppointmentStatus);
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -3327,8 +3390,8 @@ public class FlexiBookPage extends JFrame{
 							
 							.addComponent(message)
 							.addComponent(appointmentListLabel)
-							.addComponent(appOverviewLabelOfAppointmentStatus))	
-
+							//.addComponent(appOverviewLabelOfAppointmentStatus))	
+)
 					.addGroup(layout.createParallelGroup()
 																
 							
@@ -3337,7 +3400,7 @@ public class FlexiBookPage extends JFrame{
 							.addComponent(endAppointmentButton)
 							.addComponent(noShowButton)
 							
-							.addComponent(appointmentStatusTable,10,40,40)
+							//.addComponent(appointmentStatusTable,10,40,40)
 							
 							//.addComponent(appointmentStatusTable,200,200,400)
 							
@@ -3351,11 +3414,11 @@ public class FlexiBookPage extends JFrame{
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {message});
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
-		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appOverviewLabelOfAppointmentStatus,appointmentStatusTable,backToMenuButton});
+		layout.linkSize(SwingConstants.HORIZONTAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 //		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		//layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {appointmentListLabel,appointmentList,startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {appointmentListLabel,appointmentList});
-		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,appOverviewLabelOfAppointmentStatus,appointmentStatusTable,backToMenuButton});
+		layout.linkSize(SwingConstants.VERTICAL,new java.awt.Component[] {startAppointmentButton,endAppointmentButton,noShowButton,backToMenuButton});
 		//layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {});
 		
 		layout.setVerticalGroup(
@@ -3373,9 +3436,9 @@ public class FlexiBookPage extends JFrame{
 						.addComponent(endAppointmentButton)	)
 				.addGroup(layout.createParallelGroup()		
 						.addComponent(noShowButton))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(appOverviewLabelOfAppointmentStatus)
-						.addComponent(appointmentStatusTable,10,40,40))
+//				.addGroup(layout.createParallelGroup()
+//						.addComponent(appOverviewLabelOfAppointmentStatus)
+//						.addComponent(appointmentStatusTable,10,40,40))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(backToMenuButton))
 
@@ -3416,8 +3479,6 @@ public class FlexiBookPage extends JFrame{
 			}
 
 		});
-		
-		
 		
 	
 		refreshAppointmentStatusPage();
@@ -3545,7 +3606,10 @@ public class FlexiBookPage extends JFrame{
 		refreshAppointmentStatusPage();
 		
 	}
+	
+	  
 	/**
+	 *
 	 * @author yasminamatta
 	 */
 	
@@ -3562,51 +3626,36 @@ public class FlexiBookPage extends JFrame{
 			message.setText(success);
 			message.setForeground(Color.GREEN);
 		}
-		if(appointmentList!=null) {
+		
+		if(appointmentList != null) {
 			appointmentList.removeAllItems();
+		} else {
+			appointmentList = new JComboBox<String>(new String[0]);
 		}
-		
-		
 		
 		int year = appointmentDatePicker.getModel().getYear();
 		int month = appointmentDatePicker.getModel().getMonth()+1;
 		int day = appointmentDatePicker.getModel().getDay();
 		
-		String fulldate = year +"-"+month+"-" +day;
+		String fulldate = year + "-" + month + "-" + day;
 		Date dateOfPicker = Date.valueOf(fulldate);
 		ArrayList <String> appInOrderOfDate = new ArrayList<String>();
 		error="";
 		success="";
 		boolean flag = false;
-		for(Customer user : FlexiBookApplication.getFlexiBook().getCustomers()) {
 			
-			for(TOAppointment app : FlexiBookController.getCustomerAppointments(user.getUsername())) {
-				if(app.getStartDate().equals(dateOfPicker.toString())){
-					flag = true;
-				String fullInfo = app.getStartTime()  + "|" + app.getService() +"|"+ app.getCustomerName()+".";
-				
-//				if(appInOrderOfDate.isEmpty()) {
-					appInOrderOfDate.add(fullInfo);
-//				}
-//				else {
-//						appInOrderOfDate.add(fullInfo);
-//						appInOrderOfDate = sortArray(appInOrderOfDate);
-//					
-//						}
-					}
-				
-				
+		for(TOAppointment app : FlexiBookController.getAppointmentsWithDate(chosenDate)) {
+			if(app.getStartDate().equals(dateOfPicker.toString())){
+				flag = true;
+				String fullInfo = app.getStartTime()  + " | " + app.getService() +" | " + app.getCustomerName()+".";
+				appointmentList.addItem(fullInfo);
 			}
-			
-			
-				}
-	
-				for (String str : appInOrderOfDate) {
-					appointmentList.addItem(str);
-				}
-			if(flag) {
-				appointmentList.setSelectedIndex(-1);
-			}
+				
+		}	
+		
+		if(flag) {
+			appointmentList.setSelectedIndex(-1);
+		}
 		
 		//pack();
 	}
@@ -3725,16 +3774,15 @@ public class FlexiBookPage extends JFrame{
 		 
 		
 		datePickerButtonInPage.addActionListener(new ActionListener(){ 
-			
 			public void actionPerformed(ActionEvent e) {
-				
+				chosenDate = Date.valueOf(appointmentDatePicker.getJFormattedTextField().getText());
+				appointmentDatePicker.getJFormattedTextField().setText("");
 				managedAppointmentStatus(e);		
 			}
 		});
+		
 		backDatePickerButton.addActionListener(new ActionListener(){ 
-			
 			public void actionPerformed(ActionEvent e) {
-				
 				initOwnerMenu();		
 			}
 		});
@@ -4039,7 +4087,6 @@ public class FlexiBookPage extends JFrame{
 		}
 	}
 
-	Date givenDate;
 
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">
 	private void initCalenderComponents() {
@@ -4104,7 +4151,6 @@ public class FlexiBookPage extends JFrame{
 
 		jCalendar1.setBorder(javax.swing.BorderFactory.createRaisedBevelBorder());
 
-
 		jButton1.setText("Back");
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4135,18 +4181,8 @@ public class FlexiBookPage extends JFrame{
 		jLabel3.setText("View unavailable timeSlots");
 
 		jButton2.setText("get week view");
-		jButton2.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButton2ActionPerformed(evt);
-			}
-		});
 
 		jButton3.setText("get day view");
-		jButton3.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButton3ActionPerformed(evt);
-			}
-		});
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -4201,27 +4237,6 @@ public class FlexiBookPage extends JFrame{
 
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
 		initOwnerMenu();
-	}
-	private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-		initOwnerMenu();
-	}
-	private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-		getDailyview();
-	}
-
-	private void getDailyview(){
-		try {
-			DefaultListModel<String> model = new DefaultListModel<>();
-			JList<String> list = new JList<>( model );
-			List<TOTimeSlot> availableToTs = FlexiBookController.getAvailableTimeSlots(String.valueOf(jCalendar1.getDate()));
-			for(TOTimeSlot avaTs : availableToTs){
-				String aTs = avaTs.getStartDate()+" - "+avaTs.getEndTime();
-				model.addElement(aTs);
-				jList1.setModel(model);
-			}
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-		}
 	}
 
 	}
