@@ -1797,6 +1797,10 @@ public class FlexiBookController {
 			throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
 		}
 		
+		if (!fb.hasBusiness()) {
+			throw new InvalidInputException("No business exist");
+		}
+		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
 		}
@@ -2013,11 +2017,22 @@ public class FlexiBookController {
 	public static void addHolidaySlot(String startDate, String startTime, String endDate, String endTime) throws InvalidInputException {
 		
 		FlexiBook fb = FlexiBookApplication.getFlexiBook();
+	
+		Time sT;
+		Time eT;
 		
 		Date sD = Date.valueOf(startDate);
-		Time sT = Time.valueOf(startTime + ":00");
 		Date eD = Date.valueOf(endDate);
-		Time eT = Time.valueOf(endTime + ":00");
+		try {
+			sT = Time.valueOf(startTime + ":00");
+			eT = Time.valueOf(endTime + ":00");
+		} catch (IllegalArgumentException e) {
+			throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
+		}
+		
+		if (!fb.hasBusiness()) {
+			throw new InvalidInputException("No business exist");
+		}
 		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
@@ -2059,10 +2074,21 @@ public class FlexiBookController {
 		
 		FlexiBook fb = FlexiBookApplication.getFlexiBook();
 		
+		Time sT;
+		Time eT;
+		
 		Date sD = Date.valueOf(startDate);
-		Time sT = Time.valueOf(startTime + ":00");
 		Date eD = Date.valueOf(endDate);
-		Time eT = Time.valueOf(endTime + ":00");
+		try {
+			sT = Time.valueOf(startTime + ":00");
+			eT = Time.valueOf(endTime + ":00");
+		} catch (IllegalArgumentException e) {
+			throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
+		}
+		
+		if (!fb.hasBusiness()) {
+			throw new InvalidInputException("No business exist");
+		}
 		
 		if (!checkBusinessOwner()) {
 			throw new InvalidInputException("No permission to update business information");
@@ -2110,7 +2136,7 @@ public class FlexiBookController {
 			throws InvalidInputException {
 		
 		FlexiBook fb = FlexiBookApplication.getFlexiBook();
-		
+
 		Time oldS = null;
 		Time newS = null;
 		Time newE = null;
@@ -2126,6 +2152,10 @@ public class FlexiBookController {
 			}
 		} catch (IllegalArgumentException e) {
 			throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
+		}		
+		
+		if (!fb.hasBusiness()) {
+			throw new InvalidInputException("No business exist");
 		}
 		
 		ca.mcgill.ecse.flexibook.model.BusinessHour.DayOfWeek dow = getDow(s1);
@@ -2196,8 +2226,12 @@ public class FlexiBookController {
 				new_eD = Date.valueOf(new_endDate);
 				new_eT = Time.valueOf(new_endTime + ":00");
 			} catch (IllegalArgumentException e) {
-				throw new InvalidInputException("Wrong input format");
+				throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
 			}
+		}	
+		
+		if (!fb.hasBusiness()) {
+			throw new InvalidInputException("No business exist");
 		}
 		
 		
@@ -2271,8 +2305,12 @@ public class FlexiBookController {
 				new_eD = Date.valueOf(new_endDate);
 				new_eT = Time.valueOf(new_endTime + ":00");
 			} catch (IllegalArgumentException e) {
-				throw new InvalidInputException("Wrong input format");
+				throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
 			}
+		}
+		
+		if (!fb.hasBusiness()) {
+			throw new InvalidInputException("No business exist");
 		}
 		
 		TimeSlot temp = findOfftime(sD, sT, "holiday", fb);
