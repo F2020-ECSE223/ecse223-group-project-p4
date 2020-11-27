@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 //import java.io.File;
 import java.sql.Date;
@@ -2249,6 +2250,12 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			error = e.getMessage();
 		}
 	}
+	
+	///////////////////////////// VIEW APPOINTMENT CALENDER ////////////////////////////////////////////
+	
+	List<TOTimeSlot> availableSlots = Collections.emptyList();
+	List<TOTimeSlot> unavailableSlots = Collections.emptyList();
+	
 	/**
 	 * @author Venkata Satyanarayana Chivatam
 	 * @param string
@@ -2258,74 +2265,62 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@When("{string} requests the appointment calendar for the week starting on {string}")
 	public void requests_the_appointment_calendar_for_the_week_starting_on(String string, String string2) {
 		try{
-			Date date = Date.valueOf(string2);
-			for(int i = 1; i<8; i++){
-				date = new Date(date.getTime() + i*MILLIS_IN_A_DAY);
-
-				if(string.equals("Owner")) {
-
-					FlexiBookController.getUnavailableTimeSlots(String.valueOf(date));
-					FlexiBookController.getAvailableTimeSlots(String.valueOf(date));
-				}
-				else{
-					FlexiBookController.getAvailableTimeSlots(String.valueOf(date));
-				}
-
-				//FlexiBookController.viewDailyTimeSlotAvailable(String.valueOf(date));
-				//FlexiBookController.viewDailyTimeSlotUnavailable(String.valueOf(date));
-			}
-
+			availableSlots = FlexiBookController.getAvailableTimeSlotForWeek(string2);
+			unavailableSlots = FlexiBookController.getUnavailableTimeSlotForWeek(string2);
 		}catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
 
 	}
-	private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+
 
 	@Then("the following slots shall be unavailable:")
 	public void the_following_slots_shall_be_unavailable(io.cucumber.datatable.DataTable dataTable) {
 		TOTimeSlot unavailable = null;
-		List<TOTimeSlot> uats = null;
-
-		try {
+		boolean present = false;
+			
 			List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 			for (Map<String, String> columns : rows) {
-				unavailable = new TOTimeSlot(Date.valueOf(columns.get("date")),
-						Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("date")),
-						Time.valueOf(columns.get("endTime") + ":00"));
-				uats = FlexiBookController.getUnavailableTimeSlots(columns.get("date"));
+				unavailable = new TOTimeSlot(Date.valueOf(columns.get("date")), Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("date")), Time.valueOf(columns.get("endTime") + ":00"));
+				for(int i = 0; i < unavailableSlots.size(); i++) {
+					TOTimeSlot thisSlot = unavailableSlots.get(i);
+					if(thisSlot.getStartDate().equals(unavailable.getStartDate()) && thisSlot.getStartTime().equals(unavailable.getStartTime()) && thisSlot.getEndTime().equals(unavailable.getEndTime())) {
+						present = true;
+						break;
+					}else {
+						present = false;
+					}
+				}
 			}
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-		}
-		assertEquals(unavailable, uats);
+			assertEquals(true, unavailable);
+	
 	}
-
-
-
 
 
 
 	@Then("the following slots shall be available:")
 	public void the_following_slots_shall_be_available(io.cucumber.datatable.DataTable dataTable) {
 		TOTimeSlot available = null;
-		List<TOTimeSlot> uats = null;
-
-		try {
+		boolean present = false;
+			
 			List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 			for (Map<String, String> columns : rows) {
-				available = new TOTimeSlot(Date.valueOf(columns.get("startDate")),
-						Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("endDate")),
-						Time.valueOf(columns.get("endTime") + ":00"));
-				 uats = FlexiBookController.getAvailableTimeSlots("startDate");
+				available = new TOTimeSlot(Date.valueOf(columns.get("date")), Time.valueOf(columns.get("startTime") + ":00"), Date.valueOf(columns.get("date")), Time.valueOf(columns.get("endTime") + ":00"));
+				for(int i = 0; i < availableSlots.size(); i++) {
+					TOTimeSlot thisSlot = availableSlots.get(i);
+					if(thisSlot.getStartDate().equals(available.getStartDate()) && thisSlot.getStartTime().equals(available.getStartTime()) && thisSlot.getEndTime().equals(available.getEndTime())) {
+						present = true;
+						break;
+					}else {
+						present = false;
+					}
+				}
 			}
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-		}
-		assertEquals(available, uats);
+			assertEquals(true, available);
 	}
 
 
+	
 	/**
 	 * @author Venkata Satyanarayana Chivatam
 	 * @param string
@@ -2335,16 +2330,10 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 	@When("{string} requests the appointment calendar for the day of {string}")
 	public void requests_the_appointment_calendar_for_the_day_of(String string, String string2) {
 		try{
-			if(string.equals("Owner")) {
-
-				FlexiBookController.getUnavailableTimeSlots(string2);
-				FlexiBookController.getAvailableTimeSlots(string2);
-			}
-			else{
-				FlexiBookController.getAvailableTimeSlots(string2);
-			}
-				//FlexiBookController.viewDailyTimeSlotAvailable(string2);
-				//FlexiBookController.viewDailyTimeSlotUnavailable(string2);
+			
+			unavailableSlots = FlexiBookController.getUnavailableTimeSlots(string2);
+			availableSlots = FlexiBookController.getAvailableTimeSlots(string2);
+			
 		}catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -2368,21 +2357,26 @@ public void the_service_combo_shall_not_exist_in_the_system(String serviceComboN
 			case "Monday":
 				businessHour = new BusinessHour(DayOfWeek.Monday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 			case "Tuesday":
 				businessHour = new BusinessHour(DayOfWeek.Tuesday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 			case "Wednesday":
 				businessHour = new BusinessHour(DayOfWeek.Wednesday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 			case "Thursday":
 				businessHour = new BusinessHour(DayOfWeek.Thursday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 			case "Friday":
 				businessHour = new BusinessHour(DayOfWeek.Friday, Time.valueOf(columns.get("startTime") + ":00"),
 						Time.valueOf(columns.get("endTime") + ":00"), flexiBook);
+				break;
 
 			}
-
+			
 			flexiBook.getBusiness().addBusinessHour(businessHour);
 
 		}
