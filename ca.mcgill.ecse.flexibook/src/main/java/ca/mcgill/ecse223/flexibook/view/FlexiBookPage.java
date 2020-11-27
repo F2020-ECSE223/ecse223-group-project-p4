@@ -6,11 +6,16 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.GroupLayout;
@@ -45,6 +50,7 @@ import ca.mcgill.ecse223.flexibook.controller.InvalidInputException;
 import ca.mcgill.ecse223.flexibook.controller.TOAppointment;
 import ca.mcgill.ecse223.flexibook.controller.TOBusiness;
 import ca.mcgill.ecse223.flexibook.controller.TOService;
+import ca.mcgill.ecse223.flexibook.controller.TOTimeSlot;
 
 public class FlexiBookPage extends JFrame{
 
@@ -282,8 +288,8 @@ public class FlexiBookPage extends JFrame{
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
+    private javax.swing.JList<String> jList1 = new javax.swing.JList<>();
+    private javax.swing.JList<String> jList2 = new javax.swing.JList<>();
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -292,6 +298,11 @@ public class FlexiBookPage extends JFrame{
     private JButton back;
 	private JButton jButton2;
 	private JButton jButton3;
+	
+	//view appointment calender
+	private String[] availableSlots;
+	private String[] unavailableSlots;
+	private Date selectedDate;
 
 	// End of variables declaration
 	public FlexiBookPage() {
@@ -300,9 +311,8 @@ public class FlexiBookPage extends JFrame{
 		initializeLoginPage();
 		setTitle("FlexiBook System P04");
 		
-		Time time = FlexiBookApplication.getSystemTime();
-		
-		Time time2=FlexiBookApplication.getSystemTime();
+		//Time time = FlexiBookApplication.getSystemTime();
+		//Time time2=FlexiBookApplication.getSystemTime();
 	}
 	
 	
@@ -546,7 +556,7 @@ public class FlexiBookPage extends JFrame{
 	
 
 	/**
-	 * @author Shaswata
+	 * @author Team
 	 * @param evt
 	 */
 	private void initOwnerMenu() {
@@ -675,7 +685,7 @@ public class FlexiBookPage extends JFrame{
 
 
 	/**
-	 * @author Shaswata
+	 * @author Team
 	 * @param evt
 	 */
 	private void initCustomerMenu() {
@@ -766,7 +776,7 @@ public class FlexiBookPage extends JFrame{
 
 
 	/**
-	 * @author Shaswata
+	 * @author Shaswata Bhattacharyya
 	 *
 	 */
 	private void initAppointmentBookingPage() {
@@ -1006,7 +1016,7 @@ public class FlexiBookPage extends JFrame{
 
 
 	/**
-	 * @author Shaswata
+	 * @author Shaswata Bhattacharyya
 	 * 
 	 */
 	private void refreshDataForAppointmentBooking() {
@@ -1059,7 +1069,7 @@ public class FlexiBookPage extends JFrame{
 
 
 	/**
-	 * @author Shaswata
+	 * @author Shaswata Bhattacharyya
 	 * @param evt
 	 */
 	private void makeAppointmentActionPerformed(ActionEvent evt) {
@@ -1105,7 +1115,7 @@ public class FlexiBookPage extends JFrame{
 
 
 	/**
-	 * @author Shaswata
+	 * @author Shaswata Bhattacharyya
 	 * @param evt
 	 */
 	private void updateAppointmentActionPerformed(ActionEvent evt) {
@@ -1187,7 +1197,7 @@ public class FlexiBookPage extends JFrame{
 
 
 	/**
-	 * @author Shaswata
+	 * @author Shaswata Bhattacharyya
 	 * @param evt
 	 */
 	private void cancelAppointmentActionPerformed(ActionEvent evt) {
@@ -3271,7 +3281,6 @@ public class FlexiBookPage extends JFrame{
 			try {
 				FlexiBookController.deleteService(existingServices.get(selectedService).getServiceName());
 				success = "Service " + existingServices.get(selectedService).getServiceName() + " deleted successfully" ;
-
 			}
 			catch (InvalidInputException e){
 				error = e.getMessage();
@@ -4117,8 +4126,7 @@ public class FlexiBookPage extends JFrame{
 			
 		}
 	}
-
-
+	
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">
 	private void initCalenderComponents() {
 
@@ -4134,10 +4142,10 @@ public class FlexiBookPage extends JFrame{
 		jLabel2 = new javax.swing.JLabel();
 		jScrollPane3 = new javax.swing.JScrollPane();
 		jScrollPane2 = new javax.swing.JScrollPane();
-		jList1 = new javax.swing.JList<>();
+		
 		jScrollPane5 = new javax.swing.JScrollPane();
 		jScrollPane4 = new javax.swing.JScrollPane();
-		jList2 = new javax.swing.JList<>();
+		
 		jLabel3 = new javax.swing.JLabel();
 		jButton2 = new javax.swing.JButton();
 		jButton3 = new javax.swing.JButton();
@@ -4181,39 +4189,55 @@ public class FlexiBookPage extends JFrame{
 		);
 
 		jCalendar1.setBorder(javax.swing.BorderFactory.createRaisedBevelBorder());
+		
 
 		jButton1.setText("Back");
-//		jButton1.addActionListener(new java.awt.event.ActionListener() {
-//			public void actionPerformed(java.awt.event.ActionEvent evt) {
-//				jButton1ActionPerformed(evt);
-//			}
-//		});
+		jButton1.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				jButton1ActionPerformed(evt);
+			}
+		});
 
 		jLabel2.setText("View available timeSlots");
-
-		jList1.setModel(new javax.swing.AbstractListModel<String>() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-			public int getSize() { return strings.length; }
-			public String getElementAt(int i) { return strings[i]; }
-		});
+		
 		jScrollPane2.setViewportView(jList1);
-
+		
 		jScrollPane3.setViewportView(jScrollPane2);
 
-		jList2.setModel(new javax.swing.AbstractListModel<String>() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-			public int getSize() { return strings.length; }
-			public String getElementAt(int i) { return strings[i]; }
-		});
+		
 		jScrollPane4.setViewportView(jList2);
 
 		jScrollPane5.setViewportView(jScrollPane4);
 
-		jLabel3.setText("View unavailable slots");
+		jLabel3.setText("View unavailable timeSlots");
 
-		jButton2.setText("Week view");
-
-		jButton3.setText("Day view");
+		jButton2.setText("get week view");
+		jButton3.setText("get day view");
+		
+		jButton2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+            	viewAppointmentCalenderForWeek(evt);
+            }
+        });
+		
+		jButton3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+            	viewAppointmentCalenderForDay(evt);
+            }
+        });
+		
+		jCalendar1.addPropertyChangeListener(new PropertyChangeListener() {
+			 @Override
+		     public void propertyChange(PropertyChangeEvent evt) {
+				 // java.util.date
+				 java.util.Date date = jCalendar1.getDate();
+				 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				 String sDate = formatter.format(date);
+				 // java.sql.date
+				 selectedDate = Date.valueOf(sDate);  
+		     }
+		});
+		
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -4263,30 +4287,107 @@ public class FlexiBookPage extends JFrame{
 										.addComponent(jButton3)))
 		);
 
-		//pack();
-	// </editor-fold>
+		pack();
+	}
 
+	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+		initOwnerMenu();
+	}
 	
-		jButton2.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			weekViewPageActionPerformed(e);
+	
+	
+	private void viewAppointmentCalenderForDay(ActionEvent evt) {
+		List<TOTimeSlot> availableSlots = Collections.emptyList();
+		List<TOTimeSlot> unavailableSlots = Collections.emptyList();
+		jList1.removeAll();
+		jList2.removeAll();
+		String[] unavailableTimeSlots; 
+		String[] availableTimeSlots; 
 		
-		}
-	});
-	
-	jButton1.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			message.setText("");
-			initCustomerMenu();
+		try {
 			
+			unavailableSlots = FlexiBookController.getUnavailableTimeSlots(selectedDate.toString());
+			availableSlots = FlexiBookController.getAvailableTimeSlots(selectedDate.toString());
+			unavailableTimeSlots = new String[unavailableSlots.size()]; 
+			availableTimeSlots = new String[availableSlots.size()]; 
+			
+			//unavailable slots
+			for(int i = 0; i < availableSlots.size(); i++) {
+				String slot = availableSlots.get(i).getStartTime().toString() + " to " + availableSlots.get(i).getEndTime().toString();
+				unavailableTimeSlots[i] = slot;
+			}
+			jList1.setModel(new javax.swing.AbstractListModel<String>() {
+				String[] strings = unavailableTimeSlots;
+				public int getSize() { return strings.length; }
+				public String getElementAt(int i) { return strings[i]; }
+			});
+			
+			//available slots
+			for(int j = 0; j < availableSlots.size(); j++) {
+				String slot = availableSlots.get(j).getStartTime().toString() + " to " + availableSlots.get(j).getEndTime().toString();
+				unavailableTimeSlots[j] = slot;
+			}
+			jList2.setModel(new javax.swing.AbstractListModel<String>() {
+				String[] strings = availableTimeSlots;
+				public int getSize() { return strings.length; }
+				public String getElementAt(int j) { return strings[j]; }
+			});
+			
+			
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
 		}
-	});
-	}
-	
-	private void weekViewPageActionPerformed(ActionEvent evt) {
-		getContentPane().removeAll();
-		getContentPane().repaint();
-		setBounds(350,150,700,500);
 		
 	}
+	
+	
+	private void viewAppointmentCalenderForWeek(ActionEvent evt) {
+		List<TOTimeSlot> availableSlots = Collections.emptyList();
+		List<TOTimeSlot> unavailableSlots = Collections.emptyList();
+		jList1.removeAll();
+		jList2.removeAll();
+		String[] unavailableTimeSlots; 
+		String[] availableTimeSlots; 
+		
+		try {
+			
+			unavailableSlots = FlexiBookController.getUnavailableTimeSlotForWeek(selectedDate.toString());
+			availableSlots = FlexiBookController.getAvailableTimeSlotForWeek(selectedDate.toString());
+			unavailableTimeSlots = new String[unavailableSlots.size()]; 
+			availableTimeSlots = new String[availableSlots.size()]; 
+			
+			//unavailable slots
+			for(int i = 0; i < availableSlots.size(); i++) {
+				String slot = availableSlots.get(i).getStartTime().toString() + " to " + availableSlots.get(i).getEndTime().toString();
+				unavailableTimeSlots[i] = slot;
+			}
+			jList1.setModel(new javax.swing.AbstractListModel<String>() {
+				String[] strings = unavailableTimeSlots;
+				public int getSize() { return strings.length; }
+				public String getElementAt(int i) { return strings[i]; }
+			});
+			
+			//available slots
+			for(int j = 0; j < availableSlots.size(); j++) {
+				String slot = availableSlots.get(j).getStartTime().toString() + " to " + availableSlots.get(j).getEndTime().toString();
+				unavailableTimeSlots[j] = slot;
+			}
+			jList2.setModel(new javax.swing.AbstractListModel<String>() {
+				String[] strings = availableTimeSlots;
+				public int getSize() { return strings.length; }
+				public String getElementAt(int j) { return strings[j]; }
+			});
+			
+			
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
 	}
+	
+	
+	
+	
+
+}
+

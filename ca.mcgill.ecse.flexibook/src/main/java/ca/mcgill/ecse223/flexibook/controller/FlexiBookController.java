@@ -1315,20 +1315,17 @@ public class FlexiBookController {
 		boolean noFutureAppts = true;
 		Service serviceToDelete = (Service) Service.getWithName(name);
 
-//		if (existingServices == null) {
-//			existingServices = new List<STOService>
-//		}
 		if (serviceToDelete.hasAppointments() == true) {
 			appointments = serviceToDelete.getAppointments();
 			for (int i = 0; i < appointments.size(); i++) {
-				if (appointments.get(i).getTimeSlot().getStartDate()
-						.compareTo(FlexiBookApplication.getSystemDate()) > 0) {
-					throw new InvalidInputException("The service contains future appointments");
+				if (appointments.get(i).getTimeSlot().getStartDate().after(FlexiBookApplication.getSystemDate())) {
+					noFutureAppts = false;
+					break;
 				}
 			}
 		}
-
 		return noFutureAppts;
+		
 	}
 
 	/**
@@ -1376,14 +1373,26 @@ public class FlexiBookController {
 	 * @throws InvalidInputException
 	 */
 	public static void deleteService(String name) throws InvalidInputException {
-		//FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
+		FlexiBook flexiBook = FlexiBookApplication.getFlexiBook();
 		Service serviceToDelete = (Service) Service.getWithName(name);
-
-		if (checkOwner(FlexiBookApplication.getCurrentUser()) == true && noFutureApptsExist(name)) {
-
-			removeServiceFromCombos(name);
-			serviceToDelete.delete();
+		try {
+			
+			if (checkOwner(FlexiBookApplication.getCurrentUser()) == true) {
+				if(noFutureApptsExist(name) == true) {
+					removeServiceFromCombos(name);
+					serviceToDelete.delete();
+					FlexiBookPersistence.save(flexiBook);
+				} else {
+					throw new InvalidInputException("The service contains future appointments");
+				}
+				
+			}
+			
+		}catch(RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
 		}
+
+		
 		
 		
 	}
