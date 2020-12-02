@@ -306,13 +306,11 @@ public class FlexiBookPage extends JFrame{
 
 	// End of variables declaration
 	public FlexiBookPage() {
-		//FlexiBookApplication.getFlexiBook().delete();
 		
 		initializeLoginPage();
 		setTitle("FlexiBook System P04");
 		
-		//Time time = FlexiBookApplication.getSystemTime();
-		//Time time2=FlexiBookApplication.getSystemTime();
+
 	}
 	
 	

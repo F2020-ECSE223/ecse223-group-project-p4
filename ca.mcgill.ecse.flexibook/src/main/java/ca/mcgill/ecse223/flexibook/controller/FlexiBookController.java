@@ -1826,7 +1826,12 @@ public class FlexiBookController {
 		
 		try {
 			start = Time.valueOf(startTime + ":00");
-			end = Time.valueOf(endTime + ":00");
+			if(endTime.equals("0:00") || endTime.equals("00:00")) {
+				end = Time.valueOf("23:59:59");
+			}else {
+				end = Time.valueOf(endTime + ":00");
+			}
+			
 		} catch (IllegalArgumentException e) {
 			throw new InvalidInputException("Wrong Input Format. Time should be hh:mm");
 		}
@@ -1850,8 +1855,10 @@ public class FlexiBookController {
 		if (!validateBusinessHourForOverlap(getDow(dow), start, end, fb)) {
 			throw new InvalidInputException("The business hours cannot overlap");
 		}
-
+		
 		fb.getBusiness().addBusinessHour(new BusinessHour(getDow(dow), start, end, fb));
+	
+		
 		
 		FlexiBookPersistence.save(fb);
 	}
