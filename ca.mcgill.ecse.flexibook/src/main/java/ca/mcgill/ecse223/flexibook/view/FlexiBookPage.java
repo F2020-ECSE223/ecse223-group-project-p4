@@ -1844,17 +1844,18 @@ public class FlexiBookPage extends JFrame{
 	
 	private void addHolidayButtonPressed(ActionEvent evt) {
 		error = null;
+		setBounds(350,150,700,500);
 		success = null;
 		try {
 
-			int year = pickStartVacDate.getModel().getYear();
-			int month = pickStartVacDate.getModel().getMonth()+1;
-			int day = pickStartVacDate.getModel().getDay();
+			int year = pickStartHolDate.getModel().getYear();
+			int month = pickStartHolDate.getModel().getMonth()+1;
+			int day = pickStartHolDate.getModel().getDay();
 			String startDate = year +"-"+month+"-" +day;
 			
-			year = pickEndVacDate.getModel().getYear();
-			month = pickEndVacDate.getModel().getMonth()+1;
-			day = pickEndVacDate.getModel().getDay();
+			year = pickEndHolDate.getModel().getYear();
+			month = pickEndHolDate.getModel().getMonth()+1;
+			day = pickEndHolDate.getModel().getDay();
 			String endDate = year +"-"+month+"-" +day;
 			
 			String startTime = startHolidayTime.getText();
@@ -1887,7 +1888,7 @@ public class FlexiBookPage extends JFrame{
 //		endHolidayDate.setText("");
 		endHolidayTime.setText("");
 
-		pack();
+		//pack();
 	}
 	
 	private void initAddBusinessHourPage() {
@@ -2876,6 +2877,7 @@ public class FlexiBookPage extends JFrame{
 
 		addServiceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				addServiceButtonPressed(e);
 			}
 
@@ -4384,6 +4386,6 @@ public class FlexiBookPage extends JFrame{
 	
 	
 	
-	
 
 }
+
